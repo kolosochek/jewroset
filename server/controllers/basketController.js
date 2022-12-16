@@ -11,8 +11,8 @@ const generateJwt = (id, email, role) => {
         {expiresIn: '24h'}
     )
 }
-class UserController {
-    async signup(req, res, next) {
+class BasketController {
+    async getUserBasket(req, res, next) {
         const {email, password, role} = req.body
         if (!email || !password) {
             return next(APIError.badRequestError(`No error or password was given!`))
@@ -29,7 +29,7 @@ class UserController {
         return res.json({token})
     }
 
-    async signin(req, res, next){
+    async setUserBasket(req, res, next){
         const {email, password} = req.body
         if(!email || !password) {
             return next(APIError.badRequestError(`No email or password was given!`))
@@ -45,11 +45,6 @@ class UserController {
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
-
-    async isAuthorized(req, res, next){
-        const token = generateJwt((req.user.id, req.user.email, req.user.role))
-        return res.json({token})
-    }
 }
 
-module.exports = new UserController()
+module.exports = new BasketController()
