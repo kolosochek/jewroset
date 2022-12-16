@@ -3,6 +3,7 @@ import Auth from "../views/Auth";
 import Basket from "../views/Basket";
 import Item from "../views/Item";
 import Catalog from "../views/Catalog";
+import * as React from "react";
 
 export type RoutePath = "/admin" | "/basket" | "/signin" | "/signup" | "/device" | string;
 
