@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Catalog = () => {
+const Index = () => {
     return (
         <div>
-            CATALOG
+            INDEX
         </div>
     );
 };
 
-export default Catalog;
+export default Index;

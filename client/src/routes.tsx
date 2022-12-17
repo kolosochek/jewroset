@@ -1,12 +1,17 @@
 import {RouteI} from "./utils/Routes";
 import Admin from "./views/Admin";
-import Basket from "./views/Basket";
-import Item from "./views/Item";
-import Catalog from "./views/Catalog";
 import Auth from "./views/Auth";
+import Basket from "./views/Basket";
+import Index from "./views/Index";
+import Catalog from "./views/Catalog";
+import Item from "./views/Item";
 
 
 export const authorizedRoutes: RouteI[] = [
+    {
+        path: '/',
+        View: Index,
+    },
     {
         path: '/admin',
         View: Admin,
@@ -18,6 +23,10 @@ export const authorizedRoutes: RouteI[] = [
 ]
 
 export const unauthorizedRoutes: RouteI[] = [
+    {
+        path: '/',
+        View: Index,
+    },
     {
         path: '/catalog',
         View: Catalog,
