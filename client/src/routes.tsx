@@ -4,7 +4,7 @@ import Auth from "./views/Auth";
 import Basket from "./views/Basket";
 import Index from "./views/Index";
 import Catalog from "./views/Catalog";
-import Item from "./views/Item";
+import Device from "./views/Device";
 
 
 export const authorizedRoutes: RouteI[] = [
@@ -41,10 +41,10 @@ export const unauthorizedRoutes: RouteI[] = [
     },
     {
         path: '/device',
-        View: Item,
+        View: Device,
     },
     {
         path: '/device/:id',
-        View: Item,
+        View: Device,
     }
 ]

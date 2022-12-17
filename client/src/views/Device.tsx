@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Item = () => {
+const Device = () => {
     return (
         <div>
             ITEM
@@ -8,4 +8,4 @@ const Item = () => {
     );
 };
 
-export default Item;
+export default Device;
