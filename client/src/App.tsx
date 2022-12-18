@@ -5,14 +5,14 @@ import NavbarComponent from "./components/NavbarComponent";
 import {Container} from "react-bootstrap";
 
 const App = () => {
-  return (
-    <BrowserRouter>
-        <Container className="min-vh-100">
+    return (
+        <BrowserRouter>
             <NavbarComponent />
-            <AppRouter />
-        </Container>
-    </BrowserRouter>
-  );
+            <Container className="min-vh-100">
+                <AppRouter />
+            </Container>
+        </BrowserRouter>
+    );
 }
 
 export default App;

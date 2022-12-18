@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import UserStore from "./store/UserStore";
 import DeviceStore from "./store/DeviceStore";
+import BasketStore from "./store/BasketStore";
 
 export const Context = createContext({
     user: new UserStore(),
+    basket: new BasketStore(),
     device: new DeviceStore(),
 })
 
@@ -17,6 +19,7 @@ root.render(
   <React.StrictMode>
       <Context.Provider value={{
           user: new UserStore(),
+          basket: new BasketStore(),
           device: new DeviceStore(),
       }}>
           <App />
