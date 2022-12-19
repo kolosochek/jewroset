@@ -1,10 +1,26 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {BrowserRouter} from "react-router-dom"
 import AppRouter from "./components/AppRouter";
 import NavbarComponent from "./components/NavbarComponent";
-import {Container} from "react-bootstrap";
+import {Container, Spinner} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
+import {Context} from "./index";
+import {userCheck} from "./http/userAPI";
 
-const App = () => {
+const App = observer(() => {
+    const {user} = useContext(Context)
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        userCheck().then(data => {
+            user.setUser({})
+            user.setIsAuth(true)
+        }).finally(() => setIsLoading(false))
+    }, [])
+
+    if (isLoading){
+        return <Spinner animation={"grow"} />
+    }
     return (
         <BrowserRouter>
             <NavbarComponent />
@@ -13,6 +29,6 @@ const App = () => {
             </Container>
         </BrowserRouter>
     );
-}
+})
 
 export default App;

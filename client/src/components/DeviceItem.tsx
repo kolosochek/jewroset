@@ -1,8 +1,9 @@
 import React from 'react';
 import {Card, Image} from "react-bootstrap";
-import {DeviceI} from "../store/DeviceStore";
 import { SERVER_URL, SERVER_PORT } from "../utils/Const"
+import {DeviceI} from "../store/DeviceStore";
 import {useNavigate} from "react-router-dom";
+import starImg from "../assets/star.png"
 interface ItemProps {
     device: DeviceI,
     key?: number,
@@ -23,14 +24,15 @@ const DeviceItem = ({device}:ItemProps) => {
                     />
                 </figure>
                 <div className="b-device-item-info-wrapper p-2">
+                    <p className="" >{device.brandId}</p>
                     <p className="text-primary text-decoration-underline cursor-pointer card-text">{device.name}</p>
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="b-price-wrapper">
                             <span className="b-device-item-price">${device.price}</span>
                         </div>
-                        <div className="b-rating-wrapper">
-                            <span className="b-rating">{device.rating}</span>
-                        </div>
+                        <figure className="b-rating-wrapper m-0">
+                            <span className="b-rating">{device.rating}&nbsp;<Image src={starImg} width={15} height={15} /></span>
+                        </figure>
                     </div>
                 </div>
             </div>

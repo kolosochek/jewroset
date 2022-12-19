@@ -10,7 +10,7 @@ const Filterbar = observer(() => {
 
     return (
         <section className="b-filter-wrapper container p-0">
-            <div className="b-filter d-flex flex-row">
+            <div className="b-filter d-flex flex-row flex-wrap">
             {device.brands.map((brand) => {
                 return (
                     <div
