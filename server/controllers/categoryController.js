@@ -15,6 +15,9 @@ class CategoryController {
     }
 
     async getById(req, res){
+        const {categoryId} = req.query
+        const category = await Category.findOne({where:{categoryId}})
+        return res.json(category)
     }
 }
 

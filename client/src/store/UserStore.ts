@@ -12,7 +12,7 @@ export interface UserI {
 export default class UserStore {
     constructor(
         private _isAuth:boolean = false,
-        private _user:UserI = {}) {
+        private _user:Partial<UserI> = {}) {
         makeAutoObservable(this)
     }
 
