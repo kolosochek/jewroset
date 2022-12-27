@@ -1,18 +1,35 @@
 import {$authHost, $host} from "./index";
 import jwtDecode from "jwt-decode";
+import {BrandI, CategoryI, DeviceI} from "../store/DeviceStore";
 
-export const userSignUp = async (email?:string, password?: string) => {
-    const {data} = await $host.post(`api/user/signup`, {email, password, role: `ADMIN`})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+export const createCategory = async (category:Partial<CategoryI>) => {
+    const {data} = await $authHost.post(`api/category`, category)
+    return data
 }
-export const userSignIn = async (email?:string, password?: string) => {
-    const {data} = await $host.post(`api/user/signin`, {email, password})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+export const fetchCategories = async () => {
+    const {data} = await $host.get(`api/category`)
+    return data
 }
-export const userCheck = async (email?:string, password?: string) => {
-    const {data} = await $authHost.post(`api/user/auth`, {email, password, role: `ADMIN`})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+
+export const createBrand = async (brand:Partial<BrandI>) => {
+    const {data} = await $authHost.post(`api/brand`, brand)
+    return data
+}
+export const fetchBrands = async () => {
+    const {data} = await $host.get(`api/brand`)
+    return data
+}
+
+export const createDevice = async (device:DeviceI) => {
+    const {data} = await $authHost.post(`api/device`, device)
+    return data
+}
+export const fetchDevices = async () => {
+    const {data} = await $host.get(`api/device`)
+    return data
+}
+
+export const fetchOneDevice = async (id:number) => {
+    const {data} = await $host.get(`api/device/${id}`)
+    return data
 }

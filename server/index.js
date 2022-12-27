@@ -23,6 +23,8 @@ const start = async() => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+
+        // express API server start
         app.listen(PORT, () => {
             console.log(`Server started on ${PORT}`)
         })

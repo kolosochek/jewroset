@@ -24,7 +24,7 @@ const DeviceItem = ({device}:ItemProps) => {
                     />
                 </figure>
                 <div className="b-device-item-info-wrapper p-2">
-                    <p className="" >{device.brand.name}</p>
+                    <p className="" >{device.brandId}</p>
                     <p className="text-primary text-decoration-underline cursor-pointer card-text">{device.name}</p>
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="b-price-wrapper">

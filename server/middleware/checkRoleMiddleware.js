@@ -12,7 +12,7 @@ module.exports = function(role) {
                return next(APIError.userNotAuthorizedError(`User is NOT authorized!`))
            }
            const decoded = jwt.verify(token, process.env.SECRET)
-           if(decoded.role !== role){
+           if(decoded.role.toUpperCase() !== role.toUpperCase()){
                return next(APIError.badRequestError(`User with given role: ${role} is not permitted to make this action!`))
            }
            req.user = decoded

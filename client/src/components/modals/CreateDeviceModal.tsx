@@ -9,6 +9,10 @@ interface CreateDeviceModalProps {
 const CreateDeviceModal = ({show, onHide}:Partial<CreateDeviceModalProps>) => {
     const {device} = useContext(Context)
     const [deviceInfo, setDeviceInfo] = useState([] as any)
+    const [deviceName, setDeviceName] = useState('')
+    const [devicePrice, setDevicePrice] = useState(0)
+    const [deviceBrand, setDeviceBrand] = useState(null)
+    const [deviceCategory, setDeviceCategory] = useState(null)
     const addDeviceInfo = () => {
         setDeviceInfo([...deviceInfo, {
             title: ``,
@@ -35,12 +39,16 @@ const CreateDeviceModal = ({show, onHide}:Partial<CreateDeviceModalProps>) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Dropdown className="mt-2 mb-2">
+                    <Dropdown onChange={(e) => {
+                        console.log(e.target)
+                    }
+                    }
+                        className="mt-2 mb-2">
                         <Dropdown.Toggle>Choose category</Dropdown.Toggle>
                         <Dropdown.Menu>
                             {device.categories.map((category) => {
                                return (
-                                   <Dropdown.Item key={category.id}>{category.name}</Dropdown.Item>
+                                   <Dropdown.Item key={category?.id}>{category?.name}</Dropdown.Item>
                                )
                             })}
                         </Dropdown.Menu>
@@ -50,7 +58,7 @@ const CreateDeviceModal = ({show, onHide}:Partial<CreateDeviceModalProps>) => {
                         <Dropdown.Menu>
                             {device.brands.map((brand) => {
                                return (
-                                   <Dropdown.Item key={brand.id}>{brand.name}</Dropdown.Item>
+                                   <Dropdown.Item key={brand?.id}>{brand?.name}</Dropdown.Item>
                                )
                             })}
                         </Dropdown.Menu>

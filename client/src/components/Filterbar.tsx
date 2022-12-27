@@ -14,16 +14,16 @@ const Filterbar = observer(() => {
             {device.brands.map((brand) => {
                 return (
                     <div
-                        key={brand.id}
-                        className={brand.id == device.selectedBrand.id ? "bg-primary p-2 me-2 rounded" : "p-2 me-2"}
+                        key={brand?.id}
+                        className={brand?.id == device.selectedBrand.id ? "bg-primary p-2 me-2 rounded" : "p-2 me-2"}
                     >
                         <NavLink
-                            key={brand.id}
-                            to={`/brand/${brand.id}`}
+                            key={brand?.id}
+                            to={`/brand/${brand?.id}`}
                             onClick={() => {
-                                device.setSelectedBrand(brand)
+                                device.setSelectedBrand(brand!)
                             }}
-                            className={brand.id == device.selectedBrand.id ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
+                            className={brand?.id == device.selectedBrand.id ? "text-white text-decoration-none" : "text-decoration-none"}>{brand?.name}
                         </NavLink>
                     </div>
                 )
