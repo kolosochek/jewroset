@@ -1,19 +1,25 @@
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import {Button, Col, Dropdown, Form, FormControlProps, Modal, Row} from "react-bootstrap";
+import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
+import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {createCategory, createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
+import {createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
+import {DeviceI} from "../../store/DeviceStore";
 
-interface CreateDeviceModalProps {
+type ValueOf<T> = T[keyof T];
+type DeviceInfoT = Record<string, string | number | Date>
+
+interface CreateDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
 }
-const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProps>) => {
+
+const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide}: CreateDeviceModalProps) => {
     const {device} = useContext(Context)
-    const [info, setInfo] = useState([] as any)
+    const [info, setInfo] = useState([] as DeviceInfoT[])
     const [name, setName] = useState('')
     const [price, setPrice] = useState(0)
     const [file, setFile] = useState<File | null>(null)
+
     const addDeviceInfo = () => {
         setInfo([...info, {
             title: ``,
@@ -22,20 +28,30 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
         }])
     }
 
-    const addDevice = () => {
-        console.log(file)
-            createDevice({ name: name, price: price, img: file as any, rating: 0, categoryId:device.selectedCategory.id, brandId: device.selectedBrand.id }).then(data => {
-                //onHide()
-            })
-
-    }
-
-    const selectFile = (e:ChangeEvent) => {
+    const selectFile = (e: ChangeEvent) => {
         setFile((e.target! as HTMLInputElement).files![0])
     }
 
-    const removeDeviceInfo = (number:number) => {
-        setInfo(info.filter((info:Record<string, string|number>) => info.number !== number))
+    const removeDeviceInfo = (number: number) => {
+        setInfo(info.filter((info: DeviceInfoT) => info.number !== number))
+    }
+
+    const changeDeviceInfo = (key: keyof DeviceInfoT, value: ValueOf<DeviceInfoT>, number: Date) => {
+        setInfo(info.map(info => info.number === number ? {...info, [key]: value} : info))
+    }
+
+
+    const addDevice = () => {
+        const formData = new FormData()
+        formData.append(`name`, name)
+        formData.append('price', `${price}`)
+        formData.append('img', file!)
+        formData.append('brandid', `${device.selectedBrand.id}`)
+        formData.append('img', `${device.selectedCategory.id}`)
+        formData.append('info', JSON.stringify(info))
+        createDevice(formData as Partial<DeviceI>).then(data => {
+            onHide()
+        })
     }
 
     useEffect(() => {
@@ -58,16 +74,14 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Dropdown onChange={(e) => {
-                        console.log(e.target)
-                    }
-                    }
-                              className="mt-2 mb-2">
+                    <Dropdown
+                        className="mt-2 mb-2">
                         <Dropdown.Toggle>{device.selectedCategory.name ?? `Choose category`}</Dropdown.Toggle>
                         <Dropdown.Menu>
                             {device.categories.map((category) => {
                                 return (
-                                    <Dropdown.Item onClick={() => device.setSelectedCategory(category!)} key={category?.id}>{category?.name}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => device.setSelectedCategory(category!)}
+                                                   key={category?.id}>{category?.name}</Dropdown.Item>
                                 )
                             })}
                         </Dropdown.Menu>
@@ -77,7 +91,8 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
                         <Dropdown.Menu>
                             {device.brands.map((brand) => {
                                 return (
-                                    <Dropdown.Item onClick={() => device.setSelectedBrand(brand!)} key={brand?.id}>{brand?.name}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => device.setSelectedBrand(brand!)}
+                                                   key={brand?.id}>{brand?.name}</Dropdown.Item>
                                 )
                             })}
                         </Dropdown.Menu>
@@ -106,16 +121,20 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
                         className="mt-5 btn text-white"
                         onClick={addDeviceInfo}
                     >Add device info</Button>
-                    {info.map((value:Record<string, string>) => {
+                    {info.map((value: DeviceInfoT) => {
                         return (
-                            <Row className="mt-2" key={value.number}>
+                            <Row className="mt-2" key={value.number as Key}>
                                 <Col md={4}>
                                     <Form.Control
+                                        onChange={(e) => changeDeviceInfo('title', e.target.value, value.number as Date)}
+                                        value={value.title as string}
                                         placeholder="Add title"
                                     />
                                 </Col>
                                 <Col md={4}>
                                     <Form.Control
+                                        onChange={(e) => changeDeviceInfo('description', e.target.value, value.number as Date)}
+                                        value={value.description as string}
                                         placeholder="Add description"
                                     />
                                 </Col>
