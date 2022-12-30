@@ -30,10 +30,10 @@ export interface DeviceI {
     id: number,
     name: string,
     price: number,
-    rating?: number,
     img: string,
     categoryId: number,
     brandId: number,
+    rating?: number,
     createdAt?: string,
     updatedAt?: string,
 }

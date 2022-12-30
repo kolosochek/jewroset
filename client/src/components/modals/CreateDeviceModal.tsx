@@ -23,10 +23,11 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
     }
 
     const addDevice = () => {
-        //createDevice({ name: value }).then(data => {
-        //    setValue('' as any)
-        //    onHide()
-        //})
+        console.log(file)
+            createDevice({ name: name, price: price, img: file as any, rating: 0, categoryId:device.selectedCategory.id, brandId: device.selectedBrand.id }).then(data => {
+                //onHide()
+            })
+
     }
 
     const selectFile = (e:ChangeEvent) => {
@@ -98,6 +99,7 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
                         className="mt-3"
                         placeholder="Device image"
                         type="file"
+                        accept="image/png, image/gif, image/jpeg"
                         onChange={selectFile}
                     />
                     <Button
