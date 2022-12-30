@@ -17,12 +17,12 @@ const Auth = observer(() => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const click = async (e:any) => {
-        let responseUser;
         e.preventDefault()
+        let responseUser;
         if (isLoginView) {
-            responseUser = await userSignIn(email,password)
+            responseUser = await userSignIn({email, password})
         } else {
-            responseUser = await userSignUp(email,password)
+            responseUser = await userSignUp({email, password})
         }
         if(responseUser){
             user.setUser(responseUser)

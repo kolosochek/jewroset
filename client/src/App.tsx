@@ -6,14 +6,17 @@ import {Container, Spinner} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
 import {userCheck} from "./http/userAPI";
+import {UserI} from "./store/UserStore";
+
 
 const App = observer(() => {
     const {user} = useContext(Context)
     const [isLoading, setIsLoading] = useState(true)
 
+
     useEffect(() => {
         userCheck().then(data => {
-            user.setUser({})
+            user.setUser(data as unknown as UserI)
             user.setIsAuth(true)
         }).finally(() => setIsLoading(false))
     }, [])

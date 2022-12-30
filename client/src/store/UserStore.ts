@@ -2,8 +2,9 @@ import {makeAutoObservable} from "mobx";
 
 
 export interface UserI {
-    id?: number,
-    email?: string,
+    id: number,
+    email: string,
+    password?: string,
     role?: "USER" | "ADMIN",
     createdAt?: string,
     updatedAt?: string,
@@ -19,7 +20,7 @@ export default class UserStore {
     setIsAuth(isAuth:boolean) {
         this._isAuth = isAuth
     }
-    setUser(user:UserI) {
+    setUser(user:Partial<UserI>) {
         this._user = user
     }
 

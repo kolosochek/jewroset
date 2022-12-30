@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {Button, Col, Dropdown, Form, FormControlProps, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
+import {createCategory, createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 
 interface CreateDeviceModalProps {
@@ -20,6 +20,13 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
             description: ``,
             number: Date.now(),
         }])
+    }
+
+    const addDevice = () => {
+        //createDevice({ name: value }).then(data => {
+        //    setValue('' as any)
+        //    onHide()
+        //})
     }
 
     const selectFile = (e:ChangeEvent) => {
@@ -122,7 +129,7 @@ const CreateDeviceModal = observer(({show, onHide}:Partial<CreateDeviceModalProp
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button className="text-white btn-success btn-outline-success" onClick={onHide}>Add category</Button>
+                <Button className="text-white btn-success btn-outline-success" onClick={addDevice}>Add device</Button>
                 <Button className="text-white btn-danger btn-outline-danger" onClick={onHide}>Close</Button>
             </Modal.Footer>
         </Modal>

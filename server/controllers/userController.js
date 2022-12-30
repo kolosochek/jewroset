@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Basket} = require('../models/models')
+const { User, Basket } = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {
@@ -42,13 +42,18 @@ class UserController {
         if(!comparePassword) {
             return next(APIError.badRequestError(`Wrong password!`))
         }
+        const basket = await Basket.create({userid: user.id})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
 
     async isAuthorized(req, res, next){
-        const token = generateJwt((req.user.id, req.user.email, req.user.role))
-        return res.json({token})
+        if (req.user) {
+            const token = generateJwt(req.user.id, req.user.email, req.user.role)
+            return res.json({token})
+        } else {
+            next(APIError.userNotAuthorizedError(`User is not authorized`))
+        }
     }
 }
 

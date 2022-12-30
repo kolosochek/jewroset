@@ -6,6 +6,7 @@ import {Context} from "../index";
 import Filterbar from "../components/Filterbar";
 import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
+import {NavLink} from "react-router-dom";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
