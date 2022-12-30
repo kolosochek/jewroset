@@ -41,7 +41,7 @@ export interface DeviceI {
 export default class DeviceStore {
     constructor(
         private _categories: Partial<CategoryI[]> = [],
-        private _brands: Partial<BrandI[]> = [],
+        private _brands: BrandI[] = [],
         private _devices: DeviceI[] = [],
         private _selectedCategory: Partial<CategoryI> = {},
         private _selectedBrand: Partial<BrandI> = {},
@@ -78,7 +78,7 @@ export default class DeviceStore {
         return this._category
     }
 
-    get brands() {
+    get brands(): BrandI[] {
         return this._brands
     }
 

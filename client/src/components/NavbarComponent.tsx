@@ -24,21 +24,20 @@ const NavbarComponent = observer(() => {
     return (
         <Navbar bg="" variant="light">
             <Container>
+                <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
                 {user.isAuth ?
                     <>
-                        <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
                         <Nav className="ml-auto">
                             <Button className="bg-primary btn" onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
                         </Nav>
                     </>
                 :
-                <>
-                    <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
-                    <Nav className="ml-auto">
-                        <Button className="bg-primary btn btn-primary " onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
-                    </Nav>
-                </>
+                    <>
+                        <Nav className="ml-auto">
+                            <Button className="bg-primary btn btn-primary " onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
+                        </Nav>
+                    </>
             }
             </Container>
         </Navbar>

@@ -6,12 +6,10 @@ import Index from "./views/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
 
+export const defaultRoute: RouteI = { path: '/', View: Index }
 
 export const authorizedRoutes: RouteI[] = [
-    {
-        path: '/',
-        View: Index,
-    },
+    defaultRoute,
     {
         path: '/admin',
         View: Admin,
@@ -23,10 +21,7 @@ export const authorizedRoutes: RouteI[] = [
 ]
 
 export const unauthorizedRoutes: RouteI[] = [
-    {
-        path: '/',
-        View: Index,
-    },
+    defaultRoute,
     {
         path: '/catalog',
         View: Catalog,

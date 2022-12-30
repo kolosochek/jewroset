@@ -10,18 +10,9 @@ const Auth = observer(() => {
     const navigate = useNavigate()
     const {user} = useContext(Context)
     const location = useLocation();
-    let isLoginView: undefined | boolean = undefined;
-    switch (location.pathname as RouteI['path']) {
-        case ('/signin'): {
-            isLoginView = true;
-            break;
-        }
-        case ('/signup'): {
-            break;
-        }
-        default: {
-            break;
-        }
+    let isLoginView: boolean = false;
+    if (location.pathname as RouteI['path'] === '/signin' as RouteI['path']) {
+        isLoginView = true;
     }
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
