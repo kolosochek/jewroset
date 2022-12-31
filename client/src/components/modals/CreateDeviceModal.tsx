@@ -3,10 +3,9 @@ import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
 import {createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
-import {DeviceI} from "../../store/DeviceStore";
+import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 
 type ValueOf<T> = T[keyof T];
-type DeviceInfoT = Record<string, string | number | Date>
 
 interface CreateDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
@@ -46,8 +45,8 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
         formData.append(`name`, name)
         formData.append('price', `${price}`)
         formData.append('img', file!)
-        formData.append('brandid', `${device.selectedBrand.id}`)
-        formData.append('img', `${device.selectedCategory.id}`)
+        formData.append('brandId', JSON.stringify(device.selectedBrand))
+        formData.append('categoryId', JSON.stringify(device.selectedBrand))
         formData.append('info', JSON.stringify(info))
         createDevice(formData as Partial<DeviceI>).then(data => {
             onHide()

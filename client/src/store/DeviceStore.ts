@@ -26,6 +26,7 @@ export interface DeviceI_backup {
     updatedAt?: string,
 }
 
+export type DeviceInfoT = Record<string, string | number | Date>
 export interface DeviceI {
     id: number,
     name: string,
@@ -36,6 +37,7 @@ export interface DeviceI {
     rating?: number,
     createdAt?: string,
     updatedAt?: string,
+    info: DeviceInfoT[]
 }
 
 export default class DeviceStore {

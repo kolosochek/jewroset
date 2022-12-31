@@ -59,6 +59,27 @@ class DeviceController {
         });
         return res.json(device)
     }
+
+    async getByCategory(req, res){
+        const {id, categoryId = +id } = req.params
+        let device = await Device.findAndCountAll({
+            where: {
+                categoryid: {categoryId}
+            },
+            include: [{model: DeviceInfo, as: 'info'}]
+        });
+        return res.json(device)
+    }
+    async getByBrand(req, res){
+        const {id, brandId = +id } = req.params
+        let device = await Device.findAll({
+            where: {
+                id: {brandId}
+            },
+            include: [{model: DeviceInfo, as: 'info'}]
+        });
+        return res.json(device)
+    }
 }
 
 module.exports = new DeviceController()

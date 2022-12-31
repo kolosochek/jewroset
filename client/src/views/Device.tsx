@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import { SERVER_URL, SERVER_PORT } from "../utils/Const"
-import {Button, Card, Image} from "react-bootstrap";
+import React, {Key, useEffect, useState} from 'react';
+import {SERVER_URL, SERVER_PORT} from "../utils/Const"
+import {Button, Card, Image, Row, Container} from "react-bootstrap";
 import {fetchOneDevice} from "../http/deviceAPI";
 import {useParams} from "react-router-dom";
-import {DeviceI} from "../store/DeviceStore";
+import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
 
+interface DeviceViewProps extends React.PropsWithChildren {
+    children?: React.ReactNode
+}
 
-const Device = () => {
+const Device = (props: DeviceViewProps) => {
     const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
     const {id} = useParams()
 
@@ -25,7 +28,6 @@ const Device = () => {
                                 <Image src={`${SERVER_URL}:${SERVER_PORT}/${device?.img}`}/>
                             </div>
                         </div>
-
                     </div>
                     <div className="details col-md-6">
                         <h3 className="product-title">{device?.name}</h3>
@@ -39,6 +41,16 @@ const Device = () => {
                             </div>
                             <span className="review-no">41 reviews</span>
                         </div>
+                        <Container>
+                        {device.info!.map((info: DeviceInfoT , index) => {
+                                return (
+                                    <>
+                                        <Row key={info.id as Key} style={{ background: index % 2 === 0 ? 'lightgray' : 'transparent', padding: 10}}>{`${info.title}: ${info.description}`}</Row>
+                                    </>
+                                )
+                            }
+                        )}
+                        </Container>
                         <p className="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium
                             cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
                         <h4 className="price">current price: <span>${device?.price}</span></h4>
