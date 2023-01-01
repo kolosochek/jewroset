@@ -1,12 +1,11 @@
 const uuid = require('uuid')
 const path = require('path')
-const { Device, DeviceInfo } = require('../models/models')
+const { Device, DeviceInfo, Category} = require('../models/models')
 const APIError = require('../error/APIError')
 
 class DeviceController {
     async create(req, res, next){
         try {
-
             let {name, price, brandId, categoryId, info} = req.body
             const { img } = req.files
             let fileName = uuid.v4() + ".jpg"
@@ -32,6 +31,7 @@ class DeviceController {
 
     async getAll(req, res){
         let {brandId, categoryId, limit, page} = req.query;
+
         page = page || 1;
         limit = limit || 9;
         let offset = page * limit - limit
@@ -64,20 +64,29 @@ class DeviceController {
         const {id, categoryId = +id } = req.params
         let device = await Device.findAndCountAll({
             where: {
-                categoryid: {categoryId}
+                categoryId: categoryId
             },
-            include: [{model: DeviceInfo, as: 'info'}]
+            include: [{model: DeviceInfo, as: 'info'}, {model: Category, as: 'categories'}]
         });
         return res.json(device)
     }
     async getByBrand(req, res){
         const {id, brandId = +id } = req.params
-        let device = await Device.findAll({
+        let device = await Device.findAndCountAll({
             where: {
-                id: {brandId}
+                brandId: brandId
             },
             include: [{model: DeviceInfo, as: 'info'}]
         });
+        return res.json(device)
+    }
+
+    async getByCategoryBrand(req, res){
+        const {query} = req.params
+        const requestParams = query.split(':')
+        const categoryId = requestParams[0]
+        const brandId = requestParams[1]
+        let device = await Device.findAndCountAll({where:{categoryId, brandId}})
         return res.json(device)
     }
 }

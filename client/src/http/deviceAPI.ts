@@ -28,12 +28,17 @@ export const fetchDevices = async () => {
     const {data} = await $host.get(`api/device`)
     return data
 }
-export const fetchDevicesByCategory = async (id:number) => {
+export const fetchDevicesByCategory = async (id:CategoryI['id'] = 1) => {
     const {data} = await $host.get(`api/device/category/${id}`)
     return data
 }
-export const fetchDevicesByBrand = async (id:number) => {
+export const fetchDevicesByBrand = async (id:BrandI['id'] = 1) => {
     const {data} = await $host.get(`api/device/brand/${id}`)
+    return data
+}
+
+export const fetchDevicesByCategoryAndBrand = async (categoryId:CategoryI['id'] = 1, brandId: BrandI['id'] = 1) => {
+    const {data} = await $host.get(`api/device/categorybrand/${categoryId}:${brandId}`)
     return data
 }
 

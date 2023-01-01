@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import DeviceList from "../components/DeviceList";
 import DeviceStore from "../store/DeviceStore";
 import {Context} from "../index";
-import Filterbar from "../components/Filterbar";
+import Brandbar from "../components/Brandbar";
 import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
 import {NavLink} from "react-router-dom";
@@ -23,7 +23,7 @@ const Index = observer(() => {
                 <Sidebar />
             </aside>
             <section className="col-9 flex py-3">
-                <Filterbar />
+                <Brandbar />
                 <DeviceList categoryItems={device.devices} />
             </section>
         </section>

@@ -45,8 +45,8 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
         formData.append(`name`, name)
         formData.append('price', `${price}`)
         formData.append('img', file!)
-        formData.append('brandId', JSON.stringify(device.selectedBrand))
-        formData.append('categoryId', JSON.stringify(device.selectedBrand))
+        formData.append('brandId', `${device!.selectedBrand.id}`)
+        formData.append('categoryId', `${device!.selectedCategory.id}`)
         formData.append('info', JSON.stringify(info))
         createDevice(formData as Partial<DeviceI>).then(data => {
             onHide()

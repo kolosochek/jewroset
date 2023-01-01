@@ -23,6 +23,8 @@ const start = async() => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        //await sequelize.sync({ alter: true })
+        //await sequelize.drop()
 
         // express API server start
         app.listen(PORT, () => {
