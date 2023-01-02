@@ -32,6 +32,10 @@ class DeviceController {
     async getAll(req, res){
         let {brandId, categoryId, limit, page} = req.query;
 
+        //const {query} = req.params
+        //const requestParams = query.split(':')
+        //const [categoryId, brandId] = requestParams
+        //let device = await Device.findAndCountAll({where:{categoryId, brandId}})
         page = page || 1;
         limit = limit || 9;
         let offset = page * limit - limit
@@ -84,8 +88,7 @@ class DeviceController {
     async getByCategoryBrand(req, res){
         const {query} = req.params
         const requestParams = query.split(':')
-        const categoryId = requestParams[0]
-        const brandId = requestParams[1]
+        const [categoryId, brandId] = requestParams
         let device = await Device.findAndCountAll({where:{categoryId, brandId}})
         return res.json(device)
     }

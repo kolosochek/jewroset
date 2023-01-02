@@ -4,48 +4,42 @@ import {Context} from "../index";
 import {ListGroup} from "react-bootstrap";
 import {NavLink} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
+import {CategoryI} from "../store/DeviceStore";
 
 
 const Sidebar = observer(() => {
     const {device} = useContext(Context)
-    let {id} = device.selectedCategory
+    const {id} = device.selectedCategory
+    const categories = device.categories.flat()
+    categories.unshift({id:0, name: `All`})
 
+    const isCategoryI = (category:CategoryI): category is CategoryI => {
+        return true
+    }
 
     return (
-            <div className="flex-shrink-0 py-3 pe-3 bg-white" >
-                <ListGroup className="list-unstyled ps-0">
-                    <ListGroup className="">
-                        <ListGroup.Item
-                            key={0}
-                            active={id === 0}
-                            className=""
-                        >
-                            <NavLink
-                                key={0}
-                                to={`/catalog` as RouteI['path']}
-                                onClick={() => id = 0}
-                                className={`d-block text-decoration-none ${id === 0 ? 'text-white d-block text-decoration-none' : ''}`}>All
-                            </NavLink>
-                        </ListGroup.Item>
-                        {device.categories.map((category:any) => {
-                            return (
-                                <ListGroup.Item
+        <div className="flex-shrink-0 py-3 pe-3 bg-white">
+            <ListGroup className="list-unstyled ps-0">
+                {categories.map((category:FlatArray<[CategoryI] | undefined, 1>) => {
+                    if (isCategoryI(category!)) {
+                        return (
+                            <ListGroup.Item
+                                key={category.id}
+                                active={!device.selectedCategory.id ? category.id == 0 : category.id == id}
+                                className=""
+                            >
+                                <NavLink
                                     key={category.id}
-                                    active={category.id == id}
-                                    className=""
-                                >
-                                    <NavLink
-                                        key={category.id}
-                                        to={`/catalog` as RouteI['path']}
-                                        onClick={() => device.setSelectedCategory(category)}
-                                        className={`d-block text-decoration-none ${category.id == id ? 'text-white d-block text-decoration-none' : ''}`}>{category.name}
-                                    </NavLink>
-                                </ListGroup.Item>
-                            )
-                        })}
-                    </ListGroup>
-                </ListGroup>
-            </div>
+                                    to={`/catalog` as RouteI['path']}
+                                    onClick={() => device.setSelectedCategory(category)}
+                                    className={`d-block text-decoration-none ${(!device.selectedCategory.id ? category.id == 0 : category.id == id) ? 'text-white d-block text-decoration-none' : ''}`}>{category.name}
+                                </NavLink>
+                            </ListGroup.Item>
+                        )
+                    }
+                    })}
+            </ListGroup>
+        </div>
     )
 })
 

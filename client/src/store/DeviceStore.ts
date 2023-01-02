@@ -14,17 +14,7 @@ export interface CategoryI {
     updatedAt?: string,
 }
 
-export interface DeviceI_backup {
-    id: number,
-    name: string,
-    price: number,
-    rating?: number,
-    img: string,
-    category: CategoryI | CategoryI[],
-    brand: BrandI,
-    createdAt?: string,
-    updatedAt?: string,
-}
+
 
 export type DeviceInfoT = Record<string, string | number | Date>
 export interface DeviceI {

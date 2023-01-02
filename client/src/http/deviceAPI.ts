@@ -24,7 +24,7 @@ export const createDevice = async (device:Partial<DeviceI>) => {
     const {data} = await $authHost.post(`api/device`, device)
     return data
 }
-export const fetchDevices = async () => {
+export const fetchAllDevices = async () => {
     const {data} = await $host.get(`api/device`)
     return data
 }

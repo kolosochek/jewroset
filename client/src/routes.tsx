@@ -5,8 +5,6 @@ import Basket from "./views/Basket";
 import Index from "./views/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
-import DeviceByBrand from "./views/DeviceByBrand";
-import DeviceByCategory from "./views/DeviceByCategory";
 
 export const defaultRoute: RouteI = { path: '/', View: Index }
 
@@ -36,11 +34,5 @@ export const unauthorizedRoutes: RouteI[] = [
     },
     {
         path: '/device/:id', View: Device,
-    },
-    {
-        path: '/brand/:id', View: DeviceByBrand,
-    },
-    {
-        path: '/category/:id', View: DeviceByCategory,
     }
 ]

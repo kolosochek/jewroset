@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
 import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
+import {createDevice, fetchBrands, fetchCategories} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 
