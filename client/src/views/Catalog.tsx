@@ -6,7 +6,7 @@ import {
     fetchAllDevices,
     fetchDevicesByBrand,
     fetchDevicesByCategory,
-    fetchDevicesByCategoryAndBrand
+    fetchDevicesByCategoryAndBrand, fetchDevices
 } from "../http/deviceAPI";
 import Sidebar from "../components/Sidebar";
 import Brandbar from "../components/Brandbar";
@@ -17,31 +17,38 @@ const Catalog = observer(() => {
     const {device} = useContext(Context)
     const categoryId = device.selectedCategory.id
     const brandId = device.selectedBrand.id
+    const filterByType = device.selectedFilter.type
+    const filterByDirection = device.selectedFilter.direction
+    const page = device.selectedPage
 
 
     useEffect(() => {
         fetchCategories().then(data => device.setCategories(data))
         fetchBrands().then(data => device.setBrands(data))
+        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
+        /*
         // no category no brand no filter
-        if (!categoryId && !brandId){
+        if (!categoryId && !brandId && !filterBy){
             fetchAllDevices().then(data => device.setDevices(data.rows))
         }
-        // by category
-        if (categoryId && !brandId){
-            fetchDevicesByCategory(+categoryId!).then(data => device.setDevices(data.rows))
+        // by category no brand no filter
+        if (categoryId && !brandId && !filterBy){
+            fetchDevices(categoryId).then(data => device.setDevices(data.rows))
+            //fetchDevicesByCategory(+categoryId!).then(data => device.setDevices(data.rows))
         }
-        // by brand
-        if (!categoryId && brandId){
+        // by brand no category no filter
+        if (!categoryId && brandId && !filterBy){
             fetchDevicesByBrand(+brandId!).then(data => device.setDevices(data.rows))
         }
-        // by brand and by category
-        if (categoryId && brandId){
+        // by brand by category no filter
+        if (categoryId && brandId && !filterBy){
             // debug
             console.log()
             //
             fetchDevicesByCategoryAndBrand(+categoryId, +brandId).then(data => device.setDevices(data.rows))
         }
-    }, [categoryId, brandId])
+        */
+    }, [categoryId, brandId, filterByType])
 
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">

@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import {NavLink} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
-import {ListGroup} from "react-bootstrap";
+import {ListGroup, Card} from "react-bootstrap";
 import {BrandI} from "../store/DeviceStore";
 import Filterbar from "./Filterbar";
 
@@ -28,12 +28,11 @@ const Brandbar = observer(() => {
                             className={`p-2 me-2 border-0 rounded ${brand.id == id ? `bg-primary` : ''}`}
                             active={!device.selectedBrand.id ? brand.id == 0 : brand.id == id}
                         >
-                            <NavLink
+                            <div
                                 key={brand.id}
-                                to={`/catalog` as RouteI['path']}
                                 onClick={() => device.setSelectedBrand(brand!)}
                                 className={(!device.selectedBrand.id ? brand.id == 0 : brand.id == id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
-                            </NavLink>
+                            </div>
                         </ListGroup.Item>
                     )
                 }

@@ -1,16 +1,17 @@
 const uuid = require('uuid')
 const path = require('path')
-const { Device, DeviceInfo, Category} = require('../models/models')
+const {Device, DeviceInfo, Category, Brand} = require('../models/models')
 const APIError = require('../error/APIError')
+const sequelize = require('sequelize')
 
 class DeviceController {
-    async create(req, res, next){
+    async create(req, res, next) {
         try {
-            let {name, price, brandId, categoryId, info} = req.body
-            const { img } = req.files
+            let {name, price, rating, brandId, categoryId, info} = req.body
+            const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const device = await Device.create({name, price, brandId, categoryId, img: fileName});
+            const device = await Device.create({name, price, rating, brandId, categoryId, img: fileName});
 
             if (info) {
                 info = JSON.parse(info)
@@ -29,67 +30,47 @@ class DeviceController {
         }
     }
 
-    async getAll(req, res){
-        let {brandId, categoryId, limit, page} = req.query;
-
-        //const {query} = req.params
-        //const requestParams = query.split(':')
-        //const [categoryId, brandId] = requestParams
-        //let device = await Device.findAndCountAll({where:{categoryId, brandId}})
-        page = page || 1;
-        limit = limit || 9;
+    async getAll(req, res) {
+        let {brandId, categoryId, filterByType, filterByDirection, limit, page} = req.query;
+        brandId = brandId === `0` ? undefined : brandId
+        categoryId = categoryId === `0` ? undefined : categoryId
+        page = page || 1
+        limit = limit || 9
         let offset = page * limit - limit
         let devices;
-        if(!brandId && !categoryId){
-            devices = await Device.findAndCountAll({limit, offset})
+        const options = {
+            where: {},
+            include: [
+                {model: Category, attributes: ['id', 'name']},
+                {model: Brand, attributes: ['id', 'name']}
+            ],
+            attributes: [
+              'id', 'name', 'price', 'rating', 'img'
+            ],
+            limit, offset}
+
+        if (!categoryId && brandId) {
+            options.where = {brandId}
         }
-        if(brandId && !categoryId){
-            devices = await Device.findAndCountAll({where:{brandId}, limit, offset})
+        if (categoryId && !brandId) {
+            options.where = {categoryId}
         }
-        if(!brandId && categoryId){
-            devices = await Device.findAndCountAll({where:{categoryId}, limit, offset})
+        if (categoryId && brandId) {
+            options.where = {categoryId, brandId}
         }
-        if(brandId && categoryId){
-            devices = await Device.findAndCountAll({where:{categoryId, brandId}, limit, offset})
+        if (filterByType) {
+            options.order = [[filterByType, filterByDirection]]
         }
+        devices = await Device.findAndCountAll(options)
         return res.json(devices)
     }
 
-    async getById(req, res){
+    async getById(req, res) {
         const {id} = req.params
         let device = await Device.findOne({
             where: {id},
             include: [{model: DeviceInfo, as: 'info'}]
         });
-        return res.json(device)
-    }
-
-    async getByCategory(req, res){
-        const {id, categoryId = +id } = req.params
-        let device = await Device.findAndCountAll({
-            where: {
-                categoryId: categoryId
-            },
-            include: [{model: DeviceInfo, as: 'info'}, {model: Category, as: 'categories'}]
-        });
-        return res.json(device)
-    }
-    async getByBrand(req, res){
-        const {id, brandId = +id } = req.params
-        let device = await Device.findAndCountAll({
-            where: {
-                brandId: brandId
-            },
-            include: [{model: DeviceInfo, as: 'info'}]
-        });
-        return res.json(device)
-    }
-
-    async getByCategoryBrand(req, res){
-        const {query} = req.params
-        const requestParams = query.split(':')
-        const [categoryId, brandId] = requestParams
-        let device = await Device.findAndCountAll({where:{categoryId, brandId}})
         return res.json(device)
     }
 }

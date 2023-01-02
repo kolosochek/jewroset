@@ -17,6 +17,7 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
     const [info, setInfo] = useState([] as DeviceInfoT[])
     const [name, setName] = useState('')
     const [price, setPrice] = useState(0)
+    const [rating, setRating] = useState(0)
     const [file, setFile] = useState<File | null>(null)
 
     const addDeviceInfo = () => {
@@ -44,6 +45,7 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
         const formData = new FormData()
         formData.append(`name`, name)
         formData.append('price', `${price}`)
+        formData.append('rating', `${rating}`)
         formData.append('img', file!)
         formData.append('brandId', `${device!.selectedBrand.id}`)
         formData.append('categoryId', `${device!.selectedCategory.id}`)
@@ -102,6 +104,7 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
                         className="mt-3"
                         placeholder="Device name"
                     />
+                    <Form.Label>Price</Form.Label>
                     <Form.Control
                         onChange={e => setPrice(+e.target!.value)}
                         value={price}
@@ -109,11 +112,19 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
                         placeholder="Enter device price"
                         type="number"
                     />
+                    <Form.Label >Rating</Form.Label>
+                    <Form.Control
+                        onChange={e => setRating(+e.target!.value)}
+                        value={rating}
+                        className="mt-3"
+                        placeholder="Enter device rating"
+                        type="number"
+                    />
                     <Form.Control
                         className="mt-3"
                         placeholder="Device image"
                         type="file"
-                        accept="image/png, image/gif, image/jpeg"
+                        accept="image/png, image/gif, image/jpeg, image/webp"
                         onChange={selectFile}
                     />
                     <Button

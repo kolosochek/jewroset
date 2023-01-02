@@ -7,6 +7,10 @@ export interface BrandI {
     updatedAt?: string,
 }
 
+export interface PaginatorI {
+    page: number,
+    offset: number
+}
 export interface CategoryI {
     id: number,
     name: string,
@@ -14,7 +18,10 @@ export interface CategoryI {
     updatedAt?: string,
 }
 
-
+export interface FilterI {
+    type: 'price' | `rating` | `none`,
+    direction: `asc` | `desc` | `none`
+}
 
 export type DeviceInfoT = Record<string, string | number | Date>
 export interface DeviceI {
@@ -22,8 +29,10 @@ export interface DeviceI {
     name: string,
     price: number,
     img: string,
-    categoryId: number,
-    brandId: number,
+    brand?: BrandI,
+    category?: CategoryI,
+    categoryId?: number,
+    brandId?: number,
     rating?: number,
     createdAt?: string,
     updatedAt?: string,
@@ -38,6 +47,8 @@ export default class DeviceStore {
         private _selectedCategory: Partial<CategoryI> = {},
         private _selectedBrand: Partial<BrandI> = {},
         private _category: Partial<CategoryI> = {},
+        private _selectedFilter: Partial<FilterI> = {},
+        private _selectedPage: PaginatorI['page'] = 1
     ) {
         makeAutoObservable(this)
     }
@@ -48,6 +59,14 @@ export default class DeviceStore {
 
     setSelectedBrand(brand: BrandI) {
         this._selectedBrand = brand
+    }
+
+    setSelectedFilter(filter: FilterI) {
+        this._selectedFilter = filter
+    }
+
+    setPage(page: PaginatorI['page']) {
+        this._selectedPage = page
     }
 
     setCategories(categories: CategoryI[]) {
@@ -82,7 +101,15 @@ export default class DeviceStore {
         return this._selectedCategory
     }
 
+    get selectedPage(): Partial<PaginatorI['page']> {
+        return this._selectedPage
+    }
+
     get selectedBrand(): Partial<BrandI> {
         return this._selectedBrand
+    }
+
+    get selectedFilter(): Partial<FilterI> {
+        return this._selectedFilter
     }
 }

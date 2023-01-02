@@ -4,16 +4,21 @@ import DeviceList from "../components/DeviceList";
 import {Context} from "../index";
 import Brandbar from "../components/Brandbar";
 import {observer} from "mobx-react-lite";
-import {fetchCategories, fetchBrands, fetchAllDevices} from "../http/deviceAPI";
+import {fetchCategories, fetchBrands, fetchAllDevices, fetchDevices} from "../http/deviceAPI";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
+    const categoryId = device.selectedCategory.id
+    const brandId = device.selectedBrand.id
+    const filterByType = device.selectedFilter.type
+    const filterByDirection = device.selectedFilter.direction
+    const page = device.selectedPage
 
     useEffect(() => {
         fetchCategories().then(data => device.setCategories(data))
         fetchBrands().then(data => device.setBrands(data))
-        fetchAllDevices().then(data => device.setDevices(data.rows))
-    }, [])
+        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
+    }, [categoryId, brandId, filterByType, filterByDirection])
 
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">

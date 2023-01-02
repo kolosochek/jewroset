@@ -28,12 +28,11 @@ const Sidebar = observer(() => {
                                 active={!device.selectedCategory.id ? category.id == 0 : category.id == id}
                                 className=""
                             >
-                                <NavLink
+                                <div
                                     key={category.id}
-                                    to={`/catalog` as RouteI['path']}
                                     onClick={() => device.setSelectedCategory(category)}
                                     className={`d-block text-decoration-none ${(!device.selectedCategory.id ? category.id == 0 : category.id == id) ? 'text-white d-block text-decoration-none' : ''}`}>{category.name}
-                                </NavLink>
+                                </div>
                             </ListGroup.Item>
                         )
                     }
