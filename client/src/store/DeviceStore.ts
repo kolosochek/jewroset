@@ -11,6 +11,7 @@ export interface PaginatorI {
     page: number,
     offset: number
 }
+
 export interface CategoryI {
     id: number,
     name: string,
@@ -24,6 +25,7 @@ export interface FilterI {
 }
 
 export type DeviceInfoT = Record<string, string | number | Date>
+
 export interface DeviceI {
     id: number,
     name: string,

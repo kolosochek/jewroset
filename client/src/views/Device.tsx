@@ -9,7 +9,7 @@ interface DeviceViewProps extends React.PropsWithChildren {
     children?: React.ReactNode
 }
 
-const Device = (props: DeviceViewProps) => {
+const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
     const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
     const {id} = useParams()
 
@@ -42,22 +42,28 @@ const Device = (props: DeviceViewProps) => {
                             <span className="review-no">41 reviews</span>
                         </div>
                         <Container>
-                        {device.info!.map((info: DeviceInfoT , index) => {
-                                return (
-                                    <>
-                                        <Row key={info.id as Key} style={{ background: index % 2 === 0 ? 'lightgray' : 'transparent', padding: 10}}>{`${info.title}: ${info.description}`}</Row>
-                                    </>
-                                )
-                            }
-                        )}
+                            <p className="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu
+                                laudantium
+                                cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus
+                                posuere.</p>
+                            <h4 className="price">current price: <span>${device?.price}</span></h4>
+                            <h4 className="price">rating: <span>{device?.rating}</span></h4>
                         </Container>
-                        <p className="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium
-                            cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
-                        <h4 className="price">current price: <span>${device?.price}</span></h4>
-                        <div className="b-device-action">
+                        <Container>
+                            {device.info!.map((info: DeviceInfoT, index) => {
+                                    return (
+                                        <Row key={info.id as Key} style={{
+                                            background: index % 2 === 0 ? 'lightgray' : 'transparent',
+                                            padding: 10
+                                        }}>{`${info.title}: ${info.description}`}</Row>
+                                    )
+                                }
+                            )}
+                        </Container>
+                        <Container className="b-device-action py-3">
                             <Button className="add-to-cart btn btn-default" type="button">add to cart</Button>
                             <Button className="add-to-cart btn btn-default" type="button">buy now</Button>
-                        </div>
+                        </Container>
                     </div>
                 </div>
             </div>

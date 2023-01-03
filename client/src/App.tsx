@@ -21,14 +21,14 @@ const App = observer(() => {
         }).finally(() => setIsLoading(false))
     }, [])
 
-    if (isLoading){
-        return <Spinner animation={"grow"} />
+    if (isLoading) {
+        return <Spinner animation={"grow"}/>
     }
     return (
         <BrowserRouter>
-            <NavbarComponent />
-            <Container className="min-vh-100">
-                <AppRouter />
+            <NavbarComponent/>
+            <Container>
+                <AppRouter/>
             </Container>
         </BrowserRouter>
     );

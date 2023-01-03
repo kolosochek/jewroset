@@ -53,11 +53,11 @@ const Catalog = observer(() => {
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">
             <aside className="col-3 flex-inline">
-                <Sidebar />
+                <Sidebar/>
             </aside>
             <section className="col-9 flex py-3">
-                <Brandbar />
-                <DeviceList categoryItems={device.devices} />
+                <Brandbar/>
+                <DeviceList categoryItems={device.devices}/>
             </section>
         </section>
     )

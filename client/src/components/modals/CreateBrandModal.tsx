@@ -7,10 +7,11 @@ interface CreateBrandModalProps {
     show: boolean,
     onHide: any,
 }
-const CreateBrandModal = ({show, onHide}:Partial<CreateBrandModalProps>) => {
+
+const CreateBrandModal = ({show, onHide}: Partial<CreateBrandModalProps>) => {
     const [value, setValue] = useState()
     const addBrand = () => {
-        createBrand({ name: value}).then(data => {
+        createBrand({name: value}).then(data => {
             setValue('' as SetStateAction<any>)
             onHide()
         })

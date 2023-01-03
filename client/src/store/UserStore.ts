@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-
+import {v4 as uuidv4} from 'uuid';
 
 export interface UserI {
     id: number,
@@ -12,15 +12,16 @@ export interface UserI {
 
 export default class UserStore {
     constructor(
-        private _isAuth:boolean = false,
-        private _user:Partial<UserI> = {}) {
+        private _isAuth: boolean = false,
+        private _user: Partial<UserI> = {email: uuidv4(), role: 'USER'}) {
         makeAutoObservable(this)
     }
 
-    setIsAuth(isAuth:boolean) {
+    setIsAuth(isAuth: boolean) {
         this._isAuth = isAuth
     }
-    setUser(user:Partial<UserI>) {
+
+    setUser(user: Partial<UserI>) {
         this._user = user
     }
 

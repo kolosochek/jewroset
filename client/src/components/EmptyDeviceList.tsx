@@ -2,17 +2,13 @@ import React from 'react';
 import {RouteI} from "../utils/Routes";
 import {useNavigate} from "react-router-dom";
 import {Container} from "react-bootstrap";
+import {NavLink} from "react-router-dom";
 
 const EmptyDeviceList = () => {
-    const navigator = useNavigate()
 
     return (
-        <Container className="d-flex">
-            <h3 className="container">No items. <a
-                className=""
-                onClick={() => navigator('/' as RouteI['path'])}
-            >Go back?</a>
-            </h3>
+        <Container className="d-flex my-5">
+            <NavLink className="container" to={`/` as RouteI['path']}>{`No items. Go back?`}</NavLink>
         </Container>
     )
 }

@@ -13,16 +13,16 @@ export const Context = createContext({
 
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-      <Context.Provider value={{
-          user: new UserStore(),
-          basket: new BasketStore(),
-          device: new DeviceStore(),
-      }}>
-          <App />
-      </Context.Provider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Context.Provider value={{
+            user: new UserStore(),
+            basket: new BasketStore(),
+            device: new DeviceStore(),
+        }}>
+            <App/>
+        </Context.Provider>
+    </React.StrictMode>
 );

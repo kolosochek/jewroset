@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Basket} = require('../models/models')
+const {User, Basket} = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {
@@ -12,21 +12,11 @@ const generateJwt = (id, email, role) => {
     )
 }
 class BasketController {
-    async getUserBasket(req, res, next) {
-        const {email, password, role} = req.body
-        if (!email || !password) {
-            return next(APIError.badRequestError(`No error or password was given!`))
-        }
-        const candidate = await User.findOne({where: {email}})
+    async getUserBasket(req, res) {
+        let {userId} = req.query;
+        const basket = await Basket.findOrCreate({where: {userId}})
 
-        if (candidate) {
-            return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
-        }
-        const passwordHash = await bcrypt.hash(password, 5)
-        const user = await User.create({email: email, password:passwordHash, role: role})
-        const basket = await Basket.create({userid: user.id})
-        const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
+        return res.json(basket)
     }
 
     async setUserBasket(req, res, next){

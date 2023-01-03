@@ -13,7 +13,7 @@ const Basket = sequelize.define('basket', {
 })
 
 const BasketDevice = sequelize.define('basket_device', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    quantity: {type: DataTypes.INTEGER, defaultValue: 1}
 })
 
 const Device = sequelize.define('device', {
@@ -56,13 +56,13 @@ User.hasMany(Rating)
 Rating.belongsTo(User)
 
 Basket.hasMany(BasketDevice)
-BasketDevice.belongsTo(Basket)
+//BasketDevice.belongsTo(Basket)
+
+Device.hasMany(BasketDevice)
+//BasketDevice.belongsTo(Device)
 
 Device.hasMany(Rating)
 Rating.belongsTo(Device)
-
-Device.hasMany(BasketDevice)
-BasketDevice.belongsTo(Device)
 
 Device.hasMany(DeviceInfo, {as: 'info'})
 DeviceInfo.belongsTo(Device)
@@ -75,6 +75,9 @@ Device.belongsTo(Brand)
 
 Category.belongsToMany(Brand, {through: CategoryBrand})
 Brand.belongsToMany(Category, {through: CategoryBrand})
+
+Basket.belongsToMany(Device, {through: BasketDevice, onDelete: 'CASCADE'})
+Device.belongsToMany(Basket, {through: BasketDevice, onDelete: 'CASCADE'})
 
 module.exports = {
     User,

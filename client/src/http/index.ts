@@ -9,7 +9,7 @@ const $authHost = axios.create({
     baseURL: `${SERVER_URL}:${SERVER_PORT}/`
 })
 
-const authInterceptor = (config:Record<string, any>) => {
+const authInterceptor = (config: Record<string, any>) => {
     config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
     return config
 }

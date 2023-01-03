@@ -112,7 +112,7 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
                         placeholder="Enter device price"
                         type="number"
                     />
-                    <Form.Label >Rating</Form.Label>
+                    <Form.Label>Rating</Form.Label>
                     <Form.Control
                         onChange={e => setRating(+e.target!.value)}
                         value={rating}

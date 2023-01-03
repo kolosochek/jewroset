@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -6,13 +6,20 @@ import Navbar from 'react-bootstrap/Navbar';
 import {NavLink, useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import {Button} from "react-bootstrap";
-
 import {observer} from "mobx-react-lite";
+import BasketNavbarSmall from "./BasketNavbarSmall";
+import {findOrCreateBasket} from "../http/basketAPI";
 
 
 const NavbarComponent = observer(() => {
     const {user} = useContext(Context)
+    const {basket} = useContext(Context)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        findOrCreateBasket(user.user.email!).then(data => basket.setBasket(data))
+    }, [])
+
 
     const _logout = () => {
         user.setUser({})
@@ -28,17 +35,21 @@ const NavbarComponent = observer(() => {
                 {user.isAuth ?
                     <>
                         <Nav className="ml-auto">
-                            <Button className="bg-primary btn" onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>
+                            <Button className="bg-primary btn"
+                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
+                            <BasketNavbarSmall basket={basket.basket}/>
                         </Nav>
                     </>
-                :
+                    :
                     <>
                         <Nav className="ml-auto">
-                            <Button className="bg-primary btn btn-primary " onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
+                            <Button className="bg-primary btn btn-primary "
+                                    onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
+                            <BasketNavbarSmall basket={basket.basket}/>
                         </Nav>
                     </>
-            }
+                }
             </Container>
         </Navbar>
     );

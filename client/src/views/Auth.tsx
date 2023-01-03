@@ -16,7 +16,7 @@ const Auth = observer(() => {
     }
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const click = async (e:any) => {
+    const click = async (e: any) => {
         e.preventDefault()
         let responseUser;
         if (isLoginView) {
@@ -24,7 +24,7 @@ const Auth = observer(() => {
         } else {
             responseUser = await userSignUp({email, password})
         }
-        if(responseUser){
+        if (responseUser) {
             user.setUser(responseUser)
             user.setIsAuth(true)
             navigate('/' as RouteI['path'])
@@ -103,7 +103,8 @@ const Auth = observer(() => {
                             type="submit"
                             className="me-2 btn btn-primary"
                         >{isLoginView ? 'Log In' : 'Sign Up'}</Button>
-                        <NavLink to={isLoginView ? "/signup" : "/signin"} className="btn-lg-. btn-primary">{isLoginView ? 'Sign Up' : 'Log In'}</NavLink>
+                        <NavLink to={isLoginView ? "/signup" : "/signin"}
+                                 className="btn-lg-. btn-primary">{isLoginView ? 'Sign Up' : 'Log In'}</NavLink>
                     </div>
                 </Form>
             </Card>

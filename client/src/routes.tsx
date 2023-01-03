@@ -6,7 +6,7 @@ import Index from "./views/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
 
-export const defaultRoute: RouteI = { path: '/', View: Index }
+export const defaultRoute: RouteI = {path: '/', View: Index}
 
 export const authorizedRoutes: RouteI[] = [
     defaultRoute,
@@ -34,5 +34,8 @@ export const unauthorizedRoutes: RouteI[] = [
     },
     {
         path: '/device/:id', View: Device,
+    },
+    {
+        path: '/basket', View: Basket,
     }
 ]
