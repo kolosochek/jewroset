@@ -10,14 +10,16 @@ import {UserI} from "./store/UserStore";
 
 
 const App = observer(() => {
-    const {user} = useContext(Context)
-    const [isLoading, setIsLoading] = useState(true)
+    const {user} = useContext(Context);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
         userCheck().then(data => {
             user.setUser(data as unknown as UserI)
-            user.setIsAuth(true)
+            if (user.user.role !== 'GUEST'){
+                user.setIsAuth(true)
+            }
         }).finally(() => setIsLoading(false))
     }, [])
 

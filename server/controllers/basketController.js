@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {User, Basket} = require('../models/models')
+const {User, Basket, Device} = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {
@@ -13,8 +13,8 @@ const generateJwt = (id, email, role) => {
 }
 class BasketController {
     async getUserBasket(req, res) {
-        let {userId} = req.query;
-        const basket = await Basket.findOrCreate({where: {userId}})
+        let {email} = req.query;
+        const basket = await Basket.findOrCreate({where: {email}})
 
         return res.json(basket)
     }

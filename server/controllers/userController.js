@@ -24,7 +24,8 @@ class UserController {
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
-        const basket = await Basket.create({userid: user.id})
+        const userId = user.id
+        const basket = await Basket.findOrCreate({where: {userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
@@ -42,13 +43,36 @@ class UserController {
         if(!comparePassword) {
             return next(APIError.badRequestError(`Wrong password!`))
         }
-        const basket = await Basket.create({userid: user.id})
+        const userId = user.id
+        const basket = await Basket.findOrCreate({where: {userId}})
+        const token = generateJwt(user.id, user.email, user.role)
+        return res.json({token})
+    }
+
+    async findOrCreateGuest(req, res, next) {
+        const {email, password, role} = req.body
+        if (!email || !password) {
+            return next(APIError.badRequestError(`No error or password was given!`))
+        }
+        const candidate = await User.findOne({where: {email}})
+
+        if (candidate) {
+            return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
+        }
+        const passwordHash = await bcrypt.hash(password, 5)
+        let user = await User.findOrCreate({where: {email: email, password:passwordHash, role: role}})
+        user = user[0].dataValues
+        // debug
+        console.log(`user.email`)
+        console.log(user.email)
+        //
+        const userId = user.id
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
 
     async isAuthorized(req, res, next){
-        if (req.user) {
+        if (req.user && req.user.role !== 'GUEST') {
             const token = generateJwt(req.user.id, req.user.email, req.user.role)
             return res.json({token})
         } else {

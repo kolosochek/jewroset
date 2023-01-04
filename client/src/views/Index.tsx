@@ -4,7 +4,7 @@ import DeviceList from "../components/DeviceList";
 import {Context} from "../index";
 import Brandbar from "../components/Brandbar";
 import {observer} from "mobx-react-lite";
-import {fetchCategories, fetchBrands, fetchAllDevices, fetchDevices} from "../http/deviceAPI";
+import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
 
 const Index = observer(() => {
     const {device} = useContext(Context)

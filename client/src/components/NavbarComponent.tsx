@@ -17,7 +17,7 @@ const NavbarComponent = observer(() => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        findOrCreateBasket(user.user.email!).then(data => basket.setBasket(data))
+        //findOrCreateBasket(user.user.email!).then(data => basket.setBasket(data))
     }, [])
 
 
@@ -35,8 +35,8 @@ const NavbarComponent = observer(() => {
                 {user.isAuth ?
                     <>
                         <Nav className="ml-auto">
-                            <Button className="bg-primary btn"
-                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>
+                            {user.user.role === 'ADMIN' && <Button className="bg-primary btn"
+                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
                             <BasketNavbarSmall basket={basket.basket}/>
                         </Nav>
