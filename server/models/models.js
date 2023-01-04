@@ -49,14 +49,16 @@ const CategoryBrand = sequelize.define('category_brand', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-User.hasOne(Basket, {foreignKey: 'email'})
+User.hasOne(Basket)
 Basket.belongsTo(User)
 
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
-Basket.hasMany(Device)
-Device.belongsTo(Basket)
+Basket.hasMany(BasketDevice)
+BasketDevice.belongsTo(Basket)
+Device.hasMany(BasketDevice)
+BasketDevice.belongsTo(Device)
 
 //Device.hasMany(BasketDevice)
 //BasketDevice.belongsTo(Device)

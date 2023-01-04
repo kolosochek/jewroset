@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button, Card, Image, Row} from "react-bootstrap";
 import {SERVER_URL, SERVER_PORT} from "../utils/Const"
 import {DeviceI} from "../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";
 import starImg from "../assets/star.png"
+import {addToBasket} from "../http/basketAPI";
+import {Context} from "../index";
+import {BasketI} from "../store/BasketStore";
 
 interface ItemProps {
     device: DeviceI,
@@ -11,8 +14,11 @@ interface ItemProps {
 }
 
 const DeviceItem = ({device}: ItemProps) => {
+    const {basket} = useContext(Context)
     const navigate = useNavigate()
-
+    const addToCart = async (deviceId:DeviceI['id'], quantity = 1) => {
+        return await addToBasket(basket.basket.id!, deviceId!, quantity)
+    }
 
     return (
         <Card className="b-device-item-wrapper col border-0">
@@ -41,7 +47,7 @@ const DeviceItem = ({device}: ItemProps) => {
                     </div>
                 </Row>
                 <Card className="me-2 ms-5 mb-3 mt-0 card border-0 ms-auto">
-                    <Button>Add to cart</Button>
+                    <Button onClick={() => {addToCart(device.id)}}>Add to cart</Button>
                 </Card>
             </div>
         </Card>

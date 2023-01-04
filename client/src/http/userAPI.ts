@@ -3,8 +3,8 @@ import jwtDecode from "jwt-decode";
 import {UserI} from "../store/UserStore";
 
 export const userSignUp = async (user: Partial<UserI> = {}) => {
-    const {email, password} = user
-    const {data} = await $host.post(`api/user/signup`, {email, password, role: `USER`})
+    const {email, password, role} = user
+    const {data} = await $host.post(`api/user/signup`, {email, password, role: role ?? 'USER'})
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }

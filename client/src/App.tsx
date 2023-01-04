@@ -11,7 +11,10 @@ import {UserI} from "./store/UserStore";
 
 const App = observer(() => {
     const {user} = useContext(Context);
+    const {basket} = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
+    basket.setBasket(user.userBasket)
+
 
 
     useEffect(() => {

@@ -2,8 +2,18 @@ import {$authHost, $host} from "./index";
 import jwtDecode from "jwt-decode";
 import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
 import {UserI} from "../store/UserStore";
+import {BasketI} from "../store/BasketStore";
 
-export const findOrCreateBasket = async (email: UserI['email']) => {
-    const {data} = await $host.get(`api/basket`)
+export const findOrCreateBasket = async (userId:UserI['id']) => {
+    const {data} = await $host.get('api/basket', {
+        params: {
+            userId
+        }
+    })
+    return data
+}
+
+export const addToBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
+    const {data} = await $host.post('api/basket/add', {basketId, deviceId, quantity})
     return data
 }

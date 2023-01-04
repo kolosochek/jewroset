@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {User, Basket, Device} = require('../models/models')
+const {User, Basket, Device, BasketDevice} = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {
@@ -12,28 +12,40 @@ const generateJwt = (id, email, role) => {
     )
 }
 class BasketController {
-    async getUserBasket(req, res) {
-        let {email} = req.query;
-        const basket = await Basket.findOrCreate({where: {email}})
-
-        return res.json(basket)
+    async getOrCreateUserBasket(req, res) {
+        const {userId} = req.query;
+        //const basket = await Basket.findOrCreate({where: {userId}, attributes: ['id', 'userId']})
+        const basket = await Basket.findOrCreate({where: {userId}, include: BasketDevice})
+        return res.json(basket[0])
     }
 
-    async setUserBasket(req, res, next){
-        const {email, password} = req.body
-        if(!email || !password) {
-            return next(APIError.badRequestError(`No email or password was given!`))
+    async addItem(req, res, next){
+        const {basketId, deviceId, quantity = 1} = req.body
+        // debug
+        console.log(`basketId, deviceId, quantity`)
+        console.log(basketId, deviceId, quantity)
+        //
+        const id = basketId
+        if(!basketId || !deviceId) {
+            return next(APIError.badRequestError(`No basketId or deviceId was given!`))
         }
-        const user = await User.findOne({where: {email}})
-        if (!user) {
-            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+        const basket = await Basket.findOne({where: {id}})
+        if (!basket) {
+            return next(APIError.internalError(`Can't find basket by given id: ${basketId}`))
         }
-        let comparePassword = bcrypt.compareSync(password, user.password)
-        if(!comparePassword) {
-            return next(APIError.badRequestError(`Wrong password!`))
+        const basketDevice = BasketDevice.findByPk(deviceId, {
+            include: [
+                {model: Device, attributes: ['id', 'name', 'price']},
+            ]
+        })
+        if(!basketDevice) {
+            await BasketDevice.create({basketId: basketId, deviceId: deviceId, quantity: quantity})
+        } else {
+            next(APIError.internalError(`Can't add device with id ${deviceId} in basket with id ${basketId}`))
         }
-        const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
+
+        basket.reload()
+        return res.json(basket)
     }
 }
 

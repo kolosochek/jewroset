@@ -3,10 +3,7 @@ import {Context} from "../index";
 import {
     fetchBrands,
     fetchCategories,
-    fetchAllDevices,
-    fetchDevicesByBrand,
-    fetchDevicesByCategory,
-    fetchDevicesByCategoryAndBrand, fetchDevices
+    fetchDevices
 } from "../http/deviceAPI";
 import Sidebar from "../components/Sidebar";
 import Brandbar from "../components/Brandbar";

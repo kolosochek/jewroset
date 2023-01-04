@@ -1,5 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import {findOrCreateBasket} from "../http/basketAPI";
 
 
 export interface BasketI {
