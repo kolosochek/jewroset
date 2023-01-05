@@ -32,24 +32,23 @@ const NavbarComponent = observer(() => {
         <Navbar bg="" variant="light">
             <Container>
                 <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
-                {user.isAuth ?
-                    <>
-                        <Nav className="ml-auto">
+                <Nav className="ml-auto">
+                    {user.isAuth ?
+                        <>
                             {user.user.role === 'ADMIN' && <Button className="bg-primary btn"
-                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
+                                                                   onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
-                            <BasketNavbarSmall basket={basket.basket}/>
-                        </Nav>
-                    </>
-                    :
-                    <>
-                        <Nav className="ml-auto">
+
+                        </>
+                        :
+                        <>
                             <Button className="bg-primary btn btn-primary "
                                     onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
-                            <BasketNavbarSmall basket={basket.basket}/>
-                        </Nav>
-                    </>
-                }
+                        </>
+
+                    }
+                    <BasketNavbarSmall count={basket.basket.basket_devices?.length}/>
+                </Nav>
             </Container>
         </Navbar>
     );

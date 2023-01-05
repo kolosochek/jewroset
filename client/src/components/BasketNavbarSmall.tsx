@@ -7,7 +7,6 @@ import {findOrCreateBasket} from "../http/basketAPI"
 import {BasketI} from "../store/BasketStore";
 
 interface BasketNavbarSmallProps extends PropsWithChildren{
-    basket: Partial<BasketI>
     count?: BasketI['count'];
 }
 

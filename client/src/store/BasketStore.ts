@@ -5,6 +5,7 @@ export interface BasketI {
     id: number,
     count: number,
     userId: number,
+    basket_devices?: Record<string, string>[],
     createdAt?: string,
     updatedAt?: string,
 }

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Card, Image, Row} from "react-bootstrap";
 import {SERVER_URL, SERVER_PORT} from "../utils/Const"
 import {DeviceI} from "../store/DeviceStore";
@@ -16,8 +16,30 @@ interface ItemProps {
 const DeviceItem = ({device}: ItemProps) => {
     const {basket} = useContext(Context)
     const navigate = useNavigate()
+    const [deviceQuantity, setDeviceQuantity] = useState(0)
+
+    const getDeviceBasketQuantityByDeviceId = (basket: BasketI, deviceId:DeviceI['id']) => {
+        if (basket.basket_devices && Array.isArray(basket.basket_devices)){
+            for (let device of basket.basket_devices){
+                if(+device.deviceId === deviceId){
+                    return +device.quantity
+                }
+            }
+        }
+        return 0
+    }
+
     const addToCart = async (deviceId:DeviceI['id'], quantity = 1) => {
-        return await addToBasket(basket.basket.id!, deviceId!, quantity)
+        const updatedBasket = await addToBasket(basket.basket.id!, deviceId!, quantity)
+        basket.setBasket(updatedBasket)
+        const resultQuantity = getDeviceBasketQuantityByDeviceId(updatedBasket, deviceId)
+        // debug
+        console.log(`updatedBasket`)
+        console.log(updatedBasket)
+        console.log(`resultQuantity`)
+        console.log(resultQuantity)
+        //
+        setDeviceQuantity(resultQuantity)
     }
 
     return (
@@ -47,6 +69,7 @@ const DeviceItem = ({device}: ItemProps) => {
                     </div>
                 </Row>
                 <Card className="me-2 ms-5 mb-3 mt-0 card border-0 ms-auto">
+                    {deviceQuantity !== 0 && <span>{deviceQuantity}</span>}
                     <Button onClick={() => {addToCart(device.id)}}>Add to cart</Button>
                 </Card>
             </div>

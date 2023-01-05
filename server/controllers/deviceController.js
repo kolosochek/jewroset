@@ -2,7 +2,6 @@ const uuid = require('uuid')
 const path = require('path')
 const {Device, DeviceInfo, Category, Brand} = require('../models/models')
 const APIError = require('../error/APIError')
-const sequelize = require('sequelize')
 
 class DeviceController {
     async create(req, res, next) {

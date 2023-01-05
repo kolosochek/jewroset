@@ -12,7 +12,7 @@ const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
-const BasketDevice = sequelize.define('basket_device', {
+const BasketDevice = sequelize.define('basket_device',{
     quantity: {type: DataTypes.INTEGER, defaultValue: 1}
 })
 
@@ -57,11 +57,9 @@ Rating.belongsTo(User)
 
 Basket.hasMany(BasketDevice)
 BasketDevice.belongsTo(Basket)
+
 Device.hasMany(BasketDevice)
 BasketDevice.belongsTo(Device)
-
-//Device.hasMany(BasketDevice)
-//BasketDevice.belongsTo(Device)
 
 Device.hasMany(Rating)
 Rating.belongsTo(Device)
