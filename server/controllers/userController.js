@@ -62,11 +62,6 @@ class UserController {
         const passwordHash = await bcrypt.hash(password, 5)
         let user = await User.findOrCreate({where: {email: email, password:passwordHash, role: role}})
         user = user[0].dataValues
-        // debug
-        console.log(`user.email`)
-        console.log(user.email)
-        //
-        const userId = user.id
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }

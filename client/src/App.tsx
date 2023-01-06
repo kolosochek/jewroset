@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite";
 import {Context} from "./index";
 import {userCheck} from "./http/userAPI";
 import {UserI} from "./store/UserStore";
+import {useCookies} from "react-cookie";
 
 
 const App = observer(() => {
@@ -14,7 +15,35 @@ const App = observer(() => {
     const {basket} = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
     basket.setBasket(user.userBasket)
+    const [cookies, setCookie] = useCookies(["user"]);
 
+    const setUserCookie = (userEmail:UserI['email'] = user.user.email!) => {
+        setCookie("user", userEmail, {
+            path: "/"
+        });
+    }
+
+    const getUserCookies = () => {
+        const [userEmail] = document.cookie.split(';');
+        if (!userEmail){
+            return ;
+        } else {
+            return userEmail.replace('userEmail=', '')
+        }
+    }
+
+    const userCookie = getUserCookies()
+    //
+    console.log(`userCookie`)
+    console.log(userCookie)
+    //
+    if (userCookie) {
+        // findUserByEmail()
+        // user.setUser()
+    } else {
+        // findOrCreateGuestUser
+        // setUserCookie(guestUser)
+    }
 
 
     useEffect(() => {

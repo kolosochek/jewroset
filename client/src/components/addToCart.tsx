@@ -13,14 +13,6 @@ const AddToCart:React.FC<AddToCartProps> = (device:AddToCartProps) => {
     const quantity = device.quantity ? device.quantity : basket.getDeviceBasketQuantityById(device?.id!)
     const [deviceQuantity, setDeviceQuantity] = useState(quantity)
 
-    // debug
-    console.log(`quantity`)
-    console.log(quantity)
-    console.log(`deviceQuantity`)
-    console.log(deviceQuantity)
-    //
-
-
     const incrementBasketDevice = async (deviceId:DeviceI['id'], quantity = 1) => {
         const resultQuantity = await basket.incrementBasketDevice(deviceId, quantity)
         setDeviceQuantity(resultQuantity!)

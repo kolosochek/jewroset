@@ -1,6 +1,5 @@
-import {$authHost, $host} from "./index";
-import jwtDecode from "jwt-decode";
-import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
+import {$host} from "./index";
+import {DeviceI} from "../store/DeviceStore";
 import {UserI} from "../store/UserStore";
 import {BasketI} from "../store/BasketStore";
 

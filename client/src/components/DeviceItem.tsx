@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Button, Card, Image, Row} from "react-bootstrap";
+import {Card, Image, Row} from "react-bootstrap";
 import {SERVER_URL, SERVER_PORT} from "../utils/Const"
 import {DeviceI} from "../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";

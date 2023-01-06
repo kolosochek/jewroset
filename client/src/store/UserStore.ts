@@ -27,9 +27,9 @@ const createGuestBasket = async (userId:UserI['id']) => {
 export default class UserStore {
     constructor(
         private _isAuth: boolean = false,
-        // create new guest user
         private _user: Partial<UserI> = {},
         private _userBasket: Partial<BasketI> = {}) {
+
         const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
         const createGuest = createGuestUser(guest).then(user => {
             const guestUser = user as unknown as UserI
@@ -38,9 +38,7 @@ export default class UserStore {
                 this.setUserBasket(basket)
             })
         })
-
-
-
+        
         makeAutoObservable(this)
     }
 

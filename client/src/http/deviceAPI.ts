@@ -1,5 +1,4 @@
 import {$authHost, $host} from "./index";
-import jwtDecode from "jwt-decode";
 import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
 
 export const createCategory = async (category: Partial<CategoryI>) => {
