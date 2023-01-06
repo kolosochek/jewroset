@@ -13,7 +13,12 @@ export const findOrCreateBasket = async (userId:UserI['id']) => {
     return data
 }
 
-export const addToBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
-    const {data} = await $host.post('api/basket/add', {basketId, deviceId, quantity})
+export const incrementBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
+    const {data} = await $host.post('api/basket/increment', {basketId, deviceId, quantity})
+    return data
+}
+
+export const decrementBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
+    const {data} = await $host.post('api/basket/decrement', {basketId, deviceId, quantity})
     return data
 }

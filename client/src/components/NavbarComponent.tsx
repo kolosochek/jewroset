@@ -8,13 +8,13 @@ import {RouteI} from "../utils/Routes";
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import BasketNavbarSmall from "./BasketNavbarSmall";
-import {findOrCreateBasket} from "../http/basketAPI";
 
 
 const NavbarComponent = observer(() => {
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
     const navigate = useNavigate()
+
 
     useEffect(() => {
         //findOrCreateBasket(user.user.email!).then(data => basket.setBasket(data))
@@ -47,7 +47,7 @@ const NavbarComponent = observer(() => {
                         </>
 
                     }
-                    <BasketNavbarSmall count={basket.basket.basket_devices?.length}/>
+                    <BasketNavbarSmall count={basket.getTotalBasketItems()}/>
                 </Nav>
             </Container>
         </Navbar>

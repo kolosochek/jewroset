@@ -17,8 +17,8 @@ const DeviceList = ({categoryItems}: CategoryProps) => {
                 {categoryItems.length
                     ? categoryItems.map((item) => {
                         return <DeviceItem key={item.id} device={item}/>
-                    }) :
-                    <EmptyDeviceList/>
+                    })
+                    : <EmptyDeviceList/>
                 }
 
             </Row>

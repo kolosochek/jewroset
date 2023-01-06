@@ -1,22 +1,34 @@
-import React, {Key, useEffect, useState} from 'react';
+import React, {Key, useContext, useEffect, useState} from 'react';
 import {SERVER_URL, SERVER_PORT} from "../utils/Const"
-import {Button, Card, Image, Row, Container} from "react-bootstrap";
+import {Button, Card, Image, Row, Container, Spinner} from "react-bootstrap";
 import {fetchOneDevice} from "../http/deviceAPI";
 import {useParams} from "react-router-dom";
 import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
+import {Context} from "../index";
+import AddToCart from "../components/addToCart";
 
 interface DeviceViewProps extends React.PropsWithChildren {
     children?: React.ReactNode
 }
 
 const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
-    const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
+    const {basket} = useContext(Context)
     const {id} = useParams()
+    const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
+    const [deviceQuantity, setDeviceQuantity] = useState(0)
+    const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
-        fetchOneDevice(+id!).then(data => setDevice(data))
+        fetchOneDevice(+id!).then(device => {
+            setDevice(device)
+            setDeviceQuantity(basket.getDeviceBasketQuantityById(device?.id!))
+        }).finally(() => setIsLoading(false))
     }, [])
+
+    if (isLoading) {
+        return <Spinner animation={"grow"}/>
+    }
 
     return (
         <Card className="b-device-wrapper card border-0">
@@ -61,8 +73,8 @@ const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
                             )}
                         </Container>
                         <Container className="b-device-action py-3">
-                            <Button className="add-to-cart btn btn-default" type="button">add to cart</Button>
-                            <Button className="add-to-cart btn btn-default" type="button">buy now</Button>
+                            {deviceQuantity > 0 && <AddToCart device={device} quantity={deviceQuantity}/>}
+                            {!deviceQuantity && <AddToCart device={device} />}
                         </Container>
                     </div>
                 </div>

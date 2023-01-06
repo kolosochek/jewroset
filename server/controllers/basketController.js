@@ -23,16 +23,12 @@ class BasketController {
         return res.json(basket[0])
     }
 
-    async addItem(req, res, next) {
-        const {basketId, id = basketId, deviceId, quantity = 1} = req.body
-        // debug
-        console.log(`basketId, deviceId, quantity`)
-        console.log(basketId, deviceId, quantity)
-        //
+    async incrementItem(req, res, next) {
+        const {basketId, deviceId, quantity = 1} = req.body
         if (!basketId || !deviceId) {
             return next(APIError.badRequestError(`No basketId or deviceId was given!`))
         }
-        const basket = await Basket.findOne({where: {id}})
+        const basket = await Basket.findOne({where: {id: basketId}})
         if (!basket) {
             return next(APIError.internalError(`Can't find basket by given id: ${basketId}`))
         }
@@ -42,21 +38,54 @@ class BasketController {
         if (!basketDevice) {
             basketDevice = await BasketDevice.create({basketId: basketId, deviceId: deviceId, quantity: quantity})
         } else {
-            const resultQuantity = basketDevice.quantity + 1;
+            const resultQuantity = basketDevice.quantity + quantity;
             await basketDevice.update({quantity: resultQuantity})
         }
-
+        // reload basket instance with added basketDevices
         await basket.reload({include:
                 {
                     model: BasketDevice,
                     where: {basketId}
                 }})
-        // debug
-        console.log(`basket`)
-        console.log(basket)
-        console.log(`basketDevice`)
-        console.log(basketDevice)
-        //
+        return res.json(basket)
+    }
+
+    async decrementItem(req, res, next) {
+        const {basketId, deviceId, quantity = 1} = req.body
+        if (!basketId || !deviceId) {
+            return next(APIError.badRequestError(`No basketId or deviceId was given!`))
+        }
+        const basket = await Basket.findOne({where: {id: basketId}})
+        if (!basket) {
+            return next(APIError.internalError(`Can't find basket by given id: ${basketId}`))
+        }
+        // get basketDevice from cart
+        let basketDevice = await BasketDevice.findOne({where: [{basketId: basketId, deviceId: deviceId}]})
+        // if device is already in the cart
+        if (basketDevice) {
+            // decrement or remove it
+            if(basketDevice.quantity > 1) {
+                const resultQuantity = basketDevice.quantity - quantity;
+                await basketDevice.update({quantity: resultQuantity})
+                // reload basket instance with given basketDevices
+                await basket.reload({include:
+                        {
+                            model: BasketDevice,
+                            where: {basketId}
+                        }})
+            } else {
+                await basketDevice.destroy()
+                // reload basket instance with removed basketDevices
+                await basket.reload({include:
+                        {
+                            model: BasketDevice
+                        }})
+            }
+        // otherwise throw an error
+        } else {
+            return next(APIError.internalError(`No device with id: ${deviceId} in the basket with id: ${basketId}`))
+        }
+
         return res.json(basket)
     }
 }
