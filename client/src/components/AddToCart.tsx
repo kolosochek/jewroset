@@ -1,14 +1,15 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
 import {DeviceI} from "../store/DeviceStore";
 import {Context} from "../index";
-import {Button, Card} from "react-bootstrap";
+import {Button} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
 
 interface AddToCartProps extends PropsWithChildren{
     device?: Partial<DeviceI>
     quantity?: number
     id?: DeviceI['id'],
 }
-const AddToCart:React.FC<AddToCartProps> = (device:AddToCartProps) => {
+const AddToCart:React.FC<AddToCartProps> = observer((device:AddToCartProps) => {
     const {basket} = useContext(Context)
     const quantity = device.quantity ? device.quantity : basket.getDeviceBasketQuantityById(device?.id!)
     const [deviceQuantity, setDeviceQuantity] = useState(quantity)
@@ -24,9 +25,9 @@ const AddToCart:React.FC<AddToCartProps> = (device:AddToCartProps) => {
     }
 
     return (
-        <Card className="me-2 ms-5 mb-3 mt-0 card border-0 ms-auto">
+        <div className="me-2 ms-5 mb-3 mt-0 card border-0 ms-auto">
             {deviceQuantity !== 0 &&
-                <div className="ms-auto col-5">
+                <div className="ms-auto">
                     <div className="input-group">
                                     <span className="input-group-btn">
                                         <button
@@ -52,8 +53,8 @@ const AddToCart:React.FC<AddToCartProps> = (device:AddToCartProps) => {
                 </div>
             }
             {deviceQuantity === 0 && <Button onClick={() => {incrementBasketDevice(device?.device?.id!)}}>Add to cart</Button>}
-        </Card>
+        </div>
     )
-}
+})
 
 export default AddToCart;

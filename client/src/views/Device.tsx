@@ -1,11 +1,10 @@
 import React, {Key, useContext, useEffect, useState} from 'react';
-import {SERVER_URL, SERVER_PORT} from "../utils/Const"
 import {Button, Card, Image, Row, Container, Spinner} from "react-bootstrap";
 import {fetchOneDevice} from "../http/deviceAPI";
 import {useParams} from "react-router-dom";
 import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
 import {Context} from "../index";
-import AddToCart from "../components/addToCart";
+import AddToCart from "../components/AddToCart";
 
 interface DeviceViewProps extends React.PropsWithChildren {
     children?: React.ReactNode
@@ -37,7 +36,7 @@ const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
                     <div className="preview col-md-6">
                         <div className="preview-pic tab-content">
                             <div className="tab-pane active" id="pic-1">
-                                <Image src={`${SERVER_URL}:${SERVER_PORT}/${device?.img}`}/>
+                                <Image src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${device.img}`}/>
                             </div>
                         </div>
                     </div>

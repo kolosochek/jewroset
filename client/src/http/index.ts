@@ -1,12 +1,11 @@
 import axios from "axios";
-import {SERVER_URL, SERVER_PORT} from "../utils/Const";
 
 const $host = axios.create({
-    baseURL: `${SERVER_URL}:${SERVER_PORT}/`
+    baseURL: `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}`
 })
 
 const $authHost = axios.create({
-    baseURL: `${SERVER_URL}:${SERVER_PORT}/`
+    baseURL: `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}`
 })
 
 const authInterceptor = (config: Record<string, any>) => {

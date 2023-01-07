@@ -1,10 +1,9 @@
 import React, {useContext, useState} from 'react';
 import {Card, Image, Row} from "react-bootstrap";
-import {SERVER_URL, SERVER_PORT} from "../utils/Const"
 import {DeviceI} from "../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";
 import starImg from "../assets/star.png"
-import AddToCart from "./addToCart";
+import AddToCart from "./AddToCart";
 import {Context} from "../index";
 
 
@@ -23,7 +22,7 @@ const DeviceItem = ({device}: ItemProps) => {
                 <figure className="b-device-item-figure-wrapper p-2 m-0 text-center"
                         onClick={() => navigate(`/device/${device.id}`)}>
                     <Image
-                        src={`${SERVER_URL}:${SERVER_PORT}/${device.img}`}
+                        src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${device.img}`}
                         width="200"
                         height="200"
                         className="b-device-item-figure rounded"

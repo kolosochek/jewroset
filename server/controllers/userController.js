@@ -50,6 +50,20 @@ class UserController {
         return res.json({token})
     }
 
+    async find(req, res, next){
+        const {email} = req.body
+        // debug
+        console.log(`email`)
+        console.log(email)
+        //
+        const user = await User.findOne({where: {email: email}})
+        if (!user) {
+            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+        }
+
+        return res.json(user)
+    }
+
     async findOrCreateGuest(req, res, next) {
         const {email, password, role} = req.body
         if (!email || !password) {
