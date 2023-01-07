@@ -17,8 +17,7 @@ export interface UserI {
 export default class UserStore {
     constructor(
         private _isAuth: boolean = false,
-        private _user: Partial<UserI> = {},
-        private _userBasket: Partial<BasketI> = {}) {
+        private _user: Partial<UserI> = {}) {
 
         makeAutoObservable(this)
     }
@@ -31,19 +30,11 @@ export default class UserStore {
         this._user = user
     }
 
-    setUserBasket(basket: Partial<BasketI>) {
-        this._userBasket = basket
-    }
-
     get isAuth() {
         return this._isAuth
     }
 
     get user() {
         return this._user
-    }
-
-    get userBasket() {
-        return this._userBasket
     }
 }

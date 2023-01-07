@@ -21,7 +21,7 @@ const createGuestUser = async (user:Partial<UserI>) => {
     const guest = await userSignUp(user)
     return guest
 }
-const findOrCreateGuestBasket = async (userId:UserI['id']) => {
+const findOrCreateUserBasket = async (userId:UserI['id']) => {
     const basket = await findOrCreateBasket(userId)
     return basket
 }
@@ -49,10 +49,10 @@ const App = observer(() => {
         const userEmailCookie = cookies.userEmail
         if (userEmailCookie) {
             const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
-                // debug
-                console.log(`foundUser`)
-                console.log(foundUser)
-                //
+                const userId:UserI['id'] = (foundUser as unknown as Partial<UserI>).id!
+                const findBasket = findOrCreateUserBasket(userId).then(basketParam => {
+                    basket.setBasket(basketParam)
+                })
             })
         } else {
             // create new guest user
@@ -60,8 +60,8 @@ const App = observer(() => {
             const createGuest = createGuestUser(guest).then(userParam => {
                 const guestUser:UserI = userParam as unknown as UserI
                 user.setUser(guestUser)
-                const createBasket = findOrCreateGuestBasket(guestUser.id!).then(basket => {
-                    user.setUserBasket(basket)
+                const createBasket = findOrCreateUserBasket(guestUser.id!).then(basketParam => {
+                    basket.setBasket(basketParam)
                 })
                 // set user cookie
                 setUserCookie(user.user.email)
