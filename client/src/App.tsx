@@ -32,18 +32,18 @@ const App = observer(() => {
         }
     }
 
+    /*
     const userCookie = getUserCookies()
-    //
     console.log(`userCookie`)
     console.log(userCookie)
-    //
     if (userCookie) {
         // findUserByEmail()
         // user.setUser()
     } else {
         // findOrCreateGuestUser
-        // setUserCookie(guestUser)
+        // setUserCookie()
     }
+     */
 
 
     useEffect(() => {

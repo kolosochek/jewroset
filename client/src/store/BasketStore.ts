@@ -2,12 +2,17 @@ import {makeAutoObservable} from "mobx";
 import {DeviceI} from "./DeviceStore";
 import {decrementBasket, incrementBasket} from "../http/basketAPI";
 
-
+export interface BasketDeviceI {
+    basketId: BasketI['id'],
+    deviceId: DeviceI['id'],
+    quantity: number,
+    device: Partial<DeviceI>
+}
 export interface BasketI {
     id: number,
     count: number,
     userId: number,
-    basket_devices?: Record<string, string>[],
+    basket_devices?: BasketDeviceI[],
     createdAt?: string,
     updatedAt?: string,
 }
@@ -39,8 +44,8 @@ export default class BasketStore {
     getTotalBasketItems():BasketI['count'] {
         let resultQuantity = 0;
         if (this.basket.basket_devices) {
-            for (let device of this.basket.basket_devices) {
-                resultQuantity += +device.quantity
+            for (let item of this.basket.basket_devices) {
+                resultQuantity += +item.quantity
             }
             return resultQuantity
         } else {

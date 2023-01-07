@@ -27,6 +27,7 @@ class UserController {
         const userId = user.id
         const basket = await Basket.findOrCreate({where: {userId}})
         const token = generateJwt(user.id, user.email, user.role)
+        res.cookie('cookie', 'value')
         return res.json({token})
     }
 
@@ -67,7 +68,8 @@ class UserController {
     }
 
     async isAuthorized(req, res, next){
-        if (req.user && req.user.role !== 'GUEST') {
+        //if (req.user && req.user.role !== 'GUEST') {
+        if (req.user) {
             const token = generateJwt(req.user.id, req.user.email, req.user.role)
             return res.json({token})
         } else {

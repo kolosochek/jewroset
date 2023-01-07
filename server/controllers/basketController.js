@@ -33,7 +33,9 @@ class BasketController {
             return next(APIError.internalError(`Can't find basket by given id: ${basketId}`))
         }
         // if device is already in the cart
-        let basketDevice = await BasketDevice.findOne({where: [{basketId: basketId, deviceId: deviceId}]})
+        let basketDevice = await BasketDevice.findOne({
+            where: [{basketId: basketId, deviceId: deviceId}]
+        })
         // otherwise let's add device with given id in the cart
         if (!basketDevice) {
             basketDevice = await BasketDevice.create({basketId: basketId, deviceId: deviceId, quantity: quantity})
@@ -45,8 +47,10 @@ class BasketController {
         await basket.reload({include:
                 {
                     model: BasketDevice,
-                    where: {basketId}
-                }})
+                    where: {basketId},
+                    include: Device
+                }
+        })
         return res.json(basket)
     }
 
@@ -60,7 +64,9 @@ class BasketController {
             return next(APIError.internalError(`Can't find basket by given id: ${basketId}`))
         }
         // get basketDevice from cart
-        let basketDevice = await BasketDevice.findOne({where: [{basketId: basketId, deviceId: deviceId}]})
+        let basketDevice = await BasketDevice.findOne({
+            where: [{basketId: basketId, deviceId: deviceId}]
+        })
         // if device is already in the cart
         if (basketDevice) {
             // decrement or remove it
@@ -71,7 +77,8 @@ class BasketController {
                 await basket.reload({include:
                         {
                             model: BasketDevice,
-                            where: {basketId}
+                            where: {basketId},
+                            include: Device
                         }})
             } else {
                 await basketDevice.destroy()

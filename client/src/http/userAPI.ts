@@ -27,10 +27,6 @@ export const userCheck = async () => {
     if (data) {
         localStorage.setItem('token', data.token)
         const decodedToken = jwtDecode(data.token)
-        // debug
-        console.log(`decodedToken`)
-        console.log(decodedToken)
-        //
         return decodedToken
     } else {
         throw new Error('No token recieved!')

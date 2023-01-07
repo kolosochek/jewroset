@@ -29,7 +29,6 @@ export default class UserStore {
         private _isAuth: boolean = false,
         private _user: Partial<UserI> = {},
         private _userBasket: Partial<BasketI> = {}) {
-
         const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
         const createGuest = createGuestUser(guest).then(user => {
             const guestUser = user as unknown as UserI
@@ -38,7 +37,7 @@ export default class UserStore {
                 this.setUserBasket(basket)
             })
         })
-        
+
         makeAutoObservable(this)
     }
 
