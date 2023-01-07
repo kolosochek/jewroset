@@ -24,10 +24,8 @@ class UserController {
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
-        const userId = user.id
-        const basket = await Basket.findOrCreate({where: {userId}})
+        const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
-        res.cookie('cookie', 'value')
         return res.json({token})
     }
 
@@ -44,24 +42,19 @@ class UserController {
         if(!comparePassword) {
             return next(APIError.badRequestError(`Wrong password!`))
         }
-        const userId = user.id
-        const basket = await Basket.findOrCreate({where: {userId}})
+        const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
 
     async find(req, res, next){
         const {email} = req.body
-        // debug
-        console.log(`email`)
-        console.log(email)
-        //
         const user = await User.findOne({where: {email: email}})
         if (!user) {
             return next(APIError.internalError(`Can't find user by given email: ${email}`))
         }
-
-        return res.json(user)
+        const token = generateJwt(user.id, user.email, user.role)
+        return res.json({token})
     }
 
     async findOrCreateGuest(req, res, next) {

@@ -31,7 +31,7 @@ const App = observer(() => {
     const {user} = useContext(Context);
     const {basket} = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
-    basket.setBasket(user.userBasket)
+    //basket.setBasket(user.userBasket)
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
 
@@ -40,36 +40,34 @@ const App = observer(() => {
             path: "/"
         });
     }
-    // get user from cookies or create it
-    const userEmailCookie = cookies.userEmail
-    console.log(`cookies.userEmail`)
-    console.log(cookies.userEmail)
-    if (userEmailCookie) {
-        const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
 
-            // debug
-            console.log(`foundUser`)
-            console.log(foundUser)
-            //
-            // user.setUser()
-        })
-    } else {
-        // create new guest user
-        const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
-        const createGuest = createGuestUser(guest).then(userParam => {
-            const guestUser:UserI = userParam as unknown as UserI
-            user.setUser(guestUser)
-            const createBasket = findOrCreateGuestBasket(guestUser.id!).then(basket => {
-                user.setUserBasket(basket)
-            })
-            // set user cookie
-            setUserCookie(user.user.email)
-        })
-    }
 
 
 
     useEffect(() => {
+        // get user from cookies or create it
+        const userEmailCookie = cookies.userEmail
+        if (userEmailCookie) {
+            const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
+                // debug
+                console.log(`foundUser`)
+                console.log(foundUser)
+                //
+            })
+        } else {
+            // create new guest user
+            const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
+            const createGuest = createGuestUser(guest).then(userParam => {
+                const guestUser:UserI = userParam as unknown as UserI
+                user.setUser(guestUser)
+                const createBasket = findOrCreateGuestBasket(guestUser.id!).then(basket => {
+                    user.setUserBasket(basket)
+                })
+                // set user cookie
+                setUserCookie(user.user.email)
+            })
+        }
+
         userCheck().then(data => {
             user.setUser(data as unknown as UserI)
             if (user.user.role !== 'GUEST'){
