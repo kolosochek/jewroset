@@ -24,6 +24,7 @@ class UserController {
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
+        const userId = user.id
         const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
@@ -42,6 +43,7 @@ class UserController {
         if(!comparePassword) {
             return next(APIError.badRequestError(`Wrong password!`))
         }
+        const userId = user.id
         const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})

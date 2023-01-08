@@ -1,6 +1,6 @@
 import {makeAutoObservable} from "mobx";
 import {DeviceI} from "./DeviceStore";
-import {decrementBasket, incrementBasket} from "../http/basketAPI";
+import {decrementBasket, incrementBasket, removeFromBasket} from "../http/basketAPI";
 
 export interface BasketDeviceI {
     basketId: BasketI['id'],
@@ -19,7 +19,8 @@ export interface BasketI {
 
 export default class BasketStore {
     constructor(
-        private _basket: Partial<BasketI> = {}) {
+        private _basket: Partial<BasketI> = {},
+        ) {
         makeAutoObservable(this)
     }
 
@@ -29,6 +30,9 @@ export default class BasketStore {
 
     get basket() {
         return this._basket
+    }
+    get basketDevices() {
+        return this._basket.basket_devices
     }
 
     getItemById(deviceId: DeviceI['id']) {
@@ -71,6 +75,12 @@ export default class BasketStore {
 
     async decrementBasketDevice(deviceId:DeviceI['id'], quantity = 1){
         const updatedBasket = await decrementBasket(this.basket.id!, deviceId!, quantity)
+        this.setBasket(updatedBasket)
+        return this.getDeviceBasketQuantityById(deviceId)
+    }
+
+    async removeBasketDevice(deviceId:DeviceI['id']){
+        const updatedBasket = await removeFromBasket(this.basket.id!, deviceId!)
         this.setBasket(updatedBasket)
         return this.getDeviceBasketQuantityById(deviceId)
     }

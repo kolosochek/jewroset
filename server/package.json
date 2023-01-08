@@ -8,9 +8,6 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
@@ -22,5 +19,8 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.27.0",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

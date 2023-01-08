@@ -21,3 +21,8 @@ export const decrementBasket = async(basketId: BasketI['id'], deviceId: DeviceI[
     const {data} = await $host.post('api/basket/decrement', {basketId, deviceId, quantity})
     return data
 }
+
+export const removeFromBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id']) => {
+    const {data} = await $host.post('api/basket/remove', {basketId, deviceId})
+    return data
+}
