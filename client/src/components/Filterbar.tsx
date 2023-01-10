@@ -10,7 +10,8 @@ const Filterbar = observer(() => {
     return (
         <NavDropdown
             title={`Filter by: ${device.selectedFilter.type ? `${device.selectedFilter.type} ${device.selectedFilter.direction === 'none' ? '' : device.selectedFilter.direction}` : 'none'}`}
-            id="basic-nav-dropdown" align="end">
+            id="basic-nav-dropdown" align="end"
+            className="">
             <NavDropdown.Item onClick={() => device.setSelectedFilter({type: 'price', direction: 'asc'})}>by price
                 asc</NavDropdown.Item>
             <NavDropdown.Item onClick={() => device.setSelectedFilter({type: 'price', direction: 'desc'})}>by price

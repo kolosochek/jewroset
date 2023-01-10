@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BrowserRouter} from "react-router-dom"
 import AppRouter from "./components/AppRouter";
-import NavbarComponent from "./components/NavbarComponent";
+import Navbar from "./components/Navbar";
 import {Container, Spinner} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
@@ -81,7 +81,7 @@ const App = observer(() => {
     }
     return (
         <BrowserRouter>
-            <NavbarComponent/>
+            <Navbar/>
             <Container>
                 <AppRouter/>
             </Container>

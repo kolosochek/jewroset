@@ -35,20 +35,18 @@ export default class BasketStore {
         return this._basket
     }
     get basketDevices() {
-        return this._basket.basket_devices
+        return this.basket.basket_devices
     }
 
-    getItemById(deviceId: DeviceI['id']) {
-        if (this.basket.basket_devices && Array.isArray(this.basket.basket_devices)) {
-            for (let device of this.basket.basket_devices) {
-                if (+device.deviceId === deviceId) {
-                    return device
-                }
-            }
-        }
+    get priceTotal() {
+        let price = 0
+        this.basketDevices?.map((item) => {
+            price += item.quantity * item.device.price!
+        })
+        return price
     }
 
-    getTotalBasketItems():BasketI['count'] {
+    get itemsTotal():BasketI['count'] {
         let resultQuantity = 0;
         if (this.basket.basket_devices) {
             for (let item of this.basket.basket_devices) {
@@ -60,6 +58,15 @@ export default class BasketStore {
         }
     }
 
+    getItemById(deviceId: DeviceI['id']) {
+        if (this.basket.basket_devices && Array.isArray(this.basket.basket_devices)) {
+            for (let device of this.basket.basket_devices) {
+                if (+device.deviceId === deviceId) {
+                    return device
+                }
+            }
+        }
+    }
 
     getDeviceBasketQuantityById(deviceId:DeviceI['id']) {
         const device = this.getItemById(deviceId)

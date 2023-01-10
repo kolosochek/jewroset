@@ -5,6 +5,7 @@ import {Context} from "../index";
 import Brandbar from "../components/Brandbar";
 import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
+import Pagination from "../components/Pagination";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
@@ -12,12 +13,16 @@ const Index = observer(() => {
     const brandId = device.selectedBrand.id
     const filterByType = device.selectedFilter.type
     const filterByDirection = device.selectedFilter.direction
-    const page = device.selectedPage
+    const page = device.page
+    const limit = device.limit
 
     useEffect(() => {
         fetchCategories().then(data => device.setCategories(data))
         fetchBrands().then(data => device.setBrands(data))
-        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
+        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page, limit).then((data) => {
+            device.setDevices(data.rows)
+            device.setTotalCount(data.count)
+        })
     }, [categoryId, brandId, filterByType, filterByDirection, page])
 
     return (
@@ -28,6 +33,7 @@ const Index = observer(() => {
             <section className="col-9 flex py-3">
                 <Brandbar />
                 <DeviceList categoryItems={device.devices} />
+                <Pagination />
             </section>
         </section>
     )

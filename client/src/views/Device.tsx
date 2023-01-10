@@ -4,7 +4,7 @@ import {fetchOneDevice} from "../http/deviceAPI";
 import {useParams} from "react-router-dom";
 import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
 import {Context} from "../index";
-import AddToCart from "../components/AddToCart";
+import AddToCart from "../components/AddToCart/AddToCart";
 
 interface DeviceViewProps extends React.PropsWithChildren {
     children?: React.ReactNode

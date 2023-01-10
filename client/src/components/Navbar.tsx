@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import {Navbar as NavbarBootstrap} from 'react-bootstrap';
 import {NavLink, useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import {Button} from "react-bootstrap";
@@ -10,7 +10,7 @@ import {observer} from "mobx-react-lite";
 import BasketNavbarSmall from "./BasketNavbarSmall";
 
 
-const NavbarComponent = observer(() => {
+const Navbar = observer(() => {
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
     const navigate = useNavigate()
@@ -29,7 +29,7 @@ const NavbarComponent = observer(() => {
     }
 
     return (
-        <Navbar bg="" variant="light">
+        <NavbarBootstrap bg="" variant="light">
             <Container>
                 <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
                 <Nav className="ml-auto">
@@ -47,11 +47,11 @@ const NavbarComponent = observer(() => {
                         </>
 
                     }
-                    <BasketNavbarSmall count={basket.getTotalBasketItems()}/>
+                    <BasketNavbarSmall count={basket.itemsTotal}/>
                 </Nav>
             </Container>
-        </Navbar>
+        </NavbarBootstrap>
     );
 });
 
-export default NavbarComponent;
+export default Navbar;

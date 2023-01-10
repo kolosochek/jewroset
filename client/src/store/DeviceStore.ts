@@ -9,7 +9,8 @@ export interface BrandI {
 
 export interface PaginatorI {
     page: number,
-    offset: number
+    limit: number,
+    totalCount: number,
 }
 
 export interface CategoryI {
@@ -50,17 +51,23 @@ export default class DeviceStore {
         private _selectedBrand: Partial<BrandI> = {},
         private _category: Partial<CategoryI> = {},
         private _selectedFilter: Partial<FilterI> = {},
-        private _selectedPage: PaginatorI['page'] = 1
+        private _selectedPage: PaginatorI['page'] = 1,
+        private _page: PaginatorI['page'] = 1,
+        private _limit: PaginatorI['limit'] = 3,
+        private _totalCount: PaginatorI['totalCount'] = 0,
+
     ) {
         makeAutoObservable(this)
     }
 
     setSelectedCategory(category: CategoryI) {
         this._selectedCategory = category
+        this.setPage(1)
     }
 
     setSelectedBrand(brand: BrandI) {
         this._selectedBrand = brand
+        this.setPage(1)
     }
 
     setSelectedFilter(filter: FilterI) {
@@ -68,7 +75,15 @@ export default class DeviceStore {
     }
 
     setPage(page: PaginatorI['page']) {
-        this._selectedPage = page
+        this._page = page
+    }
+
+    setTotalCount(totalCount: PaginatorI['totalCount']) {
+        this._totalCount = totalCount
+    }
+
+    setLimit(limit: PaginatorI['limit']) {
+        this._limit = limit
     }
 
     setCategories(categories: CategoryI[]) {
@@ -97,6 +112,18 @@ export default class DeviceStore {
 
     get devices(): DeviceI[] {
         return this._devices
+    }
+
+    get page(): PaginatorI['page'] {
+        return this._page
+    }
+
+    get totalCount(): PaginatorI['totalCount'] {
+        return this._totalCount
+    }
+
+    get limit(): PaginatorI['limit'] {
+        return this._limit
     }
 
     get selectedCategory(): Partial<CategoryI> {

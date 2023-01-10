@@ -45,6 +45,11 @@ class UserController {
         }
         const userId = user.id
         const basket = await Basket.findOrCreate({where: {id:userId}})
+        if (!basket[0]){
+            return next(APIError.internalError(`Can't find or creat basket for user with id: ${userId}`))
+        }
+        const result = await basket[0].update({userId: userId})
+
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
@@ -57,6 +62,15 @@ class UserController {
         }
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
+    }
+
+    async isAuthorized(req, res, next){
+        if (req.user) {
+            const token = generateJwt(req.user.id, req.user.email, req.user.role)
+            return res.json({token})
+        } else {
+            next(APIError.userNotAuthorizedError(`User is not authorized`))
+        }
     }
 
     async findOrCreateGuest(req, res, next) {
@@ -74,16 +88,6 @@ class UserController {
         user = user[0].dataValues
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
-    }
-
-    async isAuthorized(req, res, next){
-        //if (req.user && req.user.role !== 'GUEST') {
-        if (req.user) {
-            const token = generateJwt(req.user.id, req.user.email, req.user.role)
-            return res.json({token})
-        } else {
-            next(APIError.userNotAuthorizedError(`User is not authorized`))
-        }
     }
 }
 

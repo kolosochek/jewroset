@@ -5,10 +5,12 @@ import {RouteI} from "../utils/Routes";
 import {userSignIn, userSignUp} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
+import {findOrCreateBasket} from "../http/basketAPI";
 
 const Auth = observer(() => {
     const navigate = useNavigate()
     const {user} = useContext(Context)
+    const {basket} = useContext(Context)
     const location = useLocation();
     let isLoginView: boolean = false;
     if (location.pathname as RouteI['path'] === '/signin' as RouteI['path']) {

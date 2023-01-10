@@ -13,6 +13,7 @@ export type RoutePathT = "/"
     | "/signup"
     | "/catalog"
     | "/device"
+    | "/checkout"
     | string;
 export type ViewT = typeof Admin | typeof Auth | typeof Basket | typeof Device | typeof Index | typeof Catalog
 

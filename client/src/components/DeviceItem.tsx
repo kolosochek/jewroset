@@ -1,10 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {Card, Image, Row} from "react-bootstrap";
+import React, {useContext} from 'react';
+import {Image, Figure} from "react-bootstrap";
 import {DeviceI} from "../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";
 import starImg from "../assets/star.png"
-import AddToCart from "./AddToCart";
+import AddToCart from "./AddToCart/AddToCart";
 import {Context} from "../index";
+
 
 
 interface ItemProps {
@@ -16,19 +17,20 @@ const DeviceItem = ({device}: ItemProps) => {
     const {basket} = useContext(Context)
     const navigate = useNavigate()
 
+
     return (
-        <Card className="b-device-item-wrapper col border-0">
+        <section className="b-device-item-wrapper col border-0">
             <div className="b-device-item card shadow-sm">
-                <figure className="b-device-item-figure-wrapper p-2 m-0 text-center"
+                <Figure className="b-device-item-figure-wrapper p-2 m-0 text-center"
                         onClick={() => navigate(`/device/${device.id}`)}>
-                    <Image
+                    <img
                         src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${device.img}`}
                         width="200"
                         height="200"
                         className="b-device-item-figure rounded"
                     />
-                </figure>
-                <Row className="b-device-item-info-wrapper p-2">
+                </Figure>
+                <section className="b-device-item-info-wrapper p-2">
                     <p className="">{`${device.category!.name}->${device.brand!.name}`}</p>
                     <NavLink to={`/device/${device.id}`}
                              className="text-primary text-decoration-underline cursor-pointer card-text">{device.name}</NavLink>
@@ -40,10 +42,12 @@ const DeviceItem = ({device}: ItemProps) => {
                             <span className="b-rating">{device.rating}&nbsp;<Image src={starImg} width={15} height={15}/></span>
                         </figure>
                     </div>
-                </Row>
-                <AddToCart device={device} quantity={basket.getDeviceBasketQuantityById(device.id!)} />
+                </section>
+                <div className="ms-auto pe-2 ps-2 pb-2">
+                    <AddToCart device={device} quantity={basket.getDeviceBasketQuantityById(device.id!)} />
+                </div>
             </div>
-        </Card>
+        </section>
     );
 };
 

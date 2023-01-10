@@ -1,9 +1,7 @@
 import React, {PropsWithChildren, useContext, useEffect} from 'react';
 import {RouteI} from "../utils/Routes";
 import {Button} from "react-bootstrap";
-import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
-import {findOrCreateBasket} from "../http/basketAPI"
 import {BasketI} from "../store/BasketStore";
 
 interface BasketNavbarSmallProps extends PropsWithChildren{

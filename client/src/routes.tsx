@@ -5,21 +5,28 @@ import Basket from "./views/Basket";
 import Index from "./views/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
+import Checkout from "./views/Checkout";
 
 export const defaultRoute: RouteI = {path: '/', View: Index}
+const commonRoutes: RouteI[] = [
+    {
+        path: '/basket', View: Basket,
+    },
+    {
+        path: '/checkout', View: Checkout,
+    }]
 
 export const authorizedRoutes: RouteI[] = [
     defaultRoute,
+    ...commonRoutes,
     {
         path: '/admin', View: Admin,
-    },
-    {
-        path: '/basket', View: Basket,
     }
 ]
 
 export const unauthorizedRoutes: RouteI[] = [
     defaultRoute,
+    ...commonRoutes,
     {
         path: '/catalog', View: Catalog,
     },
@@ -35,7 +42,4 @@ export const unauthorizedRoutes: RouteI[] = [
     {
         path: '/device/:id', View: Device,
     },
-    {
-        path: '/basket', View: Basket,
-    }
 ]
