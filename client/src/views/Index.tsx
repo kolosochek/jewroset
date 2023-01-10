@@ -18,7 +18,7 @@ const Index = observer(() => {
         fetchCategories().then(data => device.setCategories(data))
         fetchBrands().then(data => device.setBrands(data))
         fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
-    }, [categoryId, brandId, filterByType, filterByDirection])
+    }, [categoryId, brandId, filterByType, filterByDirection, page])
 
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">

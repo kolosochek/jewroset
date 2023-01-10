@@ -27,6 +27,9 @@ export default class BasketStore {
     setBasket(basket: Partial<BasketI>) {
         this._basket = basket
     }
+    setBasketDevices(basket_devices: BasketI['basket_devices']) {
+        this._basket.basket_devices = basket_devices
+    }
 
     get basket() {
         return this._basket

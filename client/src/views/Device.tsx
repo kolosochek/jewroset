@@ -1,5 +1,5 @@
 import React, {Key, useContext, useEffect, useState} from 'react';
-import {Button, Card, Image, Row, Container, Spinner} from "react-bootstrap";
+import {Card, Image, Row, Container, Spinner} from "react-bootstrap";
 import {fetchOneDevice} from "../http/deviceAPI";
 import {useParams} from "react-router-dom";
 import {DeviceI, DeviceInfoT} from "../store/DeviceStore";

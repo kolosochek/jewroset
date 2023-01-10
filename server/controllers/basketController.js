@@ -1,5 +1,4 @@
 const APIError = require('../error/APIError')
-const jwt = require('jsonwebtoken')
 const {Basket, Device, BasketDevice} = require('../models/models')
 
 
@@ -117,17 +116,14 @@ class BasketController {
             return next(APIError.internalError(`No device with id: ${deviceId} in the basket with id: ${basketId}`))
         } else {
             await basketDevice.destroy()
+            // reload basket instance with removed basketDevices
+            await basket.reload({include:
+                    {
+                        model: BasketDevice,
+                        include: Device
+                    }})
         }
-        // reload basket instance with added basketDevices
-        await basket.reload({
-            include:
-                {
-                    model: BasketDevice,
-                    where: {basketId},
-                    include: Device
-                },
-            order: [[BasketDevice, 'createdAt', 'desc']]
-        })
+
         return res.json(basket)
     }
 }

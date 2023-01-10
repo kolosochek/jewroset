@@ -1,6 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import {userSignUp} from "../http/userAPI";
-import {findOrCreateBasket} from "../http/basketAPI";
 import {BasketI} from "./BasketStore";
 
 

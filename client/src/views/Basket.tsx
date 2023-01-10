@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Card, Col, Container, Figure, Row, Spinner} from "react-bootstrap";
+import React, {useContext} from 'react';
+import {Col, Container, Figure, Row} from "react-bootstrap";
 import {Context} from "../index";
 import {BasketDeviceI} from "../store/BasketStore";
 import FigureImage from "react-bootstrap/FigureImage";
@@ -50,9 +50,6 @@ const Basket = observer(() => {
                         <Col
                             className="text-end bi bi-x-circle"
                             onClick={() => {
-                                // debug
-                                console.log('gotcha')
-                                //
                                 basket.removeBasketDevice(item.device?.id!)
                             }}
                         ></Col>
