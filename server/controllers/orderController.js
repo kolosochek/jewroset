@@ -1,27 +1,33 @@
 const APIError = require('../error/APIError')
 const {Basket, Device, BasketDevice, Order} = require('../models/models')
+const {add} = require("nodemon/lib/rules");
 
 
 class OrderController {
-    async getOrCreateOrder(req, res) {
-        const {userId, basketId, formData} = req.body.params;
-        // debug
-        console.log(`req.body.params`)
-        console.log(req.body.params)
-        console.log(`formData`)
-        console.log(formData)
-        const orderStatus = 'created'
-        const order = await Order.findOrCreate({
-            where: {userId: userId, basketId: basketId, status: orderStatus}, include: [
-                {
-                    model: Basket,
-                    where: {id: basketId},
-                    include: Device,
-                    order: ['createdAt'],
-                }
-            ]
+
+    /*
+    include: [
+        {
+            model: Basket,
+            where: {id: basketId},
+            include: Device,
+            order: ['createdAt'],
+        }
+    ]
+     */
+    async createOrder(req, res) {
+        const {userId, basketId, address, address2, country, city, zip, status} = req.body.orderObj;
+        const order = await Order.create({
+            userId: userId,
+            basketId: basketId,
+            addressone: address,
+            addresstwo: address2,
+            country: country,
+            city: city,
+            zip: zip,
+            status: status ? status : 'created'
         })
-        return res.json(order[0])
+        return res.json(order)
     }
 }
 

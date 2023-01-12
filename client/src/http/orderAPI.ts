@@ -1,13 +1,11 @@
 import {$host} from "./index";
-import {DeviceI} from "../store/DeviceStore";
 import {UserI} from "../store/UserStore";
 import {BasketI} from "../store/BasketStore";
+import jwtDecode from "jwt-decode";
+import {OrderI} from "../store/OrderStore";
 
-export const findOrCreateOrder = async (userId:UserI['id'], basketId:BasketI['id'], formData:FormData) => {
-    const {data} = await $host.post('api/order', {
-        params: {
-            userId, basketId, formData
-        }
-    })
+
+export const createOrder = async (orderObj:Partial<OrderI>) => {
+    const {data} = await $host.post('api/order', {orderObj})
     return data
 }

@@ -3,7 +3,12 @@ import {makeAutoObservable} from "mobx";
 export type OrderT = "created" | "awaitingPayment" | "awaitingShipping" | "shipped" | "closed"
 export interface OrderI {
     id: number,
-    status: OrderT
+    status: OrderT,
+    address: string,
+    address2?: string,
+    country: string,
+    city: string,
+    zip: string
     userId: number,
     basketId: number,
     createdAt?: string,

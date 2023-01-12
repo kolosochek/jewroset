@@ -10,21 +10,22 @@ import {observer} from "mobx-react-lite";
 import BasketNavbarSmall from "./BasketNavbarSmall";
 
 
+export const eraseCookie = (name:string) => {
+    document.cookie = name+'=; Max-Age=-99999999;';
+}
+
 const Navbar = observer(() => {
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
     const navigate = useNavigate()
 
 
-    useEffect(() => {
-        //findOrCreateBasket(user.user.email!).then(data => basket.setBasket(data))
-    }, [])
-
-
     const _logout = () => {
         user.setUser({})
         user.setIsAuth(false)
         localStorage.removeItem('token')
+        // remove cookie
+        eraseCookie('userEmail')
         navigate('/' as RouteI['path'])
     }
 

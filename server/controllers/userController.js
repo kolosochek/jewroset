@@ -65,6 +65,15 @@ class UserController {
         return res.json({token})
     }
 
+    async findUserRaw(req, res, next){
+        const {email} = req.body
+        const user = await User.findOne({where: {email: email}})
+        if (!user) {
+            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+        }
+        return res.json(user)
+    }
+
     async isAuthorized(req, res, next){
         if (req.user) {
             const token = generateJwt(req.user.id, req.user.email, req.user.role)

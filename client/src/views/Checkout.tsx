@@ -1,10 +1,11 @@
 import React, {useContext} from 'react';
 import {Context} from "../index";
-import {findOrCreateOrder} from "../http/orderAPI";
 import {observer} from "mobx-react-lite";
 import {UserI} from "../store/UserStore";
-import {updateUser} from "../http/userAPI";
+import {findUser, findUserRaw, updateUser} from "../http/userAPI";
 import {useCookies} from "react-cookie";
+import {OrderI} from "../store/OrderStore";
+import {createOrder} from "../http/orderAPI";
 
 const Checkout = observer(() => {
     const {user} = useContext(Context)
@@ -12,10 +13,10 @@ const Checkout = observer(() => {
     const {order} = useContext(Context)
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
-    const setUserCookie = (userEmail:UserI['email'] = user.user.email!) => {
+    const setUserCookie = (userEmail: UserI['email'] = user.user.email!) => {
         setCookie("userEmail", userEmail, {
             path: "/",
-            maxAge: 24*60*60*183 // 6 month,
+            maxAge: 24 * 60 * 60 * 183 // 6 month,
         });
     }
 
@@ -25,15 +26,10 @@ const Checkout = observer(() => {
         form.addEventListener('submit', function (event: SubmitEvent) {
             event.preventDefault()
             event.stopPropagation()
-            // debug
-            console.log(`basket.basket`)
-            console.log(basket.basket)
-            //
 
-            //if (form.checkValidity()) {
-            if (!form.checkValidity()) {
+            if (form.checkValidity()) {
+                // user
                 const userObj: Partial<UserI> = {
-                    email: user.user.email,
                     phone: form.querySelector('input#phone').value ?? undefined,
                     firstName: form.querySelector('input#phone').value ?? undefined,
                     lastName: form.querySelector('input#phone').value ?? undefined,
@@ -41,45 +37,51 @@ const Checkout = observer(() => {
                 }
                 // if user is authorized
                 if (user.isAuth) {
+                    userObj.email = user.user.email
+
+                    findUserRaw(userObj.email).then(userParam => {
+                        user.setUser(userParam as unknown as UserI)
+                    })
+                    /*
+                    if (userObj.phone || userObj.firstName || userObj.lastName) {
+                        updateUser(userObj).then(userParam => {
+                            user.setUser(userParam as unknown as UserI)
+
+                        })
+                    }
+
+                     */
+                // if user is guest, register it
+                } else {
+                    userObj.email = user.user.email
+                    userObj.newEmail = form.querySelector('input#email').value
                     userObj.password = form.querySelector('input#password').value
 
                     updateUser(userObj).then(userParam => {
-                        // debug
-                        console.log(`userParam`)
-                        console.log(userParam)
-                        //
-                        user.setUser(userParam as unknown as UserI)
-                        setUserCookie(userObj.email)
-                    })
-                } else {
-                    userObj.newEmail = form.querySelector('input#email').value
-
-                    updateUser(userObj).then(userParam => {
-                        // debug
-                        console.log(`userParam`)
-                        console.log(userParam)
-                        //
                         user.setUser(userParam as unknown as UserI)
                         setUserCookie(userObj.newEmail)
+                        user.setIsAuth(true)
                     })
                 }
 
-                /*
-                // create or find new order with given basketId
-                const formData = new FormData(form)
-                findOrCreateOrder(
-                    user.id!,
-                    basket.id!,
-                    formData,
-                ).then((orderParam) => {
+                // order
+                const orderObj: Partial<OrderI> = {
+                    userId: user.id,
+                    basketId: basket.id,
+                    address: form.querySelector('input#address').value ?? undefined,
+                    address2: form.querySelector('input#address').value ?? undefined,
+                    country: form.querySelector('select#country').value ?? undefined,
+                    city: form.querySelector('select#city').value ?? undefined,
+                    zip: form.querySelector('input#zip').value ?? undefined,
+                    status: "created"
+                }
+                // create new order
+                createOrder(orderObj).then(orderParam => {
                     // debug
                     console.log(`orderParam`)
                     console.log(orderParam)
                     //
-                    order.setOrder(orderParam)
                 })
-
-                 */
             }
 
             form.classList.add('was-validated')
@@ -147,7 +149,7 @@ const Checkout = observer(() => {
                             <div className="col-sm-6">
                                 <label htmlFor="firstName" className="form-label">First name</label>
                                 <input type="text" className="form-control" id="firstName" placeholder=""
-                                       value={user.isAuth && user.user.firstName ? user.user.firstName : undefined} />
+                                       value={user.isAuth && user.user.firstName ? user.user.firstName : undefined}/>
                                 <div className="invalid-feedback">
                                     Valid first name is required.
                                 </div>
@@ -165,7 +167,7 @@ const Checkout = observer(() => {
                             <div className="col-12">
                                 <label htmlFor="address" className="form-label">Address</label>
                                 <input type="text" className="form-control" id="address"
-                                       placeholder="st. Main Road 1137"/>
+                                       placeholder="st. Main Road 1137" required />
                                 <div className="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
