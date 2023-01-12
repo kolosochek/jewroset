@@ -37,7 +37,8 @@ const App = observer(() => {
 
     const setUserCookie = (userEmail:UserI['email'] = user.user.email!) => {
         setCookie("userEmail", userEmail, {
-            path: "/"
+            path: "/",
+            maxAge: 24*60*60*183 // 6 month,
         });
     }
 

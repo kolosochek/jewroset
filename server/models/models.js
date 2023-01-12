@@ -8,8 +8,6 @@ const User = sequelize.define('user', {
     role: {type: DataTypes.STRING, defaultValue: "USER"},
     firstname: {type: DataTypes.STRING, unique: false, allowNull: true},
     lastname: {type: DataTypes.STRING, unique: false, allowNull: true},
-    addressone: {type: DataTypes.STRING, unique: false, allowNull: true},
-    addresstwo: {type: DataTypes.STRING, unique: false, allowNull: true},
     phone: {type: DataTypes.STRING, unique: false, allowNull: true},
 })
 
@@ -19,7 +17,12 @@ const Basket = sequelize.define('basket', {
 
 const Order = sequelize.define('order', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    status: {type: DataTypes.STRING, unique: false, allowNull: false},
+    status: {type: DataTypes.STRING, unique: false, allowNull: true},
+    addressone: {type: DataTypes.STRING, unique: false, allowNull: true},
+    addresstwo: {type: DataTypes.STRING, unique: false, allowNull: true},
+    country: {type: DataTypes.STRING, unique: false, allowNull: true},
+    city: {type: DataTypes.STRING, unique: false, allowNull: true},
+    zip: {type: DataTypes.STRING, unique: false, allowNull: true},
 })
 
 const BasketDevice = sequelize.define('basket_device',{
@@ -92,11 +95,13 @@ Basket.belongsToMany(Device, {through: BasketDevice, onDelete: 'CASCADE'})
 Device.belongsToMany(Basket, {through: BasketDevice, onDelete: 'CASCADE'})
 
 // order
-Order.hasOne(Basket)
-Basket.belongsTo(Order)
-
-User.hasMany(Order)
+User.hasOne(Order)
 Order.belongsTo(User)
+
+Basket.hasOne(Order)
+Order.belongsTo(Basket)
+
+
 
 module.exports = {
     User,
@@ -106,5 +111,6 @@ module.exports = {
     Category,
     Brand,
     Rating,
-    DeviceInfo
+    DeviceInfo,
+    Order
 }

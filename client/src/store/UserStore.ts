@@ -5,7 +5,10 @@ import {BasketI} from "./BasketStore";
 export interface UserI {
     id: number,
     email: string,
+    firstName?: string,
+    lastName?: string,
     password?: string,
+    phone?: string,
     role?: "USER" | "ADMIN" | "GUEST",
     basket?: Partial<BasketI>,
     createdAt?: string,
@@ -34,5 +37,9 @@ export default class UserStore {
 
     get user() {
         return this._user
+    }
+
+    get id() {
+        return this._user.id
     }
 }

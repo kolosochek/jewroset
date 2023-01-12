@@ -34,6 +34,10 @@ export default class BasketStore {
     get basket() {
         return this._basket
     }
+
+    get id() {
+        return this._basket.id
+    }
     get basketDevices() {
         return this.basket.basket_devices
     }

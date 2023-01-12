@@ -8,7 +8,7 @@ const generateJwt = (id, email, role) => {
     return jwt.sign(
         {id: id, email: email, role: role},
         process.env.SECRET,
-        {expiresIn: '24h'}
+        {expiresIn: '3m'}
     )
 }
 class UserController {
@@ -54,7 +54,7 @@ class UserController {
         return res.json({token})
     }
 
-    async find(req, res, next){
+    async findUser(req, res, next){
         const {email} = req.body
         const user = await User.findOne({where: {email: email}})
         if (!user) {
@@ -71,6 +71,16 @@ class UserController {
         } else {
             next(APIError.userNotAuthorizedError(`User is not authorized`))
         }
+    }
+
+    async updateUser(req, res, next){
+        const {email} = req.body
+        const user = await User.findOne({where: {email: email}})
+        if (!user) {
+            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+        }
+        const token = generateJwt(user.id, user.email, user.role)
+        return res.json({token})
     }
 
     async findOrCreateGuest(req, res, next) {

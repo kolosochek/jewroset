@@ -5,11 +5,13 @@ import UserStore from "./store/UserStore";
 import DeviceStore from "./store/DeviceStore";
 import BasketStore from "./store/BasketStore";
 import {CookiesProvider} from "react-cookie"
+import OrderStore from "./store/OrderStore";
 
 export const Context = createContext({
     user: new UserStore(),
     basket: new BasketStore(),
     device: new DeviceStore(),
+    order: new OrderStore(),
 })
 
 
@@ -23,6 +25,7 @@ root.render(
                 user: new UserStore(),
                 basket: new BasketStore(),
                 device: new DeviceStore(),
+                order: new OrderStore(),
             }}>
                 <App/>
             </Context.Provider>

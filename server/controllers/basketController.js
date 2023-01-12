@@ -3,7 +3,7 @@ const {Basket, Device, BasketDevice} = require('../models/models')
 
 
 class BasketController {
-    async getOrCreateUserBasket(req, res) {
+    async getOrCreateBasket(req, res) {
         const {userId} = req.query;
         const basket = await Basket.findOrCreate({
             where: {userId}, include: [
