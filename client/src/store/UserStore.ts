@@ -5,6 +5,7 @@ import {BasketI} from "./BasketStore";
 export interface UserI {
     id: number,
     email: string,
+    newEmail?: string,
     firstName?: string,
     lastName?: string,
     password?: string,

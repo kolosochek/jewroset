@@ -14,6 +14,12 @@ export const findUser = async (email:UserI['email'] = '') => {
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }
+
+export const updateUser = async (userObj:Partial<UserI>) => {
+    const {data} = await $host.post(`api/user/update`, {userObj})
+    localStorage.setItem('token', data.token)
+    return jwtDecode(data.token)
+}
 export const userSignIn = async (user: Partial<UserI> = {}) => {
     const {email, password} = user
     const {data} = await $host.post(`api/user/signin`, {email, password})

@@ -48,7 +48,8 @@ class UserController {
         if (!basket[0]){
             return next(APIError.internalError(`Can't find or creat basket for user with id: ${userId}`))
         }
-        const result = await basket[0].update({userId: userId})
+        // update basket
+        await basket[0].update({userId: userId})
 
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
@@ -74,11 +75,37 @@ class UserController {
     }
 
     async updateUser(req, res, next){
-        const {email} = req.body
+        const {email, newEmail, password, phone, firstName, lastName, role} = req.body.userObj
+        // debug
+        console.log(`req.body.userObj`)
+        console.log(req.body.userObj)
+        //
+        const userObj = {email: email}
         const user = await User.findOne({where: {email: email}})
         if (!user) {
             return next(APIError.internalError(`Can't find user by given email: ${email}`))
         }
+        if (newEmail){
+            userObj.email = newEmail
+        }
+        if (password){
+            userObj.password = await bcrypt.hash(password, 5)
+        }
+        if (phone){
+            userObj.phone = phone
+        }
+        if (role){
+            userObj.role = role
+        }
+        if (firstName){
+            userObj.firstName = firstName
+        }
+        if (lastName){
+            userObj.lastName = lastName
+        }
+        // update user info
+        user.update(userObj)
+        //
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }

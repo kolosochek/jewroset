@@ -31,7 +31,6 @@ const App = observer(() => {
     const {user} = useContext(Context);
     const {basket} = useContext(Context);
     const [isLoading, setIsLoading] = useState(true);
-    //basket.setBasket(user.userBasket)
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
 
@@ -48,9 +47,20 @@ const App = observer(() => {
     useEffect(() => {
         // get user from cookies or create it
         const userEmailCookie = cookies.userEmail
+        //
+        console.log(`user.Id`)
+        console.log(user.id)
+        console.log(`userEmailCookie`)
+        console.log(userEmailCookie)
+        //
         if (userEmailCookie) {
             const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
                 const userId:UserI['id'] = (foundUser as unknown as Partial<UserI>).id!
+                //
+                console.log(`userId`)
+                console.log(userId)
+                //
+
                 const findBasket = findOrCreateUserBasket(userId).then(basketParam => {
                     basket.setBasket(basketParam)
                 })

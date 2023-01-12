@@ -11,6 +11,17 @@ export const findOrCreateBasket = async (userId:UserI['id']) => {
     })
     return data
 }
+/*
+export const updateBasketUser = async (userId:UserI['id'], newUserId:UserI['id']) => {
+    const {data} = await $host.get('api/basket/update', {
+        params: {
+            userId: userId,
+            newUserId: newUserId,
+        }
+    })
+    return data
+}
+ */
 
 export const incrementBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
     const {data} = await $host.post('api/basket/increment', {basketId, deviceId, quantity})
