@@ -2,22 +2,24 @@ import React, {useContext, useState} from 'react';
 import {Container, Form, Card, Button} from "react-bootstrap";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
-import {userSignIn, userSignUp} from "../http/userAPI";
+import {setUserCookie, userSignIn, userSignUp} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
-import {findOrCreateBasket} from "../http/basketAPI";
+import {useCookies} from "react-cookie";
 
 const Auth = observer(() => {
     const navigate = useNavigate()
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
     const location = useLocation();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [cookies, setCookie] = useCookies(["userEmail"]);
+
     let isLoginView: boolean = false;
     if (location.pathname as RouteI['path'] === '/signin' as RouteI['path']) {
         isLoginView = true;
     }
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const click = async (e: any) => {
         e.preventDefault()
         let responseUser;
@@ -29,6 +31,7 @@ const Auth = observer(() => {
         if (responseUser) {
             user.setUser(responseUser)
             user.setIsAuth(true)
+            setUserCookie(user.user.email!, setCookie)
             navigate('/' as RouteI['path'])
         }
     }

@@ -2,6 +2,13 @@ import {$authHost, $host} from "./index";
 import jwtDecode from "jwt-decode";
 import {UserI} from "../store/UserStore";
 
+
+export const setUserCookie = (email: UserI['email'], setCookieFunction:Function) => {
+    setCookieFunction("userEmail", email, {
+        path: "/",
+        maxAge: 24 * 60 * 60 * 183 // 6 month,
+    })
+}
 export const userSignUp = async (user: Partial<UserI> = {}) => {
     const {email, password, role} = user
     const {data} = await $host.post(`api/user/signup`, {email, password, role: role ?? 'USER'})
@@ -15,16 +22,14 @@ export const findUser = async (email:UserI['email'] = '') => {
     return jwtDecode(data.token)
 }
 
-export const findUserRaw = async (email:UserI['email'] = '') => {
+export const findUserData = async (email:UserI['email'] = '') => {
     const {data} = await $host.post(`api/user/find/raw`, {email})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+    return data
 }
 
 export const updateUser = async (userObj:Partial<UserI>) => {
     const {data} = await $host.post(`api/user/update`, {userObj})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+    return data
 }
 export const userSignIn = async (user: Partial<UserI> = {}) => {
     const {email, password} = user

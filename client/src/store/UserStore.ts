@@ -12,6 +12,7 @@ export interface UserI {
     phone?: string,
     role?: "USER" | "ADMIN" | "GUEST",
     basket?: Partial<BasketI>,
+    userInfo: Record<string, string|number>
     createdAt?: string,
     updatedAt?: string,
 }
@@ -32,6 +33,10 @@ export default class UserStore {
         this._user = user
     }
 
+    setUserInfo(userInfo: UserI['userInfo']) {
+        this._user.userInfo = userInfo
+    }
+
     get isAuth() {
         return this._isAuth
     }
@@ -42,5 +47,9 @@ export default class UserStore {
 
     get id() {
         return this._user.id
+    }
+
+    get userInfo() {
+        return this.user.userInfo
     }
 }

@@ -19,16 +19,14 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <React.StrictMode>
-        <CookiesProvider>
-            <Context.Provider value={{
-                user: new UserStore(),
-                basket: new BasketStore(),
-                device: new DeviceStore(),
-                order: new OrderStore(),
-            }}>
-                <App/>
-            </Context.Provider>
-        </CookiesProvider>
-    </React.StrictMode>
+    <CookiesProvider>
+        <Context.Provider value={{
+            user: new UserStore(),
+            basket: new BasketStore(),
+            device: new DeviceStore(),
+            order: new OrderStore(),
+        }}>
+            <App/>
+        </Context.Provider>
+    </CookiesProvider>
 );

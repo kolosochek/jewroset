@@ -1,92 +1,98 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {UserI} from "../store/UserStore";
-import {findUser, findUserRaw, updateUser} from "../http/userAPI";
+import {findUserData, setUserCookie, updateUser} from "../http/userAPI";
 import {useCookies} from "react-cookie";
 import {OrderI} from "../store/OrderStore";
 import {createOrder} from "../http/orderAPI";
+import {useNavigate} from "react-router-dom";
+import {RouteI} from "../utils/Routes";
+import {clearBasket} from "../http/basketAPI";
 
 const Checkout = observer(() => {
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
     const {order} = useContext(Context)
+    const navigate = useNavigate()
+    const form: HTMLFormElement = document.querySelector('form.needs-validation')!
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
-    const setUserCookie = (userEmail: UserI['email'] = user.user.email!) => {
-        setCookie("userEmail", userEmail, {
-            path: "/",
-            maxAge: 24 * 60 * 60 * 183 // 6 month,
-        });
+    const createUserOrder = () => {
+        // order
+        const orderObj: Partial<OrderI> = {
+            userId: user.id,
+            basketId: basket.id,
+            address: (form.querySelector('input#address') as HTMLInputElement).value ?? undefined,
+            address2: (form.querySelector('input#address2') as HTMLInputElement).value ?? undefined,
+            country: (form.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
+            city: (form.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
+            zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
+            status: "created"
+        }
+        // create new order
+        createOrder(orderObj).then(orderParam => {
+            // clear basket
+            clearBasket(basket.id!).then((newBasket) => {
+                basket.setBasket(newBasket)
+            })
+        })
     }
 
     // validation
-    const forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event: SubmitEvent) {
+    if (form !== null) {
+        form.addEventListener('submit', (event: SubmitEvent) => {
             event.preventDefault()
             event.stopPropagation()
 
+            // if form is valid
             if (form.checkValidity()) {
-                // user
                 const userObj: Partial<UserI> = {
-                    phone: form.querySelector('input#phone').value ?? undefined,
-                    firstName: form.querySelector('input#phone').value ?? undefined,
-                    lastName: form.querySelector('input#phone').value ?? undefined,
-                    role: "USER"
+                    phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
+                    firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
+                    lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
+                    role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
                 }
                 // if user is authorized
                 if (user.isAuth) {
                     userObj.email = user.user.email
 
-                    findUserRaw(userObj.email).then(userParam => {
-                        user.setUser(userParam as unknown as UserI)
+                    updateUser(userObj).then(userInfo => {
+                        user.setUser(user.user)
+                        user.setUserInfo(userInfo)
                     })
-                    /*
-                    if (userObj.phone || userObj.firstName || userObj.lastName) {
-                        updateUser(userObj).then(userParam => {
-                            user.setUser(userParam as unknown as UserI)
-
-                        })
-                    }
-
-                     */
-                // if user is guest, register it
+                    // if user is guest
                 } else {
                     userObj.email = user.user.email
-                    userObj.newEmail = form.querySelector('input#email').value
-                    userObj.password = form.querySelector('input#password').value
+                    userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
+                    userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
 
                     updateUser(userObj).then(userParam => {
                         user.setUser(userParam as unknown as UserI)
-                        setUserCookie(userObj.newEmail)
                         user.setIsAuth(true)
+                        setUserCookie(user.user.email!, setCookie)
                     })
                 }
 
-                // order
-                const orderObj: Partial<OrderI> = {
-                    userId: user.id,
-                    basketId: basket.id,
-                    address: form.querySelector('input#address').value ?? undefined,
-                    address2: form.querySelector('input#address').value ?? undefined,
-                    country: form.querySelector('select#country').value ?? undefined,
-                    city: form.querySelector('select#city').value ?? undefined,
-                    zip: form.querySelector('input#zip').value ?? undefined,
-                    status: "created"
-                }
                 // create new order
-                createOrder(orderObj).then(orderParam => {
-                    // debug
-                    console.log(`orderParam`)
-                    console.log(orderParam)
-                    //
-                })
+                createUserOrder()
+                navigate('/payment' as RouteI['path'])
             }
 
             form.classList.add('was-validated')
-        }, false)
-    })
+        })
+    }
+
+    useEffect(() => {
+        // if user is authorized, get all user data
+        if (user.isAuth) {
+            findUserData(user.user.email).then((userInfo) => {
+                user.setUser(user.user)
+                user.setUserInfo(userInfo)
+            })
+        }
+
+    }, [])
 
 
     return (
@@ -119,7 +125,7 @@ const Checkout = observer(() => {
                 </div>
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3">Billing address</h4>
-                    <form method="GET" className="needs-validation" noValidate>
+                    <form method="POST" className="needs-validation" noValidate>
                         <div className="row g-3">
                             <div className="col-12">
                                 <label htmlFor="email" className="form-label">Email</label>
@@ -140,7 +146,8 @@ const Checkout = observer(() => {
 
                             <div className="col-12">
                                 <label htmlFor="phone" className="form-label">Phone number</label>
-                                <input type="tel" className="form-control" id="phone" placeholder=""/>
+                                <input type="tel" className="form-control" id="phone" placeholder=""
+                                       defaultValue={(user.isAuth && user.user.userInfo?.phone) ? user.user.userInfo?.phone : undefined}/>
                                 <div className="invalid-feedback">
                                     Please enter a valid phone number.
                                 </div>
@@ -148,8 +155,8 @@ const Checkout = observer(() => {
 
                             <div className="col-sm-6">
                                 <label htmlFor="firstName" className="form-label">First name</label>
-                                <input type="text" className="form-control" id="firstName" placeholder=""
-                                       value={user.isAuth && user.user.firstName ? user.user.firstName : undefined}/>
+                                <input type="text" className="form-control" id="firstName" placeholder="John"
+                                       defaultValue={(user.isAuth && user.user.userInfo?.firstname) ? user.user.userInfo?.firstname : undefined}/>
                                 <div className="invalid-feedback">
                                     Valid first name is required.
                                 </div>
@@ -157,8 +164,8 @@ const Checkout = observer(() => {
 
                             <div className="col-sm-6">
                                 <label htmlFor="lastName" className="form-label">Last name</label>
-                                <input type="text" className="form-control" id="lastName" placeholder=""
-                                       value={user.isAuth && user.user.lastName ? user.user.lastName : undefined}/>
+                                <input type="text" className="form-control" id="lastName" placeholder="Deere"
+                                       defaultValue={(user.isAuth && user.user.userInfo?.lastname) ? user.user.userInfo?.lastname : undefined}/>
                                 <div className="invalid-feedback">
                                     Valid last name is required.
                                 </div>
@@ -167,7 +174,7 @@ const Checkout = observer(() => {
                             <div className="col-12">
                                 <label htmlFor="address" className="form-label">Address</label>
                                 <input type="text" className="form-control" id="address"
-                                       placeholder="st. Main Road 1137" required />
+                                       placeholder="st. Main Road 1137" required/>
                                 <div className="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
@@ -275,8 +282,11 @@ const Checkout = observer(() => {
 
                         <hr className="my-4"/>
 
-                        <button className="w-100 btn btn-primary btn-lg" type="submit">Continue to
-                            checkout
+                        <button
+                            className="w-100 btn btn-primary btn-lg"
+                            type="submit"
+                        >Continue to
+                            payment
                         </button>
                     </form>
                 </div>

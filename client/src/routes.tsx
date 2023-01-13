@@ -6,6 +6,8 @@ import Index from "./views/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
 import Checkout from "./views/Checkout";
+import Payment from "./views/Payment";
+import Personal from "./views/Personal";
 
 export const defaultRoute: RouteI = {path: '/', View: Index}
 const commonRoutes: RouteI[] = [
@@ -14,13 +16,20 @@ const commonRoutes: RouteI[] = [
     },
     {
         path: '/checkout', View: Checkout,
-    }]
+    },
+    {
+        path: '/payment', View: Payment,
+    },
+]
 
 export const authorizedRoutes: RouteI[] = [
     defaultRoute,
     ...commonRoutes,
     {
         path: '/admin', View: Admin,
+    },
+    {
+        path: '/personal', View: Personal,
     }
 ]
 

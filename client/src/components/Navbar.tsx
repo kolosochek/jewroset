@@ -38,6 +38,7 @@ const Navbar = observer(() => {
                         <>
                             {user.user.role === 'ADMIN' && <Button className="bg-primary btn"
                                                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
+                            <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Personal</Button>
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
 
                         </>

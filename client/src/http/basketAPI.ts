@@ -11,6 +11,11 @@ export const findOrCreateBasket = async (userId:UserI['id']) => {
     })
     return data
 }
+
+export const clearBasket = async (basketId:BasketI['id']) => {
+    const {data} = await $host.post('api/basket/clear', {basketId})
+    return data
+}
 /*
 export const updateBasketUser = async (userId:UserI['id'], newUserId:UserI['id']) => {
     const {data} = await $host.get('api/basket/update', {
