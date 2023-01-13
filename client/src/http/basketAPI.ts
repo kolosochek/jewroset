@@ -12,8 +12,8 @@ export const findOrCreateBasket = async (userId:UserI['id']) => {
     return data
 }
 
-export const clearBasket = async (basketId:BasketI['id']) => {
-    const {data} = await $host.post('api/basket/clear', {basketId})
+export const clearBasket = async (userId:UserI['id'], basketId:BasketI['id']) => {
+    const {data} = await $host.post('api/basket/clear', {userId, basketId})
     return data
 }
 /*

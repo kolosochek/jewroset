@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import {Container, Spinner} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
-import {findUser, userCheck, userSignUp} from "./http/userAPI";
+import {findUser, setUserCookie, userCheck, userSignUp} from "./http/userAPI";
 import {UserI} from "./store/UserStore";
 import {useCookies} from "react-cookie";
 import {v4 as uuidv4} from "uuid";
@@ -34,38 +34,33 @@ const App = observer(() => {
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
 
-    const setUserCookie = (userEmail:UserI['email'] = user.user.email!) => {
-        setCookie("userEmail", userEmail, {
-            path: "/",
-            maxAge: 24*60*60*183 // 6 month,
-        });
-    }
-
-
-
-
     useEffect(() => {
         // get user from cookies or create it
-        const userEmailCookie = cookies.userEmail
+        const userEmailCookie = cookies.userEmail ? cookies.userEmail.replace('%40', '@') : false
         if (userEmailCookie) {
             const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
                 const userId:UserI['id'] = (foundUser as unknown as Partial<UserI>).id!
 
-                const findBasket = findOrCreateUserBasket(userId).then(basketParam => {
+                findOrCreateUserBasket(userId).then(basketParam => {
                     basket.setBasket(basketParam)
                 })
             })
         } else {
             // create new guest user
             const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
-            const createGuest = createGuestUser(guest).then(userParam => {
+            createGuestUser(guest).then(userParam => {
                 const guestUser:UserI = userParam as unknown as UserI
+
+                // set user cookie
+                setUserCookie(guest.email!, setCookie)
                 user.setUser(guestUser)
-                const createBasket = findOrCreateUserBasket(guestUser.id!).then(basketParam => {
+                // debug
+                console.log(`guestUser`)
+                console.log(guestUser.id)
+                //
+                findOrCreateUserBasket(guestUser.id).then(basketParam => {
                     basket.setBasket(basketParam)
                 })
-                // set user cookie
-                setUserCookie(user.user.email)
             })
         }
 

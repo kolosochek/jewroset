@@ -15,10 +15,9 @@ const Checkout = observer(() => {
     const {basket} = useContext(Context)
     const {order} = useContext(Context)
     const navigate = useNavigate()
-    const form: HTMLFormElement = document.querySelector('form.needs-validation')!
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
-    const createUserOrder = () => {
+    const createUserOrder = (form:HTMLFormElement) => {
         // order
         const orderObj: Partial<OrderI> = {
             userId: user.id,
@@ -33,62 +32,65 @@ const Checkout = observer(() => {
         // create new order
         createOrder(orderObj).then(orderParam => {
             // clear basket
-            clearBasket(basket.id!).then((newBasket) => {
+            clearBasket(user.id!, basket.id!).then((newBasket) => {
                 basket.setBasket(newBasket)
             })
         })
     }
 
-    // validation
-    if (form !== null) {
-        form.addEventListener('submit', (event: SubmitEvent) => {
-            event.preventDefault()
-            event.stopPropagation()
-
-            // if form is valid
-            if (form.checkValidity()) {
-                const userObj: Partial<UserI> = {
-                    phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
-                    firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
-                    lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
-                    role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
-                }
-                // if user is authorized
-                if (user.isAuth) {
-                    userObj.email = user.user.email
-
-                    updateUser(userObj).then(userInfo => {
-                        user.setUser(user.user)
-                        user.setUserInfo(userInfo)
-                    })
-                    // if user is guest
-                } else {
-                    userObj.email = user.user.email
-                    userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
-                    userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
-
-                    updateUser(userObj).then(userParam => {
-                        user.setUser(userParam as unknown as UserI)
-                        user.setIsAuth(true)
-                        setUserCookie(user.user.email!, setCookie)
-                    })
-                }
-
-                // create new order
-                createUserOrder()
-                navigate('/payment' as RouteI['path'])
-            }
-
-            form.classList.add('was-validated')
-        })
-    }
 
     useEffect(() => {
         // if user is authorized, get all user data
         if (user.isAuth) {
-            findUserData(user.user.email).then((userInfo) => {
-                user.setUser(user.user)
+            findUserData(user.user.email!).then((userInfo) => {
+                //user.setUser(user.user)
                 user.setUserInfo(userInfo)
+            })
+        }
+
+
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+        // validation
+        if (form !== null) {
+            form.addEventListener('submit', (e: SubmitEvent) => {
+                e.preventDefault()
+                e.stopPropagation()
+
+                // if form is valid
+                if (form.checkValidity()) {
+                    const userObj: Partial<UserI> = {
+                        phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
+                        firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
+                        lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
+                        role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
+                    }
+                    // if user is authorized
+                    if (user.isAuth) {
+                        userObj.email = user.user.email
+
+                        updateUser(userObj).then(userInfo => {
+                            user.setUser(user.user)
+                            user.setUserInfo(userInfo)
+                        })
+                        // if user is guest
+                    } else {
+                        userObj.email = user.user.email
+                        userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
+                        userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
+
+                        updateUser(userObj).then(userParam => {
+                            user.setUser(userParam as unknown as UserI)
+                            user.setIsAuth(true)
+                            setUserCookie(user.user.email!, setCookie)
+                        })
+                    }
+
+                    // create new order
+                    createUserOrder(form)
+                    navigate('/payment' as RouteI['path'])
+                }
+
+                form.classList.add('was-validated')
             })
         }
 
@@ -125,7 +127,7 @@ const Checkout = observer(() => {
                 </div>
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3">Billing address</h4>
-                    <form method="POST" className="needs-validation" noValidate>
+                    <form method="POST" className="needs-validation" noValidate={true}>
                         <div className="row g-3">
                             <div className="col-12">
                                 <label htmlFor="email" className="form-label">Email</label>

@@ -1,10 +1,11 @@
 import React, {Key, useContext, useEffect, useState} from 'react';
 import {Card, Image, Row, Container, Spinner} from "react-bootstrap";
 import {fetchOneDevice} from "../http/deviceAPI";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
 import {Context} from "../index";
 import AddToCart from "../components/AddToCart/AddToCart";
+import {RouteI} from "../utils/Routes";
 
 interface DeviceViewProps extends React.PropsWithChildren {
     children?: React.ReactNode
@@ -12,6 +13,7 @@ interface DeviceViewProps extends React.PropsWithChildren {
 
 const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
     const {basket} = useContext(Context)
+    const navigate = useNavigate()
     const {id} = useParams()
     const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
     const [deviceQuantity, setDeviceQuantity] = useState(0)
@@ -74,6 +76,12 @@ const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
                         <Container className="b-device-action py-3">
                             {deviceQuantity > 0 && <AddToCart device={device} quantity={deviceQuantity}/>}
                             {!deviceQuantity && <AddToCart device={device} />}
+                            <button
+                                className="mt-5 w-100 btn btn-primary btn-lg"
+                                type="submit"
+                                onClick={() => navigate('/basket' as RouteI['path'])}
+                            >Buy now
+                            </button>
                         </Container>
                     </div>
                 </div>
