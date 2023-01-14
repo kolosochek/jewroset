@@ -9,6 +9,27 @@ import {Link, useNavigate} from "react-router-dom";
 import {BasketDeviceI} from "../store/BasketStore";
 import BasketImage from "../components/BasketImage/BasketImage";
 
+export const switchTitle = (element: HTMLButtonElement) => {
+    if (element.hasAttributes() && element.hasAttribute('aria-expanded')){
+        if (element.getAttribute('aria-expanded') === 'true') {
+            element.textContent = "Collapse"
+        } else {
+            element.textContent = "Expand"
+        }
+    }
+}
+
+export const getTotalPrice = (basketDevices:BasketDeviceI[]) => {
+    let resultTotal = 0
+    if (!Array.isArray(basketDevices)){
+        return resultTotal
+    }
+    for (let item of basketDevices){
+        resultTotal += item.quantity * item.device.price!
+    }
+
+    return resultTotal
+}
 
 const Personal = () => {
     const {user} = useContext(Context)
@@ -16,27 +37,7 @@ const Personal = () => {
     const [orders, setOrders] = useState([] as Partial<OrderI>[]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const switchTitle = (element: HTMLButtonElement) => {
-        if (element.hasAttributes() && element.hasAttribute('aria-expanded')){
-            if (element.getAttribute('aria-expanded') === 'true') {
-                element.textContent = "Collapse"
-            } else {
-                element.textContent = "Expand order"
-            }
-        }
-    }
 
-    const getTotalPrice = (basketDevices:BasketDeviceI[]) => {
-        let resultTotal = 0
-        if (!Array.isArray(basketDevices)){
-            return resultTotal
-        }
-        for (let item of basketDevices){
-            resultTotal += item.quantity * item.device.price!
-        }
-
-        return resultTotal
-    }
 
     useEffect(() => {
         getUserOrders(user.id!).then((userOrders) => {
@@ -106,7 +107,7 @@ const Personal = () => {
                                                 aria-expanded="false"
                                                 aria-controls={`collapse${order.id}`}
                                                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {switchTitle((e.target as HTMLButtonElement))}}
-                                            >Expand order
+                                            >Expand
                                             </button>
                                         </Col>
                                     </Row>

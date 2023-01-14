@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Button, ListGroup, Row, Container} from "react-bootstrap";
+import {Button, ListGroup, Row, Container, Col} from "react-bootstrap";
 import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
 import CreateBrandModal from "../../components/modals/CreateBrandModal";
 import CreateDeviceModal from "../../components/modals/CreateDeviceModal";
@@ -21,11 +21,27 @@ const AdminProducts = () => {
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <section className="col-9">
+                    <section className="col-10">
                         <div className="wrapper d-flex flex-column">
-                            <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
-                            <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
-                            <Button className="btn" onClick={() => setDeviceVisible(true)}>add device</Button>
+                            <Row className="pt-1 pb-1">
+                                <Col>Category:</Col>
+                                <Col className="text-end">
+                                    <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
+                                </Col>
+                            </Row>
+                            <Row className="pt-1 pb-1">
+                                <Col>Brand:</Col>
+                                <Col className="text-end">
+                                    <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
+                                </Col>
+                            </Row>
+                            <Row className="pt-1 pb-1">
+                                <Col>Device:</Col>
+                                <Col className="text-end">
+                                    <Button className="btn" onClick={() => setDeviceVisible(true)}>add device</Button>
+                                </Col>
+                            </Row>
+
                             <CreateCategoryModal show={isCategoryVisible} onHide={() => setCategoryVisible(false)}/>
                             <CreateBrandModal show={isBrandVisible} onHide={() => setBrandVisible(false)}/>
                             <CreateDeviceModal show={isDeviceVisible} onHide={() => setDeviceVisible(false)}/>

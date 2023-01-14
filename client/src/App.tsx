@@ -59,8 +59,8 @@ const App = observer(() => {
             })
         }
 
-        userCheck().then(data => {
-            user.setUser(data as unknown as UserI)
+        userCheck().then(userParam => {
+            user.setUser(userParam as unknown as UserI)
             if (user.user.role !== 'GUEST'){
                 user.setIsAuth(true)
                 if (user.user.role == 'ADMIN'){

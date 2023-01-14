@@ -16,17 +16,6 @@ export const clearBasket = async (userId:UserI['id'], basketId:BasketI['id']) =>
     const {data} = await $host.post('api/basket/clear', {userId, basketId})
     return data
 }
-/*
-export const updateBasketUser = async (userId:UserI['id'], newUserId:UserI['id']) => {
-    const {data} = await $host.get('api/basket/update', {
-        params: {
-            userId: userId,
-            newUserId: newUserId,
-        }
-    })
-    return data
-}
- */
 
 export const incrementBasket = async(basketId: BasketI['id'], deviceId: DeviceI['id'], quantity=1) => {
     const {data} = await $host.post('api/basket/increment', {basketId, deviceId, quantity})

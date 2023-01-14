@@ -70,7 +70,7 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Modal heading
+                    Create new device
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

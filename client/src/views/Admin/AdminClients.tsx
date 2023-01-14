@@ -20,7 +20,7 @@ const AdminClients = () => {
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <section className="col-9">
+                    <section className="col-10">
                         <div className="wrapper d-flex flex-column">
                             <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
                             <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
