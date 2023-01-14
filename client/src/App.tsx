@@ -50,14 +50,9 @@ const App = observer(() => {
             const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
             createGuestUser(guest).then(userParam => {
                 const guestUser:UserI = userParam as unknown as UserI
-
                 // set user cookie
                 setUserCookie(guest.email!, setCookie)
                 user.setUser(guestUser)
-                // debug
-                console.log(`guestUser`)
-                console.log(guestUser.id)
-                //
                 findOrCreateUserBasket(guestUser.id).then(basketParam => {
                     basket.setBasket(basketParam)
                 })
@@ -68,6 +63,9 @@ const App = observer(() => {
             user.setUser(data as unknown as UserI)
             if (user.user.role !== 'GUEST'){
                 user.setIsAuth(true)
+                if (user.user.role == 'ADMIN'){
+                    user.setIsAdmin(true)
+                }
             }
         }).finally(() => setIsLoading(false))
     }, [])

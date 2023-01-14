@@ -12,7 +12,7 @@ export interface UserI {
     phone?: string,
     role?: "USER" | "ADMIN" | "GUEST",
     basket?: Partial<BasketI>,
-    userInfo: Record<string, string|number>
+    userInfo: Record<string, string|number>,
     createdAt?: string,
     updatedAt?: string,
 }
@@ -20,6 +20,7 @@ export interface UserI {
 export default class UserStore {
     constructor(
         private _isAuth: boolean = false,
+        private _isAdmin: boolean = false,
         private _user: Partial<UserI> = {}) {
 
         makeAutoObservable(this)
@@ -27,6 +28,9 @@ export default class UserStore {
 
     setIsAuth(isAuth: boolean) {
         this._isAuth = isAuth
+    }
+    setIsAdmin(isAdmin: boolean) {
+        this._isAdmin = isAdmin
     }
 
     setUser(user: Partial<UserI>) {
@@ -39,6 +43,10 @@ export default class UserStore {
 
     get isAuth() {
         return this._isAuth
+    }
+
+    get isAdmin() {
+        return this._isAdmin
     }
 
     get user() {

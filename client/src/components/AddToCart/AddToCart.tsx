@@ -29,7 +29,7 @@ const AddToCart: React.FC<AddToCartProps> = observer((device: AddToCartProps) =>
     return (
         <>
             {deviceQuantity !== 0 &&
-                <section className="b-add-to-cart-wrapper d-flex">
+                <section className="b-add-to-cart-wrapper">
                     <div className="b-add-to-cart d-flex">
                         <span className="input-group-btn d-inline-block">
                             <button

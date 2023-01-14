@@ -31,6 +31,9 @@ const Auth = observer(() => {
         if (responseUser) {
             user.setUser(responseUser)
             user.setIsAuth(true)
+            if (user.user.role === "ADMIN") {
+                user.setIsAdmin(true)
+            }
             setUserCookie(user.user.email!, setCookie)
             navigate('/' as RouteI['path'])
         }

@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {Context} from "../index";
 import {useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
+import {Button} from "react-bootstrap";
 
 const Payment = () => {
     const {order} = useContext(Context)
@@ -9,9 +10,14 @@ const Payment = () => {
 
 
     return (
-        <div>
-            <h1>{`Thank you! Your order with id: ${order.order.id} has been payed! We will contact you and ship your order ASAP!`}</h1>
-            <a onClick={() => navigate('/' as RouteI['path'])}>Main page</a>
+        <div className="mt-5 text-center">
+            <h1 className="">{`Thank you! Your order has been paid!`}</h1>
+            <h3>{`We will contact you and ship your order ASAP!`}</h3>
+            <section className="d-flex mt-5 b-goto-mainpage-wrapper">
+                <div className="container b-checkout">
+                    <Button onClick={() => navigate('/' as RouteI['path'])}>Main page</Button>
+                </div>
+            </section>
         </div>
     )
 }

@@ -1,16 +1,20 @@
 import {makeAutoObservable} from "mobx";
+import basket from "../views/Basket";
+import {BasketI} from "./BasketStore";
 
-export type OrderT = "created" | "awaitingPayment" | "awaitingShipping" | "shipped" | "closed"
+export type OrderT = "awaitingPayment" | "awaitingShipping" | "shipped" | "closed"
 export interface OrderI {
     id: number,
     status: OrderT,
-    address: string,
-    address2?: string,
+    addressone: string,
+    addresstwo?: string,
     country: string,
     city: string,
     zip: string
     userId: number,
     basketId: number,
+
+    basket?: BasketI,
     createdAt?: string,
     updatedAt?: string,
 }

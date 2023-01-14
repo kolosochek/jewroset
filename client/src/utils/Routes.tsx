@@ -1,4 +1,4 @@
-import Admin from "../views/Admin";
+import AdminDashboard from "../views/Admin/AdminDashboard";
 import Auth from "../views/Auth";
 import Basket from "../views/Basket";
 import Catalog from "../views/Catalog";
@@ -16,7 +16,7 @@ export type RoutePathT = "/"
     | "/checkout"
     | "payment"
     | string;
-export type ViewT = typeof Admin | typeof Auth | typeof Basket | typeof Device | typeof Index | typeof Catalog
+export type ViewT = typeof AdminDashboard | typeof Auth | typeof Basket | typeof Device | typeof Index | typeof Catalog
 
 export interface RouteI {
     path: RoutePathT,

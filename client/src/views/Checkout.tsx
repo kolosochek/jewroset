@@ -22,12 +22,12 @@ const Checkout = observer(() => {
         const orderObj: Partial<OrderI> = {
             userId: user.id,
             basketId: basket.id,
-            address: (form.querySelector('input#address') as HTMLInputElement).value ?? undefined,
-            address2: (form.querySelector('input#address2') as HTMLInputElement).value ?? undefined,
+            addressone: (form.querySelector('input#addressone') as HTMLInputElement).value ?? undefined,
+            addresstwo: (form.querySelector('input#addresstwo') as HTMLInputElement).value ?? undefined,
             country: (form.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
             city: (form.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
             zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
-            status: "created"
+            status: "awaitingPayment"
         }
         // create new order
         createOrder(orderObj).then(orderParam => {
@@ -67,10 +67,11 @@ const Checkout = observer(() => {
                     // if user is authorized
                     if (user.isAuth) {
                         userObj.email = user.user.email
-
-                        updateUser(userObj).then(userInfo => {
-                            user.setUser(user.user)
-                            user.setUserInfo(userInfo)
+                        updateUser(userObj).then(() => {
+                            //user.setUser(userParam as unknown as UserI)
+                            findUserData(user.user.email!).then((userInfo) => {
+                                user.setUserInfo(userInfo)
+                            })
                         })
                         // if user is guest
                     } else {
@@ -174,8 +175,8 @@ const Checkout = observer(() => {
                             </div>
 
                             <div className="col-12">
-                                <label htmlFor="address" className="form-label">Address</label>
-                                <input type="text" className="form-control" id="address"
+                                <label htmlFor="addressone" className="form-label">Address</label>
+                                <input type="text" className="form-control" id="addressone"
                                        placeholder="st. Main Road 1137" required/>
                                 <div className="invalid-feedback">
                                     Please enter your shipping address.
@@ -183,9 +184,9 @@ const Checkout = observer(() => {
                             </div>
 
                             <div className="col-12">
-                                <label htmlFor="address2" className="form-label">Address 2 <span
+                                <label htmlFor="addresstwo" className="form-label">Address 2 <span
                                     className="text-muted">(Optional)</span></label>
-                                <input type="text" className="form-control" id="address2"
+                                <input type="text" className="form-control" id="addresstwo"
                                        placeholder="apt. 881"/>
                             </div>
 

@@ -8,6 +8,7 @@ import {RouteI} from "../utils/Routes";
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import BasketNavbarSmall from "./BasketNavbarSmall";
+import {clearBasket} from "../http/basketAPI";
 
 
 export const eraseCookie = (name:string) => {
@@ -21,12 +22,19 @@ const Navbar = observer(() => {
 
 
     const _logout = () => {
-        user.setUser({})
-        user.setIsAuth(false)
-        localStorage.removeItem('token')
-        // remove cookie
-        eraseCookie('userEmail')
-        navigate('/' as RouteI['path'])
+        clearBasket(user.id!, basket.id!).then(() => {
+            user.setUser({})
+            user.setIsAuth(false)
+            if (user.user.role === "ADMIN") {
+                user.setIsAdmin(false)
+            }
+            localStorage.removeItem('token')
+            // remove cookie
+            eraseCookie('userEmail')
+            basket.setBasket({})
+            navigate('/' as RouteI['path'])
+        })
+
     }
 
     return (
@@ -36,9 +44,9 @@ const Navbar = observer(() => {
                 <Nav className="ml-auto">
                     {user.isAuth ?
                         <>
-                            {user.user.role === 'ADMIN' && <Button className="bg-primary btn"
+                            {user.isAdmin && <Button className="bg-primary btn"
                                                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
-                            <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Personal</Button>
+                            <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
 
                         </>
