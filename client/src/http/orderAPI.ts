@@ -21,3 +21,12 @@ export const adminGetAllOrders = async (userId: UserI['id']) => {
     })
     return data
 }
+
+export const adminRemoveOrder = async (userId: UserI['id'], orderId: OrderI["id"]) => {
+    const {data} = await $authHost.post('api/order/remove', {
+        params: {
+            userId, orderId
+        }
+    })
+    return data
+}

@@ -3,8 +3,7 @@ import {Button, ListGroup, Row, Container, Col} from "react-bootstrap";
 import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
 import CreateBrandModal from "../../components/modals/CreateBrandModal";
 import CreateDeviceModal from "../../components/modals/CreateDeviceModal";
-import {Link, useLocation} from "react-router-dom";
-import {RouteI} from "../../utils/Routes";
+import {useLocation} from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
 

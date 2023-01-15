@@ -3,6 +3,16 @@ import {DeviceI} from "../store/DeviceStore";
 import {UserI} from "../store/UserStore";
 import {BasketI} from "../store/BasketStore";
 
+export const createBasket = async (userId:UserI['id'], status?: BasketI['status']) => {
+    const {data} = await $host.post('api/basket', {
+        params: {
+            userId,
+            status
+        }
+    })
+    return data
+}
+
 export const findOrCreateBasket = async (userId:UserI['id']) => {
     const {data} = await $host.get('api/basket', {
         params: {

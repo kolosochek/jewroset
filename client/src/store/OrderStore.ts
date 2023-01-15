@@ -1,11 +1,13 @@
 import {makeAutoObservable} from "mobx";
 import basket from "../views/Basket";
 import {BasketI} from "./BasketStore";
+import {UserI} from "./UserStore";
 
-export type OrderT = "awaitingPayment" | "awaitingShipping" | "shipped" | "closed"
+export const orderStatusArr = ["awaitingPayment", "awaitingShipping", "shipped", "closed"] as const;
+export type OrderStatusT = typeof orderStatusArr[number]
 export interface OrderI {
     id: number,
-    status: OrderT,
+    status: OrderStatusT,
     addressone: string,
     addresstwo?: string,
     country: string,
@@ -13,11 +15,13 @@ export interface OrderI {
     zip: string
     userId: number,
     basketId: number,
-
+    user?: UserI,
+    email?: UserI["email"],
     basket?: BasketI,
     createdAt?: string,
     updatedAt?: string,
 }
+
 
 export default class OrderStore {
     constructor(

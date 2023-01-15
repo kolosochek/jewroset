@@ -8,7 +8,7 @@ const generateJwt = (id, email, role) => {
     return jwt.sign(
         {id: id, email: email, role: role},
         process.env.SECRET,
-        {expiresIn: '3m'}
+        {expiresIn: '183d'}
     )
 }
 class UserController {
@@ -18,14 +18,13 @@ class UserController {
             return next(APIError.badRequestError(`No error or password was given!`))
         }
         const candidate = await User.findOne({where: {email}})
-
         if (candidate) {
             return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
-        const userId = user.id
-        const basket = await Basket.findOrCreate({where: {id:userId}})
+        //const userId = user.id
+        //const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
@@ -65,9 +64,19 @@ class UserController {
         return res.json({token})
     }
 
-    async findUserRaw(req, res, next){
+    async findUser(req, res, next){
         const {email} = req.body
         const user = await User.findOne({where: {email: email}})
+        if (!user) {
+            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+        }
+        const token = generateJwt(user.id, user.email, user.role)
+        return res.json({token})
+    }
+
+    async findUserRaw(req, res, next){
+        const {email} = req.body
+        const user = await User.findOne({where: {email: email}, attributes: ['id', 'phone', 'firstname', 'lastname']})
         if (!user) {
             return next(APIError.internalError(`Can't find user by given email: ${email}`))
         }
@@ -85,10 +94,6 @@ class UserController {
 
     async updateUser(req, res, next){
         const {email, newEmail, password, phone, firstName, lastName, role} = req.body.userObj
-        // debug
-        console.log(`req.body.userObj`)
-        console.log(req.body.userObj)
-        //
         const userObj = {email: email}
         const user = await User.findOne({where: {email: email}})
         if (!user) {
@@ -107,13 +112,13 @@ class UserController {
             userObj.role = role
         }
         if (firstName){
-            userObj.firstName = firstName
+            userObj.firstname = firstName
         }
         if (lastName){
-            userObj.lastName = lastName
+            userObj.lastname = lastName
         }
         // update user info
-        user.update(userObj)
+        user.update(userObj, {attributes: ['phone', 'firstname', 'lastname']})
         //
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})

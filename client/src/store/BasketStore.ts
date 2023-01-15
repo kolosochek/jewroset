@@ -13,6 +13,7 @@ export interface BasketI {
     count: number,
     userId: number,
     basket_devices?: BasketDeviceI[],
+    status?: "open" | "closed"
     createdAt?: string,
     updatedAt?: string,
 }

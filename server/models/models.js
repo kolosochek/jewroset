@@ -13,6 +13,7 @@ const User = sequelize.define('user', {
 
 const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    status: {type: DataTypes.STRING, unique: false, allowNull: false, defaultValue: 'open'},
 })
 
 const Order = sequelize.define('order', {
@@ -85,8 +86,11 @@ Category.belongsToMany(Brand, {through: CategoryBrand})
 Brand.belongsToMany(Category, {through: CategoryBrand})
 
 // basket
-User.hasOne(Basket)
-Basket.belongsTo(User)
+User.hasMany(Basket, {foreignKey: {
+        name: 'userId',
+        allowNull: false,
+    }})
+Basket.belongsTo(User, {constraints: false})
 
 Basket.hasMany(BasketDevice)
 BasketDevice.belongsTo(Basket)

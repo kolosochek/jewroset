@@ -32,6 +32,9 @@ const commonRoutes: RouteI[] = [
         path: '/checkout', View: Checkout,
     },
     {
+        path: '/basket', View: Basket,
+    },
+    {
         path: '/payment', View: Payment,
     },
 ]

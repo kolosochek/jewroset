@@ -39,13 +39,6 @@ export const userSignIn = async (user: Partial<UserI> = {}) => {
     return jwtDecode(data.token)
 }
 
-export const guestFindOrCreate = async (user: Partial<UserI> = {}) => {
-    const {email, password, role} = user
-    const {data} = await $host.post(`api/user/guest`, {email, password, role})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
-}
-
 export const userCheck = async () => {
     const {data} = await $authHost.post(`api/user/auth`)
     if (data) {

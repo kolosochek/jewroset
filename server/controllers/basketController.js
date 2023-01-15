@@ -6,7 +6,46 @@ class BasketController {
     async getOrCreateBasket(req, res) {
         const {userId} = req.query;
         const basket = await Basket.findOrCreate({
-            where: {userId}, include: [
+            where: {
+                userId: userId,
+                status: 'open',
+            }, include: [
+                {
+                    model: BasketDevice,
+                    include: Device,
+                    order: ['createdAt', 'desc'],
+                }
+            ]
+        })
+        return res.json(basket[0])
+    }
+
+
+    async createBasket(req, res) {
+        const {userId, status} = req.body.params;
+        const basket = await Basket.create({
+            userId: userId,
+            status: status ? status : 'open',
+        })
+        return res.json(basket)
+    }
+
+    async clearBasket(req, res, next) {
+        const {userId, basketId} = req.body;
+        const oldBasket = await Basket.findOne({
+            where: {
+                id: basketId
+            }
+        })
+        if (!oldBasket) {
+            return next(APIError.internalError(`Can't find old basket by given id: ${basketId}`))
+        }
+        oldBasket.update({status: 'closed'})
+        const basket = await Basket.findOrCreate({
+            where: {
+                userId: userId,
+                status: 'open',
+            }, include: [
                 {
                     model: BasketDevice,
                     include: Device,
@@ -66,7 +105,7 @@ class BasketController {
         // if device is already in the cart
         if (basketDevice) {
             // decrement or remove it
-            if(basketDevice.quantity > 1) {
+            if (basketDevice.quantity > 1) {
                 const resultQuantity = basketDevice.quantity - quantity;
                 await basketDevice.update({quantity: resultQuantity})
                 // reload basket instance with given basketDevices
@@ -81,16 +120,19 @@ class BasketController {
                         },
                     order: [[BasketDevice, 'createdAt', 'desc']]
                 })
+                // remove
             } else {
                 await basketDevice.destroy()
                 // reload basket instance with removed basketDevices
-                await basket.reload({include:
+                await basket.reload({
+                    include:
                         {
                             model: BasketDevice,
                             include: Device
-                        }})
+                        }
+                })
             }
-        // otherwise throw an error
+            // otherwise throw an error
         } else {
             return next(APIError.internalError(`No device with id: ${deviceId} in the basket with id: ${basketId}`))
         }
@@ -117,11 +159,13 @@ class BasketController {
         } else {
             await basketDevice.destroy()
             // reload basket instance with removed basketDevices
-            await basket.reload({include:
+            await basket.reload({
+                include:
                     {
                         model: BasketDevice,
                         include: Device
-                    }})
+                    }
+            })
         }
 
         return res.json(basket)

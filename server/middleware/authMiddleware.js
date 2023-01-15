@@ -14,6 +14,6 @@ module.exports = function (req, res, next) {
         req.user = decoded
         next()
     } catch (e) {
-        next(APIError.userNotAuthorizedError(`authMiddleware catch: User is NOT authorized!`))
+        next(APIError.userNotAuthorizedError(`authMiddleware catch: User is NOT authorized! ${e}`))
     }
 }

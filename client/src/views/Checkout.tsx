@@ -9,6 +9,8 @@ import {createOrder} from "../http/orderAPI";
 import {useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import {clearBasket} from "../http/basketAPI";
+import SelectCountry from "../components/SelectCountry";
+import SelectCity from "../components/SelectCity";
 
 const Checkout = observer(() => {
     const {user} = useContext(Context)
@@ -43,7 +45,6 @@ const Checkout = observer(() => {
         // if user is authorized, get all user data
         if (user.isAuth) {
             findUserData(user.user.email!).then((userInfo) => {
-                //user.setUser(user.user)
                 user.setUserInfo(userInfo)
             })
         }
@@ -191,27 +192,11 @@ const Checkout = observer(() => {
                             </div>
 
                             <div className="col-md-5">
-                                <label htmlFor="country" className="form-label">Country</label>
-                                <select className="form-select" id="country" required>
-                                    <option value="">Choose...</option>
-                                    <option>United States</option>
-                                </select>
-                                <div className="invalid-feedback">
-                                    Please select a valid country.
-                                </div>
+                                <SelectCountry />
                             </div>
 
                             <div className="col-md-4">
-                                <label htmlFor="city" className="form-label">City</label>
-                                <select className="form-select" id="city" required>
-                                    <option value="">Choose...</option>
-                                    <option>Detroit</option>
-                                    <option>Philadelphia</option>
-                                    <option>New York</option>
-                                </select>
-                                <div className="invalid-feedback">
-                                    Please provide a valid city.
-                                </div>
+                                <SelectCity />
                             </div>
 
                             <div className="col-md-3">

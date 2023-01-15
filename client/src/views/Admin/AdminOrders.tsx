@@ -3,26 +3,36 @@ import {Button, ListGroup, Row, Container, Col, Spinner} from "react-bootstrap";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
 import {Link, useLocation} from "react-router-dom";
-import {adminGetAllOrders} from "../../http/orderAPI";
+import {adminGetAllOrders, adminRemoveOrder} from "../../http/orderAPI";
 import {OrderI} from "../../store/OrderStore";
 import {BasketDeviceI} from "../../store/BasketStore";
 import BasketImage from "../../components/BasketImage/BasketImage";
 import {getTotalPrice, switchTitle} from "../Personal";
+import OrderModal from "../../components/modals/OrderModal";
+import AdminOrderFilterbar from "../../components/admin/AdminOrderFilterbar";
+
 
 const AdminOrders = () => {
     const {user} = useContext(Context)
     const location = useLocation()
     const adminSection = location.pathname.split('/').pop()
     const [orders, setOrders] = useState([] as Partial<OrderI>[]);
+    const [isRender, setIsRender] = useState(false)
     const [count, setCount] = useState([] as Partial<OrderI>[]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCreateOrderVisible, setCreateOrderVisible] = useState(false)
+    const [isEditOrderVisible, setEditOrderVisible] = useState(false)
+
 
     useEffect(() => {
         adminGetAllOrders(user.id!).then(orders => {
             setCount(orders.count)
             setOrders(orders.rows)
-        }).finally(() => setIsLoading(false))
-    }, [])
+        }).finally(() => {
+            setIsLoading(false)
+            setIsRender(false)
+        })
+    }, [isRender])
 
     if (isLoading) {
         return <Spinner animation={"grow"}/>
@@ -34,6 +44,25 @@ const AdminOrders = () => {
                     <AdminSidebar activeItem={adminSection!}/>
                     <section className="col-10">
                         <div className="wrapper d-flex flex-column">
+                            <Row className="mb-3">
+                                <Col className="text-start">
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={() => setCreateOrderVisible(true)}
+                                    >Create new order</button>
+                                    <OrderModal
+                                        mode="create"
+                                        show={isCreateOrderVisible}
+                                        onHide={() => {
+                                            setIsRender(true)
+                                            setCreateOrderVisible(false)
+                                        }
+                                    } />
+                                </Col>
+                                <Col className="text-end">
+                                    <AdminOrderFilterbar />
+                                </Col>
+                            </Row>
                             {orders
                                 ? (<>
                                         <Row>
@@ -76,7 +105,7 @@ const AdminOrders = () => {
                                                 <>
                                                     <Row key={order.id} className="align-items-center mb-2 mt-2">
                                                         <Col>{order.id}</Col>
-                                                        <Col className="">{user.user.email}</Col>
+                                                        <Col className="">{order.user?.email}</Col>
                                                         <Col className="col-3">{`${order.addressone}${order.addresstwo ? `, ${order.addresstwo}` : ''}`}</Col>
                                                         <Col className="text-center">{order.country}</Col>
                                                         <Col className="text-center">{order.city}</Col>
@@ -119,7 +148,30 @@ const AdminOrders = () => {
                                                             )
                                                         })}
                                                         <hr />
-                                                        <Row>
+                                                        <Row key={`actions-${order.id}`} className="align-items-center">
+                                                            <Col className="text-start">
+                                                                <button
+                                                                    className="btn btn-success me-2"
+                                                                    onClick={() => setEditOrderVisible(true)
+                                                                }
+                                                                >Edit</button>
+                                                                <OrderModal
+                                                                    mode="edit"
+                                                                    show={isEditOrderVisible}
+                                                                    onHide={() => {
+                                                                        setIsRender(true)
+                                                                        setEditOrderVisible(false)
+                                                                    }
+                                                                    } />
+                                                                <button className="btn btn-danger" onClick={() => {
+                                                                    adminRemoveOrder(user.id!, order.id!).then(result => {
+                                                                        if (result.result === true) {
+                                                                            setIsRender(true)
+                                                                        }
+                                                                    })
+                                                                }
+                                                                }>Delete</button>
+                                                            </Col>
                                                             <Col className="text-end"><strong>Order total: {getTotalPrice(order.basket?.basket_devices!)}</strong></Col>
                                                         </Row>
                                                     </section>
