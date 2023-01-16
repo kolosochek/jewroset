@@ -1,194 +1,40 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Button, ListGroup, Row, Container, Col, Spinner} from "react-bootstrap";
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {Row, Container, Spinner} from "react-bootstrap";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
-import {Link, useLocation} from "react-router-dom";
-import {adminGetAllOrders, adminRemoveOrder} from "../../http/orderAPI";
-import {OrderI} from "../../store/OrderStore";
-import {BasketDeviceI} from "../../store/BasketStore";
-import BasketImage from "../../components/BasketImage/BasketImage";
-import {getTotalPrice, switchTitle} from "../Personal";
-import OrderModal from "../../components/modals/OrderModal";
-import AdminOrderFilterbar from "../../components/admin/AdminOrderFilterbar";
+import {useLocation} from "react-router-dom";
+import AdminOrderList from "../../components/admin/order/AdminOrderList";
 
+export interface AdminOrderFilterI {
+    orderBy: "status" | "creation"
+    orderDirection: "asc" | "desc"
 
+}
+
+const orderFilter = {
+    orderBy: 'creation',
+        orderDirection: 'desc',
+}
+
+export const AdminOrderContext = createContext({
+    isRender: false,
+    setIsRender: (bool:boolean) => {}
+})
 const AdminOrders = () => {
     const {user} = useContext(Context)
     const location = useLocation()
     const adminSection = location.pathname.split('/').pop()
-    const [orders, setOrders] = useState([] as Partial<OrderI>[]);
-    const [isRender, setIsRender] = useState(false)
-    const [count, setCount] = useState([] as Partial<OrderI>[]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isCreateOrderVisible, setCreateOrderVisible] = useState(false)
-    const [isEditOrderVisible, setEditOrderVisible] = useState(false)
+    const [isRender, setIsRender] = useState(false);
 
 
-    useEffect(() => {
-        adminGetAllOrders(user.id!).then(orders => {
-            setCount(orders.count)
-            setOrders(orders.rows)
-        }).finally(() => {
-            setIsLoading(false)
-            setIsRender(false)
-        })
-    }, [isRender])
-
-    if (isLoading) {
-        return <Spinner animation={"grow"}/>
-    }
     return (
         user.isAdmin
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <section className="col-10">
-                        <div className="wrapper d-flex flex-column">
-                            <Row className="mb-3">
-                                <Col className="text-start">
-                                    <button
-                                        className="btn btn-success"
-                                        onClick={() => setCreateOrderVisible(true)}
-                                    >Create new order</button>
-                                    <OrderModal
-                                        mode="create"
-                                        show={isCreateOrderVisible}
-                                        onHide={() => {
-                                            setIsRender(true)
-                                            setCreateOrderVisible(false)
-                                        }
-                                    } />
-                                </Col>
-                                <Col className="text-end">
-                                    <AdminOrderFilterbar />
-                                </Col>
-                            </Row>
-                            {orders
-                                ? (<>
-                                        <Row>
-                                            <Col className="">Order id</Col>
-                                            <Col>Email</Col>
-                                            <Col className="col-3">Address</Col>
-                                            <Col className="text-center">Country</Col>
-                                            <Col className="text-center">City</Col>
-                                            <Col className="text-center">Status</Col>
-                                            <Col className="text-end">Action</Col>
-                                        </Row>
-                                        <hr/>
-                                        {(orders as OrderI[]).map((order: OrderI, index) => {
-                                            const orderStatus = {
-                                                title: '',
-                                                className: '',
-                                            }
-                                            switch(order.status){
-                                                case "awaitingPayment":
-                                                    orderStatus.className = 'text-danger'
-                                                    orderStatus.title = 'Awaiting payment'
-                                                    break;
-                                                case "awaitingShipping":
-                                                    orderStatus.className = 'text-primary'
-                                                    orderStatus.title = 'Awaiting shipping'
-                                                    break;
-                                                case "shipped":
-                                                    orderStatus.className = 'text-success'
-                                                    orderStatus.title = 'Sent'
-                                                    break
-                                                case "closed":
-                                                    orderStatus.className = 'text-error'
-                                                    orderStatus.title = 'Sent'
-                                                    break
-                                                default:
-                                                    break;
-                                            }
-
-                                            return (
-                                                <>
-                                                    <Row key={order.id} className="align-items-center mb-2 mt-2">
-                                                        <Col>{order.id}</Col>
-                                                        <Col className="">{order.user?.email}</Col>
-                                                        <Col className="col-3">{`${order.addressone}${order.addresstwo ? `, ${order.addresstwo}` : ''}`}</Col>
-                                                        <Col className="text-center">{order.country}</Col>
-                                                        <Col className="text-center">{order.city}</Col>
-                                                        <Col className={`text-center ${orderStatus.className}`}>{orderStatus.title}</Col>
-                                                        <Col className="text-end">
-                                                            <button
-                                                                className="btn btn-primary"
-                                                                type="button"
-                                                                data-bs-toggle="collapse"
-                                                                data-bs-target={`#collapse${order.id}`}
-                                                                aria-expanded="false"
-                                                                aria-controls={`collapse${order.id}`}
-                                                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {switchTitle((e.target as HTMLButtonElement))}}
-                                                            >Expand
-                                                            </button>
-                                                        </Col>
-                                                    </Row>
-                                                    <section key={`order-expanded-${order.id}`} className="collapse card card-body" id={`collapse${order.id}`} >
-                                                        <Row>
-                                                            <Col>#</Col>
-                                                            <Col className="col-3">Name</Col>
-                                                            <Col className="text-center">Img</Col>
-                                                            <Col className="text-center">Quantity</Col>
-                                                            <Col className="text-center">Price</Col>
-                                                            <Col className="text-end">Total</Col>
-                                                        </Row>
-                                                        <hr />
-                                                        {order.basket?.basket_devices?.map((item: Partial<BasketDeviceI>, i) => {
-                                                            return (
-                                                                <Row key={item.device?.id} className="align-items-center">
-                                                                    <Col className="">{++i}</Col>
-                                                                    <Col className="col-3"><Link to={`/device/${item.device?.id}`}>{item.device?.name}</Link></Col>
-                                                                    <Col className="text-center">
-                                                                        <BasketImage imageUrl={item.device?.img!} />
-                                                                    </Col>
-                                                                    <Col className="text-center">{item.quantity}</Col>
-                                                                    <Col className="text-center">{item.device?.price}</Col>
-                                                                    <Col className="text-end"><strong>{item.device?.price! * item.quantity!}</strong></Col>
-                                                                </Row>
-                                                            )
-                                                        })}
-                                                        <hr />
-                                                        <Row key={`actions-${order.id}`} className="align-items-center">
-                                                            <Col className="text-start">
-                                                                <button
-                                                                    className="btn btn-success me-2"
-                                                                    onClick={() => setEditOrderVisible(true)
-                                                                }
-                                                                >Edit</button>
-                                                                <OrderModal
-                                                                    mode="edit"
-                                                                    show={isEditOrderVisible}
-                                                                    onHide={() => {
-                                                                        setIsRender(true)
-                                                                        setEditOrderVisible(false)
-                                                                    }
-                                                                    } />
-                                                                <button className="btn btn-danger" onClick={() => {
-                                                                    adminRemoveOrder(user.id!, order.id!).then(result => {
-                                                                        if (result.result === true) {
-                                                                            setIsRender(true)
-                                                                        }
-                                                                    })
-                                                                }
-                                                                }>Delete</button>
-                                                            </Col>
-                                                            <Col className="text-end"><strong>Order total: {getTotalPrice(order.basket?.basket_devices!)}</strong></Col>
-                                                        </Row>
-                                                    </section>
-                                                </>
-                                            )
-                                        })}
-                                        <hr/>
-                                        <Row>
-                                            <Col className="text-end"></Col>
-                                        </Row>
-                                    </>
-                                )
-                                : (<h3>No items in this section</h3>)
-
-                            }
-                        </div>
-                    </section>
+                    <AdminOrderContext.Provider value={{isRender, setIsRender}}>
+                        <AdminOrderList />
+                    </AdminOrderContext.Provider>
                 </Row>
             </Container>)
             : (<h1>Not enough rights to access that page!</h1>)

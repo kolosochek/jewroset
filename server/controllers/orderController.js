@@ -53,7 +53,8 @@ class OrderController {
                         include: Device
                     }]
                 }
-            ]
+            ],
+            order: [['createdAt', 'desc']]
         })
         if (!order) {
             return next(APIError.internalError(`Can't create an order with giver params! ${req.body.orderObj.toString()}`))

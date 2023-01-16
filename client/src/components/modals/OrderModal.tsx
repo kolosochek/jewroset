@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {fetchDevices} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
@@ -7,34 +7,45 @@ import SelectCountry from "../SelectCountry";
 import SelectCity from "../SelectCity";
 import {OrderI, orderStatusArr} from "../../store/OrderStore";
 import {createOrder} from "../../http/orderAPI";
-import {UserI} from "../../store/UserStore";
 import {clearBasket, createBasket, incrementBasket} from "../../http/basketAPI";
-import {BasketI} from "../../store/BasketStore";
+import {BasketDeviceI, BasketI} from "../../store/BasketStore";
 import {findUserData} from "../../http/userAPI";
+import {AdminOrderContext} from "../../views/Admin/AdminOrders";
+import {switchTitle} from "../../views/Personal";
+import BasketDeviceList from "../BasketDeviceList";
+import {Context} from "../../index";
 
-type ValueOf<T> = T[keyof T];
+
 type ModeT = "create" | "edit"
 
 interface CreateOrderModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
-    mode: ModeT
+    mode: ModeT,
+    order?: OrderI
 }
 
-const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mode}: CreateOrderModalProps) => {
-    const [user, setUser] = useState<Partial<UserI>>({})
-    const [basket, setBasket] = useState<Partial<BasketI>>({})
-    const [email, setEmail] = useState('')
-    const [addressone, setAddressone] = useState("")
-    const [addresstwo, setAddresstwo] = useState("")
-    const [zip, setZip] = useState("")
-    const [status, setStatus] = useState("created")
-    const [orderDevice, setOrderDevice] = useState<DeviceI[]>([])
+const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mode, order}: CreateOrderModalProps) => {
+    const {basket} = useContext(Context)
+    const {isRender, setIsRender} = useContext(AdminOrderContext);
+    const forceParentRender = () => setIsRender(!isRender);
+    const [email, setEmail] = useState(mode === 'edit' && order!.user?.email ? order!.user?.email : '')
+    const [addressone, setAddressone] = useState(mode === 'edit' && order!.addressone ? order!.addressone : '')
+    const [addresstwo, setAddresstwo] = useState(mode === 'edit' && order!.addresstwo ? order!.addresstwo : '')
+    const [country, setCountry] = useState(mode === 'edit' && order!.country ? order!.country : undefined)
+    const [city, setCity] = useState(mode === 'edit' && order!.city ? order!.city : undefined)
+    const [zip, setZip] = useState(mode === 'edit' && order!.zip ? order!.zip : '')
+    const [status, setStatus] = useState(mode === 'edit' && order!.status ? order!.status : 'created')
     const [deviceArr, setDeviceArr] = useState<DeviceI[]>([])
+    const deviceLabelArr = mode === 'create' ? ['Collapse', 'Add device'] : ['Collapse', 'Edit devices']
+    // fetch all devices
+    const deviceLimit = 999;
+
 
     useEffect(() => {
+        // if modal is visible
         if (show) {
-            fetchDevices(undefined, undefined, undefined, undefined, undefined, 999).then((devices) => {
+            fetchDevices(undefined, undefined, undefined, undefined, undefined, deviceLimit).then((devices) => {
                 setDeviceArr(devices.rows as unknown as DeviceI[])
             })
 
@@ -69,12 +80,9 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                                 for (let item of orderDeviceParam) {
                                     incrementBasket(orderObj.basketId!, +item.value!)
                                 }
-                                // debug
-                                console.log(`orderObj`)
-                                console.log(orderObj)
-                                //
                                 // create new order
                                 createOrder(orderObj).then(() => {
+                                    forceParentRender()
                                     onHide()
                                 })
                             }).catch((e) => {
@@ -151,13 +159,13 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                         />
                     </div>
                     <div className="mb-2">
-                        <SelectCountry className=""/>
+                        <SelectCountry className="" active={country}/>
                     </div>
                     <div className="mb-2">
-                        <SelectCity className=""/>
+                        <SelectCity className="" active={city}/>
                     </div>
                     <div className="mb-2">
-                        <Form.Label className="form-label" htmlFor="addresstwo">Post code</Form.Label>
+                        <Form.Label className="form-label" htmlFor="zip">Post code</Form.Label>
                         <Form.Control
                             onChange={e => setZip(e.target!.value)}
                             value={zip}
@@ -165,6 +173,7 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                             placeholder="PS101001"
                             name="zip"
                             id="zip"
+                            required
                         />
                     </div>
                     <div className="mb-2">
@@ -188,38 +197,52 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                             Please select valid order status.
                         </div>
                     </div>
-                    <div>
-                        <Button
-                            className="mt-3 btn text-white"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#orderDevice"
-                            aria-expanded="false"
-                            aria-controls="orderDevice"
-                        >Add device</Button>
-                        <Form.Select
-                            className="collapse card card-body mt-2 form-control"
-                            id="orderDevice"
-                            name="orderDevice"
-                            required
-                            multiple
-                        >
-                            {deviceArr.map((item: DeviceI) => {
-                                return (
-                                    <option value={`${item.id}`} key={`option-${item.id}`}>
-                                        {`${item.name} for ${item.price}$`}
-                                    </option>
-                                )
-                            })}
-                        </Form.Select>
-                        <div className="invalid-feedback mb-2">
-                            Please select one or multiple devices.
+                    {/* mode === "edit" && (
+                            <section
+                                className="collapse card card-body mt-2 form-control"
+                                id="orderDevice"
+                            >
+                                <BasketDeviceList basketDevices={order?.basket?.basket_devices!} />
+                            </section>
+
+                        ) */}
+                    {mode === "create" && (
+                        <div>
+                            <Button
+                                className="mt-3 btn text-white"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#orderDevice"
+                                aria-expanded="false"
+                                aria-controls="orderDevice"
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    switchTitle((e.target as HTMLButtonElement), deviceLabelArr)
+                                }}
+                            >{deviceLabelArr[1]}</Button>
+                            <Form.Select
+                                className="collapse card card-body mt-2 form-control"
+                                id="orderDevice"
+                                name="orderDevice"
+                                required
+                                multiple
+                            >
+                                {deviceArr.map((item: DeviceI) => {
+                                    return (
+                                        <option value={`${item.id}`} key={`option-${item.id}`}>
+                                            {`${item.name} for ${item.price}$`}
+                                        </option>
+                                    )
+                                })}
+                            </Form.Select>
+                            <div className="invalid-feedback mb-2">
+                                Please select one or multiple devices.
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button form="createOrderForm" type="submit" className="text-white btn-success btn-outline-success">
-                    Create order</Button>
+                <Button form="createOrderForm" type="submit" className="text-white btn-success btn-outline-success">{`
+                    ${mode && mode === 'edit' ? 'Change' : 'Create'} order`}</Button>
                 <Button className="text-white btn-danger btn-outline-danger" onClick={onHide}>Close</Button>
             </Modal.Footer>
         </Modal>

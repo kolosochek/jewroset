@@ -1,5 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import basket from "../views/Basket";
 import {BasketI} from "./BasketStore";
 import {UserI} from "./UserStore";
 

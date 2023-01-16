@@ -1,36 +1,37 @@
 import React, {useState} from 'react';
 import {NavDropdown} from "react-bootstrap";
+import {AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 
 const AdminOrderFilterbar = () => {
-    const [filterBy, setFilterBy] = useState('creation')
-    const [filterDirection, setFilterDirection] = useState('desc')
+    const [orderBy, setOrderBy] = useState<AdminOrderFilterI['orderBy']>('creation')
+    const [orderDirection, setOrderDirection] = useState<AdminOrderFilterI['orderDirection']>('desc')
 
 
     return (
         <NavDropdown
-            title={`Filter by: ${filterBy}, ${filterDirection}`}
+            title={`Filter by: ${orderBy}, ${orderDirection}`}
             id="basic-nav-dropdown" align="end"
             className="">
             <NavDropdown.Item onClick={() => {
-                setFilterBy('status')
-                setFilterDirection('asc')
+                setOrderBy('status')
+                setOrderDirection('asc')
             }}>by status
                 asc</NavDropdown.Item>
             <NavDropdown.Item onClick={() => {
-                setFilterBy('status')
-                setFilterDirection('asc')
+                setOrderBy('status')
+                setOrderDirection('asc')
             }
             }>by status
                 desc</NavDropdown.Item>
             <NavDropdown.Item onClick={() => {
-                setFilterBy('creation')
-                setFilterDirection('asc')
+                setOrderBy('creation')
+                setOrderDirection('asc')
             }
             }>by creation
                 asc</NavDropdown.Item>
             <NavDropdown.Item onClick={() => {
-                setFilterBy('creation')
-                setFilterDirection('desc')
+                setOrderBy('creation')
+                setOrderDirection('desc')
             }
             }>by creation
                 desc</NavDropdown.Item>

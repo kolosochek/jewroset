@@ -3,6 +3,7 @@ import {DeviceI} from "./DeviceStore";
 import {decrementBasket, incrementBasket, removeFromBasket} from "../http/basketAPI";
 
 export interface BasketDeviceI {
+    id?: number,
     basketId: BasketI['id'],
     deviceId: DeviceI['id'],
     quantity: number,
@@ -16,6 +17,30 @@ export interface BasketI {
     status?: "open" | "closed"
     createdAt?: string,
     updatedAt?: string,
+}
+
+export const incrementBasketDevice = async (basketId: BasketI['id'], deviceId:DeviceI['id'], quantity = 1) => {
+    const updatedBasket = await incrementBasket(basketId, deviceId!, quantity)
+    if (!updatedBasket){
+        return false
+    }
+    return updatedBasket
+}
+
+export const decrementBasketDevice = async (basketId: BasketI['id'], deviceId:DeviceI['id'], quantity = 1) => {
+    const updatedBasket = await decrementBasket(basketId, deviceId!, quantity)
+    if (!updatedBasket){
+        return false
+    }
+    return updatedBasket
+}
+
+export const removeBasketDevice = async (basketId: BasketI['id'], deviceId:DeviceI['id']) => {
+    const updatedBasket = await removeFromBasket(basketId, deviceId!)
+    if (!updatedBasket){
+        return false
+    }
+    return updatedBasket
 }
 
 export default class BasketStore {
