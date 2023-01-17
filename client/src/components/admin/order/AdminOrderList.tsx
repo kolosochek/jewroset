@@ -4,7 +4,7 @@ import {OrderI} from "../../../store/OrderStore";
 import {Context} from "../../../index";
 import AdminOrderListActions from "./AdminOrderListActions";
 import {adminGetAllOrders} from "../../../http/orderAPI";
-import {AdminOrderContext} from "../../../views/Admin/AdminOrders";
+import {AdminOrderContext, AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 import AdminOrderItem from "./AdminOrderItem";
 import AdminOrderListPagination from "./AdminOrderListPagination";
 
@@ -16,20 +16,25 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     const {user} = useContext(Context)
     const {isRender} = useContext(AdminOrderContext)
     const [orders, setOrders] = useState<OrderI[]>([]);
+    // pagination
     const [totalCount, setTotalCount] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
     const limit = 10;
-    const [isLoading, setIsLoading] = useState(true);
+    // filterbar
+    const [orderBy, setOrderBy] = useState<AdminOrderFilterI['orderBy']>('createdAt')
+    const [orderDirection, setOrderDirection] = useState<AdminOrderFilterI['orderDirection']>('desc')
+    //
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
-        adminGetAllOrders(user.id!, page, limit).then(orders => {
+        adminGetAllOrders(user.id!, page, limit, orderBy, orderDirection).then(orders => {
             setOrders(orders.rows)
             setTotalCount(orders.count)
         }).finally(() => {
             setIsLoading(false)
         })
-    }, [isRender, page])
+    }, [isRender, page, orderBy, orderDirection])
 
 
 
@@ -40,7 +45,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     return (
         <section className="col-10">
             <div className="wrapper d-flex flex-column">
-                <AdminOrderListActions/>
+                <AdminOrderListActions orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage} />
                 {orders
                     ? (<>
                         <Row>

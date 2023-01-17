@@ -1,10 +1,18 @@
-import React, {useContext, useState} from 'react';
+import React, {PropsWithChildren, useContext, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import OrderModal from "../../modals/OrderModal";
 import AdminOrderFilterbar from "./AdminOrderFilterbar";
-import {AdminOrderContext} from "../../../views/Admin/AdminOrders";
+import {AdminOrderContext, AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
+import {PaginatorI} from "../../../store/DeviceStore";
 
-const AdminOrderListActions = () => {
+interface AdminOrderListActionsProps extends PropsWithChildren {
+    orderBy: AdminOrderFilterI['orderBy'],
+    setOrderBy: (value: AdminOrderFilterI['orderBy'] | ((prevVar: AdminOrderFilterI['orderBy']) => AdminOrderFilterI['orderBy'])) => void
+    orderDirection: AdminOrderFilterI['orderDirection']
+    setOrderDirection: (value: AdminOrderFilterI['orderDirection'] | ((prevVar: AdminOrderFilterI["orderDirection"]) => AdminOrderFilterI["orderDirection"])) => void
+    setPage: (value: PaginatorI["page"] | ((prevVar: PaginatorI["page"]) => PaginatorI["page"])) => void
+}
+const AdminOrderListActions:React.FC<AdminOrderListActionsProps> = ({orderBy, setOrderBy, orderDirection, setOrderDirection, setPage}) => {
     const [isCreateOrderVisible, setCreateOrderVisible] = useState(false)
 
 
@@ -30,7 +38,7 @@ const AdminOrderListActions = () => {
                 </AdminOrderContext.Consumer>
             </Col>
             <Col className="text-end">
-                <AdminOrderFilterbar/>
+                <AdminOrderFilterbar orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage}/>
             </Col>
         </Row>
     )

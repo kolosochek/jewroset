@@ -6,7 +6,7 @@ import {useLocation} from "react-router-dom";
 import AdminOrderList from "../../components/admin/order/AdminOrderList";
 
 export interface AdminOrderFilterI {
-    orderBy: "status" | "creation"
+    orderBy: "status" | "createdAt"
     orderDirection: "asc" | "desc"
 
 }

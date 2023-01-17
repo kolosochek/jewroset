@@ -10,27 +10,25 @@ interface AdminOrderListPaginationProps extends PropsWithChildren {
     setIsLoading: (value: boolean | ((prevVar: boolean) => boolean)) => void,
 }
 const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page, totalCount, limit, setPage, setIsLoading}) => {
-    const [activePage, setActivePage] = useState<PaginatorI['page']>(page)
     const totalPages = Math.ceil(totalCount / limit)
-    const pages:number[] = [...Array(totalPages).keys()].slice(1)
+    const pages:PaginatorI['page'][] = [...Array(totalPages).keys()].slice(1)
 
     if (pages.length > 1) {
         return (
             <div className="d-flex mt-2">
                 <PaginationBootsrap className="ms-auto shadow-sm">
                     <PaginationBootsrap.First onClick={() => {setPage(1)}}/>
-                    {pages.map((page, index) => {
+                    {pages.map((item) => {
                         return (
                             <PaginationBootsrap.Item
-                                key={`pagination-page-${page}`}
-                                active={activePage === index+1}
+                                key={`pagination-page-${item}`}
+                                active={item === page}
                                 onClick={() => {
-                                    setActivePage(index+1)
-                                    setPage(page)
+                                    setPage(item)
                                     setIsLoading(true)
                                 }}
                             >
-                                {page}
+                                {item}
                             </PaginationBootsrap.Item>
                         )
                     })}

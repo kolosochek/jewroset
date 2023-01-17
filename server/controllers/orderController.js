@@ -66,9 +66,9 @@ class OrderController {
         if (!(req.user && req.user.role === "ADMIN")){
             return next(APIError.internalError(`User is not ADMIN!`))
         }
-        let {userId, limit, page} = req.query;
+        let {userId, limit, page, orderBy, orderDirection} = req.query;
         page = page || 1
-        limit = limit || 9
+        limit = limit || 10
         let offset = page * limit - limit
         // find user instance
         const user = await User.findOne({
@@ -91,7 +91,7 @@ class OrderController {
                     model: Basket,
                     include: [{
                         model: BasketDevice,
-                        order: ['createdAt'],
+                        order: [['id', 'asc']],
                         include: Device
                     }]
                 },
@@ -99,7 +99,7 @@ class OrderController {
                     model: User,
                 }
             ],
-            order: [['createdAt', 'desc']],
+            order: [[orderBy, orderDirection]],
             limit,
             offset
         })
