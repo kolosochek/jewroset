@@ -1,15 +1,15 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
 import {Pagination as PaginationBootsrap} from "react-bootstrap";
 import {PaginatorI} from "../../../store/DeviceStore";
-import {BasketDeviceI} from "../../../store/BasketStore";
 
 interface AdminOrderListPaginationProps extends PropsWithChildren {
     page: PaginatorI['page'],
-    totalCount: number,
-    limit: PaginatorI['limit']
-    setPage: (value: PaginatorI['page'] | ((prevVar: PaginatorI['page']) => number)) => void;
+    totalCount: PaginatorI['totalCount'],
+    limit: PaginatorI['limit'],
+    setPage: (value: PaginatorI['page'] | ((prevVar: PaginatorI['page']) => PaginatorI['page'])) => void,
+    setIsLoading: (value: boolean | ((prevVar: boolean) => boolean)) => void,
 }
-const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page, totalCount, limit, setPage}) => {
+const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page, totalCount, limit, setPage, setIsLoading}) => {
     const [activePage, setActivePage] = useState<PaginatorI['page']>(page)
     const totalPages = Math.ceil(totalCount / limit)
     const pages:number[] = [...Array(totalPages).keys()].slice(1)
@@ -23,8 +23,12 @@ const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page,
                         return (
                             <PaginationBootsrap.Item
                                 key={`pagination-page-${page}`}
-                                active={page === index}
-                                onClick={() => {setPage(page)}}
+                                active={activePage === index+1}
+                                onClick={() => {
+                                    setActivePage(index+1)
+                                    setPage(page)
+                                    setIsLoading(true)
+                                }}
                             >
                                 {page}
                             </PaginationBootsrap.Item>

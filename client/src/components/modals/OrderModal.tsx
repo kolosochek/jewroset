@@ -228,7 +228,6 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
                                 className="collapse card card-body mt-2 form-control"
                                 id="orderDevice"
                                 name="orderDevice"
-                                required
                                 multiple
                             >
                                 {deviceArr.map((item: DeviceI) => {
@@ -239,9 +238,6 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
                                     )
                                 })}
                             </Form.Select>
-                            <div className="invalid-feedback mb-2">
-                                Please select one or multiple devices.
-                            </div>
                         </div>
                     )}
                 </Form>

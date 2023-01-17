@@ -53,7 +53,7 @@ export default class DeviceStore {
         private _selectedFilter: Partial<FilterI> = {},
         private _selectedPage: PaginatorI['page'] = 1,
         private _page: PaginatorI['page'] = 1,
-        private _limit: PaginatorI['limit'] = 3,
+        private _limit: PaginatorI['limit'] = 9,
         private _totalCount: PaginatorI['totalCount'] = 0,
 
     ) {

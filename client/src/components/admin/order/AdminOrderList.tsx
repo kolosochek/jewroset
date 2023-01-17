@@ -29,10 +29,6 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
         }).finally(() => {
             setIsLoading(false)
         })
-        // debug
-        console.log(`page`)
-        console.log(page)
-        //
     }, [isRender, page])
 
 
@@ -66,7 +62,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
                     : (<h3>No items in this section</h3>)
                 }
             </div>
-            <AdminOrderListPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} />
+            <AdminOrderListPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} setIsLoading={setIsLoading} />
         </section>
     )
 }
