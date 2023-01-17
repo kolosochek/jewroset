@@ -12,7 +12,7 @@ interface CreateDeviceModalProps extends React.PropsWithChildren {
     onHide: () => void | undefined,
 }
 
-const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide}: CreateDeviceModalProps) => {
+const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide}) => {
     const {device} = useContext(Context)
     const [info, setInfo] = useState([] as DeviceInfoT[])
     const [name, setName] = useState('')

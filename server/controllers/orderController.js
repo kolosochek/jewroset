@@ -66,7 +66,10 @@ class OrderController {
         if (!(req.user && req.user.role === "ADMIN")){
             return next(APIError.internalError(`User is not ADMIN!`))
         }
-        const {userId} = req.query;
+        let {userId, limit, page} = req.query;
+        page = page || 1
+        limit = limit || 9
+        let offset = page * limit - limit
         // find user instance
         const user = await User.findOne({
             where: {
@@ -95,7 +98,10 @@ class OrderController {
                 {
                     model: User,
                 }
-            ], order: [['createdAt', 'desc']]
+            ],
+            order: [['createdAt', 'desc']],
+            limit,
+            offset
         })
         if (!order) {
             return next(APIError.internalError(`Can't create an order with given params! ${req.body.orderObj.toString()}`))
@@ -132,6 +138,50 @@ class OrderController {
         }
         await order.destroy()
         return res.json({result: true})
+    }
+
+    async adminUpdateOrder(req, res, next) {
+        if (!(req.user && req.user.role === "ADMIN")){
+            return next(APIError.internalError(`User is not ADMIN!`))
+        }
+        const {email, userId, id, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
+        // find user instance
+        const user = await User.findOne({
+            where: {
+                id: userId,
+            }
+        })
+        if (!user){
+            return next(APIError.internalError(`User with id: ${userId} or email: ${email} is not found!`))
+        }
+        // and check admin role
+        if (user.role !== "ADMIN"){
+            return next(APIError.internalError(`User with id: ${userId} have no admin role!`))
+        }
+        const order = await Order.findOne({
+            where: {
+                id: id
+            }
+        })
+        if (!order) {
+            return next(APIError.internalError(`Can't create an order with giver params! ${req.body.orderObj.toString()}`))
+        }
+        const updatedOrder = await order.update({
+            userId: userId,
+            addressone: addressone,
+            addresstwo: addresstwo,
+            country: country,
+            city: city,
+            zip: zip,
+            status: status ? status : 'created'
+        }, {
+            include: [
+                {
+                    model: Basket,
+                }
+            ]
+        })
+        return res.json(updatedOrder)
     }
 }
 

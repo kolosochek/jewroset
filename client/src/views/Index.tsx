@@ -5,7 +5,7 @@ import {Context} from "../index";
 import Brandbar from "../components/Brandbar";
 import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
-import Pagination from "../components/Pagination";
+import DeviceListPagination from "../components/DeviceListPagination";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
@@ -33,7 +33,7 @@ const Index = observer(() => {
             <section className="col-9 flex py-3">
                 <Brandbar />
                 <DeviceList categoryItems={device.devices} />
-                <Pagination />
+                <DeviceListPagination />
             </section>
         </section>
     )

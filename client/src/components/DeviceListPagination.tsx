@@ -3,7 +3,7 @@ import {Pagination as PaginationBootsrap} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 
-const Pagination = observer(() => {
+const DeviceListPagination = observer(() => {
     const {device} = useContext(Context)
     const totalPages = Math.ceil(device.totalCount / device.limit)
     const pages:number[] = [...Array(totalPages+1).keys()].slice(1)
@@ -32,4 +32,4 @@ const Pagination = observer(() => {
 
 })
 
-export default Pagination;
+export default DeviceListPagination;

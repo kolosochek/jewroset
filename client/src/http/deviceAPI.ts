@@ -28,7 +28,7 @@ export const fetchBrands = async () => {
 }
 
 
-export const fetchDevices = async (categoryId?: CategoryI['id'], brandId?: BrandI['id'], filterByType?: FilterI['type'], filterByDirection?: FilterI['direction'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 3) => {
+export const fetchDevices = async (categoryId?: CategoryI['id'], brandId?: BrandI['id'], filterByType?: FilterI['type'], filterByDirection?: FilterI['direction'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 9) => {
     const {data} = await $host.get('api/device', {
         params: {
             categoryId, brandId, filterByType, filterByDirection, page, limit

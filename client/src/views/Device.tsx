@@ -6,18 +6,25 @@ import {DeviceI, DeviceInfoT} from "../store/DeviceStore";
 import {Context} from "../index";
 import AddToCart from "../components/AddToCart/AddToCart";
 import {RouteI} from "../utils/Routes";
+import {BasketDeviceI} from "../store/BasketStore";
 
 interface DeviceViewProps extends React.PropsWithChildren {
-    children?: React.ReactNode
+
 }
 
-const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
+const Device: React.FC<DeviceViewProps> = ({}) => {
     const {basket} = useContext(Context)
     const navigate = useNavigate()
     const {id} = useParams()
-    const [device, setDevice] = useState({info: []} as Partial<DeviceI>)
-    const [deviceQuantity, setDeviceQuantity] = useState(0)
+    const [device, setDevice] = useState<DeviceI>({} as DeviceI)
+    const [deviceQuantity, setDeviceQuantity] = useState(basket.getDeviceBasketQuantityById(+id!))
     const [isLoading, setIsLoading] = useState(true);
+    const basketDevice:BasketDeviceI = {
+        basketId: basket.id!,
+        deviceId: device.id,
+        device: device,
+        quantity: deviceQuantity
+    }
 
 
     useEffect(() => {
@@ -74,8 +81,8 @@ const Device: React.FC<DeviceViewProps> = (props: DeviceViewProps) => {
                             )}
                         </Container>
                         <Container className="b-device-action py-3">
-                            {deviceQuantity > 0 && <AddToCart device={device} quantity={deviceQuantity}/>}
-                            {!deviceQuantity && <AddToCart device={device} />}
+                            {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice} basket={basket} />}
+                            {!deviceQuantity && <AddToCart basketDevice={basketDevice} basket={basket} />}
                             <button
                                 className="mt-5 w-100 btn btn-primary btn-lg"
                                 type="submit"

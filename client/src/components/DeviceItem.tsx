@@ -5,7 +5,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import starImg from "../assets/star.png"
 import AddToCart from "./AddToCart/AddToCart";
 import {Context} from "../index";
-
+import {BasketDeviceI} from "../store/BasketStore";
 
 
 interface ItemProps {
@@ -16,7 +16,12 @@ interface ItemProps {
 const DeviceItem = ({device}: ItemProps) => {
     const {basket} = useContext(Context)
     const navigate = useNavigate()
-
+    const basketDevice:BasketDeviceI = {
+        basketId: basket.id!,
+        deviceId: device.id,
+        device: device,
+        quantity: 1,
+    }
 
     return (
         <section className="b-device-item-wrapper col border-0">
@@ -44,7 +49,7 @@ const DeviceItem = ({device}: ItemProps) => {
                     </div>
                 </section>
                 <div className="ms-auto pe-2 ps-2 pb-2">
-                    <AddToCart device={device} quantity={basket.getDeviceBasketQuantityById(device.id!)} />
+                    <AddToCart basketDevice={basketDevice} basket={basket}/>
                 </div>
             </div>
         </section>

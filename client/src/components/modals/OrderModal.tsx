@@ -6,27 +6,27 @@ import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import SelectCountry from "../SelectCountry";
 import SelectCity from "../SelectCity";
 import {OrderI, orderStatusArr} from "../../store/OrderStore";
-import {createOrder} from "../../http/orderAPI";
-import {clearBasket, createBasket, incrementBasket} from "../../http/basketAPI";
+import {createOrder, updateOrder} from "../../http/orderAPI";
+import {createBasket, incrementBasket} from "../../http/basketAPI";
 import {BasketDeviceI, BasketI} from "../../store/BasketStore";
 import {findUserData} from "../../http/userAPI";
 import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 import {switchTitle} from "../../views/Personal";
-import BasketDeviceList from "../BasketDeviceList";
 import {Context} from "../../index";
 
 
 type ModeT = "create" | "edit"
 
-interface CreateOrderModalProps extends React.PropsWithChildren {
+interface OrderModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
     mode: ModeT,
-    order?: OrderI
+    order?: OrderI,
+    basketDevices?: BasketDeviceI[]
 }
 
-const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mode, order}: CreateOrderModalProps) => {
-    const {basket} = useContext(Context)
+const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, order}) => {
+    const {user} = useContext(Context)
     const {isRender, setIsRender} = useContext(AdminOrderContext);
     const forceParentRender = () => setIsRender(!isRender);
     const [email, setEmail] = useState(mode === 'edit' && order!.user?.email ? order!.user?.email : '')
@@ -74,17 +74,33 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                             // create new closed basket
                             createBasket(orderObj.userId!, 'closed').then((basketParam) => {
                                 orderObj.basketId = basketParam.id
-                                const orderDeviceParam = (form.querySelector('select#orderDevice') as HTMLSelectElement).selectedOptions
-                                //setBasket(basketParam)
-                                // let's add basketDevices to created basket
-                                for (let item of orderDeviceParam) {
-                                    incrementBasket(orderObj.basketId!, +item.value!)
+                                // CREATE ORDER MODE
+                                if (mode === 'create') {
+                                    const orderDeviceParam = (form.querySelector('select#orderDevice') as HTMLSelectElement).selectedOptions
+                                    const addBasketDevices = async () => {
+                                        for (let item of orderDeviceParam) {
+                                            await incrementBasket(orderObj.basketId!, +item.value!)
+                                        }
+                                    }
+                                    // let's add basketDevices to created basket
+                                    addBasketDevices().then(() => {
+                                        // create new order
+                                        createOrder(orderObj).then(() => {
+                                            forceParentRender()
+                                            onHide()
+                                        })
+                                    })
+                                // EDIT EXISTING ORDER
+                                } else if (mode === 'edit') {
+                                    orderObj.userId = user.id!
+                                    orderObj.id = order?.id
+                                    updateOrder(orderObj).then(() => {
+                                        forceParentRender()
+                                        onHide()
+                                    })
                                 }
-                                // create new order
-                                createOrder(orderObj).then(() => {
-                                    forceParentRender()
-                                    onHide()
-                                })
+
+
                             }).catch((e) => {
                                 console.log(`Got an error, ${e}`)
                             })
@@ -93,7 +109,6 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                             console.log(`Got an error, ${e}`)
                         })
                     }
-
 
                     form.classList.add('was-validated')
                 })
@@ -189,7 +204,7 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                         >
                             {orderStatusArr.map((status) => {
                                 return (
-                                    <option value={status}>{status}</option>
+                                    <option key={`option-${status}`} value={status}>{status}</option>
                                 )
                             })}
                         </Form.Select>
@@ -197,15 +212,6 @@ const OrderModal: React.FC<CreateOrderModalProps> = observer(({show, onHide, mod
                             Please select valid order status.
                         </div>
                     </div>
-                    {/* mode === "edit" && (
-                            <section
-                                className="collapse card card-body mt-2 form-control"
-                                id="orderDevice"
-                            >
-                                <BasketDeviceList basketDevices={order?.basket?.basket_devices!} />
-                            </section>
-
-                        ) */}
                     {mode === "create" && (
                         <div>
                             <Button

@@ -1,6 +1,7 @@
 import {$authHost, $host} from "./index";
 import {UserI} from "../store/UserStore";
 import {OrderI} from "../store/OrderStore";
+import {PaginatorI} from "../store/DeviceStore";
 
 
 export const createOrder = async (orderObj: Partial<OrderI>) => {
@@ -13,10 +14,10 @@ export const getUserOrders = async (userId: UserI['id']) => {
     return data
 }
 
-export const adminGetAllOrders = async (userId: UserI['id']) => {
+export const adminGetAllOrders = async (userId: UserI['id'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 10) => {
     const {data} = await $authHost.get('api/order/all', {
         params: {
-            userId
+            userId, page, limit
         }
     })
     return data
@@ -28,5 +29,10 @@ export const adminRemoveOrder = async (userId: UserI['id'], orderId: OrderI["id"
             userId, orderId
         }
     })
+    return data
+}
+
+export const updateOrder = async (orderObj: Partial<OrderI>) => {
+    const {data} = await $authHost.post('api/order/update', {orderObj})
     return data
 }

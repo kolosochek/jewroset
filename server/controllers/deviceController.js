@@ -36,7 +36,6 @@ class DeviceController {
         page = page || 1
         limit = limit || 9
         let offset = page * limit - limit
-        let devices;
         const options = {
             where: {},
             include: [
@@ -46,7 +45,9 @@ class DeviceController {
             attributes: [
               'id', 'name', 'price', 'rating', 'img'
             ],
-            limit, offset}
+            limit,
+            offset
+        }
 
         if (!categoryId && brandId) {
             options.where = {brandId}
@@ -60,7 +61,7 @@ class DeviceController {
         if (filterByType) {
             options.order = [[filterByType, filterByDirection]]
         }
-        devices = await Device.findAndCountAll(options)
+        const devices = await Device.findAndCountAll(options)
         return res.json(devices)
     }
 

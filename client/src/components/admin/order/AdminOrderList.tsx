@@ -1,16 +1,12 @@
 import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {Col, Row, Spinner} from "react-bootstrap";
 import {OrderI} from "../../../store/OrderStore";
-import {getTotalPrice, switchTitle} from "../../../views/Personal";
-import {BasketDeviceI} from "../../../store/BasketStore";
-import {Link} from "react-router-dom";
-import BasketImage from "../../BasketImage/BasketImage";
 import {Context} from "../../../index";
-import AdminOrderActions from "./AdminOrderActions";
 import AdminOrderListActions from "./AdminOrderListActions";
 import {adminGetAllOrders} from "../../../http/orderAPI";
 import {AdminOrderContext} from "../../../views/Admin/AdminOrders";
 import AdminOrderItem from "./AdminOrderItem";
+import AdminOrderListPagination from "./AdminOrderListPagination";
 
 
 interface AdminOrderListProps extends PropsWithChildren{
@@ -19,19 +15,25 @@ interface AdminOrderListProps extends PropsWithChildren{
 const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     const {user} = useContext(Context)
     const {isRender} = useContext(AdminOrderContext)
-    const [orders, setOrders] = useState([] as OrderI[]);
-    const [count, setCount] = useState([] as Partial<OrderI>[]);
+    const [orders, setOrders] = useState<OrderI[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [page, setPage] = useState<number>(1);
+    const limit = 10;
     const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
-        adminGetAllOrders(user.id!).then(orders => {
-            setCount(orders.count)
+        adminGetAllOrders(user.id!, page, limit).then(orders => {
             setOrders(orders.rows)
+            setTotalCount(orders.count)
         }).finally(() => {
             setIsLoading(false)
         })
-    }, [isRender])
+        // debug
+        console.log(`page`)
+        console.log(page)
+        //
+    }, [isRender, page])
 
 
 
@@ -54,20 +56,17 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
                             <Col className="text-center">Status</Col>
                             <Col className="text-end">Action</Col>
                         </Row>
-                        <hr/>
+                        <hr />
                         {(orders as OrderI[]).map((order: OrderI, index) => {
                             return (
-                                <AdminOrderItem order={order} />
+                                <AdminOrderItem key={order.id} order={order} index={index}/>
                             )
                         })}
-                        <hr/>
-                        <Row>
-                            <Col className="text-end"></Col>
-                        </Row>
                     </>)
                     : (<h3>No items in this section</h3>)
                 }
             </div>
+            <AdminOrderListPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} />
         </section>
     )
 }

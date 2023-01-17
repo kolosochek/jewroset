@@ -7,7 +7,7 @@ export interface BasketDeviceI {
     basketId: BasketI['id'],
     deviceId: DeviceI['id'],
     quantity: number,
-    device: Partial<DeviceI>
+    device: DeviceI
 }
 export interface BasketI {
     id: number,

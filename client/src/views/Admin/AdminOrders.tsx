@@ -18,7 +18,7 @@ const orderFilter = {
 
 export const AdminOrderContext = createContext({
     isRender: false,
-    setIsRender: (bool:boolean) => {}
+    setIsRender: (bool:boolean) => {},
 })
 const AdminOrders = () => {
     const {user} = useContext(Context)

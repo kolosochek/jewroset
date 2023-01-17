@@ -1,50 +1,53 @@
-import React, {PropsWithChildren} from 'react';
 import {Col, Row} from "react-bootstrap";
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {getTotalPrice, switchTitle} from "../../../views/Personal";
 import {BasketDeviceI} from "../../../store/BasketStore";
-import {Link} from "react-router-dom";
-import BasketImage from "../../BasketImage/BasketImage";
-import AdminOrderActions from "./AdminOrderActions";
+import AdminOrderItemActions from "./AdminOrderItemActions";
 import {OrderI} from "../../../store/OrderStore";
-import {UserI} from "../../../store/UserStore";
 import BasketDeviceList from "../../BasketDeviceList";
+
+export const getOrderStatus = (status: string) => {
+    const orderStatus = {
+        title: '',
+        className: '',
+    }
+    switch (status) {
+        case "awaitingPayment":
+            orderStatus.className = 'text-danger'
+            orderStatus.title = 'Awaiting payment'
+            break;
+        case "awaitingShipping":
+            orderStatus.className = 'text-primary'
+            orderStatus.title = 'Awaiting shipping'
+            break;
+        case "shipped":
+            orderStatus.className = 'text-success'
+            orderStatus.title = 'Sent'
+            break
+        case "closed":
+            orderStatus.className = 'text-error'
+            orderStatus.title = 'Closed'
+            break
+        default:
+            break;
+    }
+    return orderStatus
+}
 
 interface AdminOrderItemProps extends PropsWithChildren {
     order: OrderI,
+    index: number
 }
-const AdminOrderItem:React.FC<AdminOrderItemProps> = ({order}) => {
-    const getOrderStatus = (status:string) => {
-        const orderStatus = {
-            title: '',
-            className: '',
-        }
-        switch (status) {
-            case "awaitingPayment":
-                orderStatus.className = 'text-danger'
-                orderStatus.title = 'Awaiting payment'
-                break;
-            case "awaitingShipping":
-                orderStatus.className = 'text-primary'
-                orderStatus.title = 'Awaiting shipping'
-                break;
-            case "shipped":
-                orderStatus.className = 'text-success'
-                orderStatus.title = 'Sent'
-                break
-            case "closed":
-                orderStatus.className = 'text-error'
-                orderStatus.title = 'Closed'
-                break
-            default:
-                break;
-        }
-        return orderStatus
-    }
+
+const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index}) => {
+    const [basketDevices, setBasketDevices] = useState<BasketDeviceI[]>(order.basket?.basket_devices!)
     const orderStatus = getOrderStatus(order.status)
+
 
     return (
         <>
-            <Row key={order.id} className="align-items-center mb-2 mt-2">
+            {/* order header */}
+            <Row key={order.id} className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
                 <Col>{order.id}</Col>
                 <Col className="">{order.user?.email}</Col>
                 <Col
@@ -67,25 +70,45 @@ const AdminOrderItem:React.FC<AdminOrderItemProps> = ({order}) => {
                     </button>
                 </Col>
             </Row>
+            {/* collapse */}
             <section key={`order-expanded-${order.id}`} className="collapse card card-body"
                      id={`collapse${order.id}`}>
+                {/* order basketDevice header */}
                 <Row key={`order-items-${order.id}`}>
                     <Col>#</Col>
                     <Col className="col-3">Name</Col>
                     <Col className="text-center">Img</Col>
                     <Col className="text-center">Quantity</Col>
                     <Col className="text-center">Price</Col>
-                    <Col className="text-end">Total</Col>
+                    <Col className="text-center">Total</Col>
+                    <Col className="text-end">Action</Col>
                 </Row>
                 <hr/>
-                    <BasketDeviceList basketDevices={order.basket?.basket_devices!} />
-                <hr/>
+                {basketDevices.length > 0
+                    ? (
+                        <>
+                            {/* order basketDevice body */}
+                            <BasketDeviceList basketDevices={basketDevices} setBasketDevices={setBasketDevices}/>
+                            <hr/>
+                        </>
+                    )
+                    : (
+                        <>
+                            <Row>
+                                <Col>
+                                    No devices in this order
+                                </Col>
+                            </Row>
+                            <hr/>
+                        </>
+                    )
+                }
                 <Row key={`actions-${order.id}`} className="align-items-center">
                     <Col className="text-start">
-                        <AdminOrderActions order={order} />
+                        <AdminOrderItemActions order={order} basketDevices={basketDevices} setBasketDevices={setBasketDevices}/>
                     </Col>
-                    <Col className="text-end"><strong>Order
-                        total: {getTotalPrice(order.basket?.basket_devices!)}</strong></Col>
+                    <Col className="text-end">{basketDevices.length > 0 && (<strong>Order
+                        total: {getTotalPrice(basketDevices)}</strong>)}</Col>
                 </Row>
             </section>
         </>
