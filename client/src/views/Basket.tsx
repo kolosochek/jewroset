@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Container, Figure, Row} from "react-bootstrap";
 import {Context} from "../index";
 import EmptyBasket from "../components/EmptyBasket";
@@ -6,6 +6,7 @@ import {observer} from "mobx-react-lite";
 import {useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import BasketDeviceList from "../components/BasketDeviceList";
+import BasketDeviceListHeader from "../components/BasketDeviceListHeader";
 
 const Basket = observer(() => {
     const {basket} = useContext(Context)
@@ -18,17 +19,9 @@ const Basket = observer(() => {
             {isBasketEmpty
                 ? (<EmptyBasket/>)
                 : (<>
-                        <Row>
-                            <Col>#</Col>
-                            <Col className="col-3">Name</Col>
-                            <Col className="text-center">Img</Col>
-                            <Col className="text-center">Quantity</Col>
-                            <Col className="text-center">Price</Col>
-                            <Col className="text-center">Total</Col>
-                            <Col className="text-end">Action</Col>
-                        </Row>
+                        <BasketDeviceListHeader />
                         <hr/>
-                        <BasketDeviceList basketDevices={basket.basketDevices!} basket={basket}/>
+                        <BasketDeviceList />
                         <hr/>
                         <Row>
                             <Col className="text-end"><strong>{`Price total: ${basket.priceTotal}`}</strong></Col>

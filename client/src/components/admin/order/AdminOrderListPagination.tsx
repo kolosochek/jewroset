@@ -11,7 +11,8 @@ interface AdminOrderListPaginationProps extends PropsWithChildren {
 }
 const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page, totalCount, limit, setPage, setIsLoading}) => {
     const totalPages = Math.ceil(totalCount / limit)
-    const pages:PaginatorI['page'][] = [...Array(totalPages).keys()].slice(1)
+    const pages:PaginatorI['page'][] = [...Array(totalPages+1).keys()].slice(1)
+
 
     if (pages.length > 1) {
         return (

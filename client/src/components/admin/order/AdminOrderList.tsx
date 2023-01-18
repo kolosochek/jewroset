@@ -9,7 +9,7 @@ import AdminOrderItem from "./AdminOrderItem";
 import AdminOrderListPagination from "./AdminOrderListPagination";
 
 
-interface AdminOrderListProps extends PropsWithChildren{
+interface AdminOrderListProps extends PropsWithChildren {
 
 }
 const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
@@ -36,8 +36,6 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
         })
     }, [isRender, page, orderBy, orderDirection])
 
-
-
     if (isLoading) {
         return <Spinner animation={"grow"}/>
     }
@@ -46,26 +44,28 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
         <section className="col-10">
             <div className="wrapper d-flex flex-column">
                 <AdminOrderListActions orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage} />
-                {orders
-                    ? (<>
-                        <Row>
-                            <Col className="">Order id</Col>
-                            <Col>Email</Col>
-                            <Col className="col-3">Address</Col>
-                            <Col className="text-center">Country</Col>
-                            <Col className="text-center">City</Col>
-                            <Col className="text-center">Status</Col>
-                            <Col className="text-end">Action</Col>
-                        </Row>
-                        <hr />
-                        {(orders as OrderI[]).map((order: OrderI, index) => {
-                            return (
-                                <AdminOrderItem key={order.id} order={order} index={index}/>
-                            )
-                        })}
-                    </>)
-                    : (<h3>No items in this section</h3>)
-                }
+                <section className="mt-3 mb-3">
+                    {orders
+                        ? (<>
+                            <Row>
+                                <Col className="">Order id</Col>
+                                <Col>Email</Col>
+                                <Col className="col-3">Address</Col>
+                                <Col className="text-center">Country</Col>
+                                <Col className="text-center">City</Col>
+                                <Col className="text-center">Status</Col>
+                                <Col className="text-end">Action</Col>
+                            </Row>
+                            <hr />
+                            {(orders as OrderI[]).map((order: OrderI, index) => {
+                                return (
+                                    <AdminOrderItem key={order.id} order={order} index={index}/>
+                                )
+                            })}
+                        </>)
+                        : (<h3>No items in this section</h3>)
+                    }
+                </section>
             </div>
             <AdminOrderListPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} setIsLoading={setIsLoading} />
         </section>

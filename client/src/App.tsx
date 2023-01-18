@@ -38,9 +38,8 @@ const App = observer(() => {
         // get user from cookies or create it
         const userEmailCookie = cookies.userEmail ? cookies.userEmail.replace('%40', '@') : false
         if (userEmailCookie) {
-            const findUser = findUserByEmail(userEmailCookie).then((foundUser) => {
+            findUserByEmail(userEmailCookie).then((foundUser) => {
                 const userId:UserI['id'] = (foundUser as unknown as Partial<UserI>).id!
-
                 findOrCreateUserBasket(userId).then(basketParam => {
                     basket.setBasket(basketParam)
                 })

@@ -20,9 +20,6 @@ const Filterbar = observer(() => {
                 asc</NavDropdown.Item>
             <NavDropdown.Item onClick={() => device.setSelectedFilter({type: 'rating', direction: 'desc'})}>by rating
                 desc</NavDropdown.Item>
-            <NavDropdown.Divider/>
-            <NavDropdown.Item
-                onClick={() => device.setSelectedFilter({type: 'none', direction: 'none'})}>none</NavDropdown.Item>
         </NavDropdown>
     )
 })

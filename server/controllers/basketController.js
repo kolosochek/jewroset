@@ -13,9 +13,9 @@ class BasketController {
                 {
                     model: BasketDevice,
                     include: Device,
-                    order: ['createdAt', 'desc'],
+                    order: [['createdAt', 'desc']],
                 }
-            ]
+            ],
         })
         return res.json(basket[0])
     }
@@ -49,7 +49,7 @@ class BasketController {
                 {
                     model: BasketDevice,
                     include: Device,
-                    order: ['createdAt'],
+                    order: [['createdAt', 'desc']],
                 }
             ]
         })

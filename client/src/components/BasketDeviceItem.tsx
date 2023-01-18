@@ -1,18 +1,20 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import BasketImage from "./BasketImage/BasketImage";
 import AddToCart from "./AddToCart/AddToCart";
 import BasketStore, {BasketDeviceI, removeBasketDevice} from "../store/BasketStore";
+import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
 interface BasketDeviceItemProps extends PropsWithChildren{
     basketDevice: BasketDeviceI,
     index: number
     basketDevices?: BasketDeviceI[],
     setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void;
-    basket?: BasketStore
 }
-const BasketDeviceItem:React.FC<BasketDeviceItemProps> = ({basketDevice, index, basket, basketDevices, setBasketDevices}) => {
+const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice, index, basketDevices, setBasketDevices}) => {
+    const {basket} = useContext(Context)
 
 
     return (
@@ -26,7 +28,6 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = ({basketDevice, index, 
                 <Col className="text-center">
                     <AddToCart
                         basketDevice={basketDevice}
-                        basket={basket ?? undefined}
                         basketDevices={basketDevices}
                         setBasketDevices={setBasketDevices}
                     />
@@ -41,7 +42,7 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = ({basketDevice, index, 
                             removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(basketParam => {
                                 basket.setBasket(basketParam)
                             })
-                        // Admin order view mode
+                            // Admin order view mode
                         } else {
                             removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(() => {
                                 if (setBasketDevices){
@@ -54,6 +55,6 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = ({basketDevice, index, 
             </Row>
         </>
     )
-}
+})
 
 export default BasketDeviceItem;

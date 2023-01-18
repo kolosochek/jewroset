@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from 'react';
 import Sidebar from "../components/Sidebar";
 import DeviceList from "../components/DeviceList";
-import {Context} from "../index";
 import Brandbar from "../components/Brandbar";
+import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
 import DeviceListPagination from "../components/DeviceListPagination";

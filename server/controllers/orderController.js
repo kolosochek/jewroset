@@ -49,7 +49,7 @@ class OrderController {
                     where: {status: 'closed'},
                     include: [{
                         model: BasketDevice,
-                        order: ['createdAt'],
+                        order: [['createdAt', 'asc']],
                         include: Device
                     }]
                 }
@@ -101,7 +101,8 @@ class OrderController {
             ],
             order: [[orderBy, orderDirection]],
             limit,
-            offset
+            offset,
+            distinct:true
         })
         if (!order) {
             return next(APIError.internalError(`Can't create an order with given params! ${req.body.orderObj.toString()}`))

@@ -81,8 +81,8 @@ const Device: React.FC<DeviceViewProps> = ({}) => {
                             )}
                         </Container>
                         <Container className="b-device-action py-3">
-                            {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice} basket={basket} />}
-                            {!deviceQuantity && <AddToCart basketDevice={basketDevice} basket={basket} />}
+                            {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice} />}
+                            {!deviceQuantity && <AddToCart basketDevice={basketDevice} />}
                             <button
                                 className="mt-5 w-100 btn btn-primary btn-lg"
                                 type="submit"

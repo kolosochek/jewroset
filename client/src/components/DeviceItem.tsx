@@ -49,7 +49,7 @@ const DeviceItem = ({device}: ItemProps) => {
                     </div>
                 </section>
                 <div className="ms-auto pe-2 ps-2 pb-2">
-                    <AddToCart basketDevice={basketDevice} basket={basket}/>
+                    <AddToCart basketDevice={basketDevice} />
                 </div>
             </div>
         </section>

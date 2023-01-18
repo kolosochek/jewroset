@@ -11,11 +11,6 @@ export interface AdminOrderFilterI {
 
 }
 
-const orderFilter = {
-    orderBy: 'creation',
-        orderDirection: 'desc',
-}
-
 export const AdminOrderContext = createContext({
     isRender: false,
     setIsRender: (bool:boolean) => {},

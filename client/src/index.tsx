@@ -14,10 +14,10 @@ export const Context = createContext({
     order: new OrderStore(),
 })
 
-
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
 root.render(
     <CookiesProvider>
         <Context.Provider value={{

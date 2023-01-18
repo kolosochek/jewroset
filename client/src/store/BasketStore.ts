@@ -46,6 +46,7 @@ export const removeBasketDevice = async (basketId: BasketI['id'], deviceId:Devic
 export default class BasketStore {
     constructor(
         private _basket: Partial<BasketI> = {},
+        private basket_devices: BasketDeviceI[] = []
         ) {
         makeAutoObservable(this)
     }

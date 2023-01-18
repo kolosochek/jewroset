@@ -37,7 +37,7 @@ const AdminOrderListActions:React.FC<AdminOrderListActionsProps> = ({orderBy, se
                     )}
                 </AdminOrderContext.Consumer>
             </Col>
-            <Col className="text-end">
+            <Col className="text-end d-flex flex-grow-0 align-items-center">
                 <AdminOrderFilterbar orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage}/>
             </Col>
         </Row>

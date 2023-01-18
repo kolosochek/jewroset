@@ -20,6 +20,7 @@ const Sidebar = observer(() => {
     return (
         <div className="flex-shrink-0 py-3 pe-3 bg-white">
             <ListGroup className="list-unstyled ps-0 shadow-sm">
+                {/* TODO refactor that */}
                 {categories.map((category: FlatArray<[CategoryI] | undefined, 1>) => {
                     if (isCategoryI(category!)) {
                         return (

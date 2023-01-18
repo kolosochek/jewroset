@@ -5,6 +5,7 @@ import {BasketDeviceI} from "../../../store/BasketStore";
 import AdminOrderItemActions from "./AdminOrderItemActions";
 import {OrderI} from "../../../store/OrderStore";
 import BasketDeviceList from "../../BasketDeviceList";
+import BasketDeviceListHeader from "../../BasketDeviceListHeader";
 
 export const getOrderStatus = (status: string) => {
     const orderStatus = {
@@ -74,15 +75,7 @@ const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index}) => {
             <section key={`order-expanded-${order.id}`} className="collapse card card-body"
                      id={`collapse${order.id}`}>
                 {/* order basketDevice header */}
-                <Row key={`order-items-${order.id}`}>
-                    <Col>#</Col>
-                    <Col className="col-3">Name</Col>
-                    <Col className="text-center">Img</Col>
-                    <Col className="text-center">Quantity</Col>
-                    <Col className="text-center">Price</Col>
-                    <Col className="text-center">Total</Col>
-                    <Col className="text-end">Action</Col>
-                </Row>
+                <BasketDeviceListHeader />
                 <hr/>
                 {basketDevices.length > 0
                     ? (
