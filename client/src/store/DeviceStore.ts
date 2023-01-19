@@ -30,6 +30,7 @@ export type DeviceInfoT = Record<string, string | number | Date>
 export interface DeviceI {
     id: number,
     name: string,
+    description?: string,
     price: number,
     img: string,
     brand?: BrandI,
@@ -44,7 +45,7 @@ export interface DeviceI {
 
 export default class DeviceStore {
     constructor(
-        private _categories: Partial<CategoryI[]> = [],
+        private _categories: CategoryI[] = [],
         private _brands: BrandI[] = [],
         private _devices: DeviceI[] = [],
         private _selectedCategory: Partial<CategoryI> = {},
@@ -140,5 +141,30 @@ export default class DeviceStore {
 
     get selectedFilter(): Partial<FilterI> {
         return this._selectedFilter
+    }
+
+    getCategoryById(id:CategoryI['id']){
+        for (let category of [...this.categories.flat()]) {
+            if (category.id === id) {
+                return category
+            }
+        }
+        return false
+    }
+
+    getBrandById(id:BrandI['id']){
+        for (let brand of [...this.brands.flat()]) {
+            if (brand.id === id) {
+                return brand
+            }
+        }
+        return false
+    }
+
+    clearSelectedCategory(){
+        this._selectedCategory = {}
+    }
+    clearSelectedBrand(){
+        this._selectedBrand = {}
     }
 }

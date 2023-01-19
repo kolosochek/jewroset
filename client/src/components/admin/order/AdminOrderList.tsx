@@ -4,9 +4,11 @@ import {OrderI} from "../../../store/OrderStore";
 import {Context} from "../../../index";
 import AdminOrderListActions from "./AdminOrderListActions";
 import {adminGetAllOrders} from "../../../http/orderAPI";
-import {AdminOrderContext, AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
+import {AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 import AdminOrderItem from "./AdminOrderItem";
 import AdminOrderListPagination from "./AdminOrderListPagination";
+import {PaginatorI} from "../../../store/DeviceStore";
+import AdminOrderListHeader from "./AdminOrderListHeader";
 
 
 interface AdminOrderListProps extends PropsWithChildren {
@@ -14,16 +16,16 @@ interface AdminOrderListProps extends PropsWithChildren {
 }
 const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     const {user} = useContext(Context)
-    const {isRender} = useContext(AdminOrderContext)
     const [orders, setOrders] = useState<OrderI[]>([]);
+    const [isForceParentRender, setIsForceParentRender] = useState<boolean>(false)
     // pagination
-    const [totalCount, setTotalCount] = useState<number>(0);
-    const [page, setPage] = useState<number>(1);
+    const [totalCount, setTotalCount] = useState<PaginatorI['totalCount']>(0);
+    const [page, setPage] = useState<PaginatorI["page"]>(1);
     const limit = 10;
     // filterbar
     const [orderBy, setOrderBy] = useState<AdminOrderFilterI['orderBy']>('createdAt')
     const [orderDirection, setOrderDirection] = useState<AdminOrderFilterI['orderDirection']>('desc')
-    //
+    // loading
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -34,7 +36,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
         }).finally(() => {
             setIsLoading(false)
         })
-    }, [isRender, page, orderBy, orderDirection])
+    }, [isForceParentRender, page, orderBy, orderDirection])
 
     if (isLoading) {
         return <Spinner animation={"grow"}/>
@@ -43,23 +45,22 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     return (
         <section className="col-10">
             <div className="wrapper d-flex flex-column">
-                <AdminOrderListActions orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage} />
+                <AdminOrderListActions
+                    orderBy={orderBy}
+                    setOrderBy={setOrderBy}
+                    orderDirection={orderDirection}
+                    setOrderDirection={setOrderDirection}
+                    setPage={setPage}
+                    isForceParentRender={isForceParentRender}
+                    setIsForceParentRender={setIsForceParentRender}
+                />
                 <section className="mt-3 mb-3">
                     {orders
                         ? (<>
-                            <Row>
-                                <Col className="">Order id</Col>
-                                <Col>Email</Col>
-                                <Col className="col-3">Address</Col>
-                                <Col className="text-center">Country</Col>
-                                <Col className="text-center">City</Col>
-                                <Col className="text-center">Status</Col>
-                                <Col className="text-end">Action</Col>
-                            </Row>
-                            <hr />
+                            <AdminOrderListHeader />
                             {(orders as OrderI[]).map((order: OrderI, index) => {
                                 return (
-                                    <AdminOrderItem key={order.id} order={order} index={index}/>
+                                    <AdminOrderItem key={order.id} order={order} index={index} isForceParentRender={isForceParentRender} setIsForceParentRender={setIsForceParentRender} />
                                 )
                             })}
                         </>)

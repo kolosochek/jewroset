@@ -1,16 +1,10 @@
 import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
 import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {createDevice, fetchBrands, fetchCategories, fetchDevices} from "../../http/deviceAPI";
-import {observer} from "mobx-react-lite";
+import {fetchDevices} from "../../http/deviceAPI";
 import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {BasketDeviceI, incrementBasketDevice} from "../../store/BasketStore";
 import {OrderI} from "../../store/OrderStore";
-import {findUserData} from "../../http/userAPI";
-import {createBasket, incrementBasket} from "../../http/basketAPI";
-import {createOrder} from "../../http/orderAPI";
-
-type ValueOf<T> = T[keyof T];
 
 interface AddDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
@@ -89,8 +83,9 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, bas
                             <Dropdown
                                 className="mt-2 mb-2 w-100"
                             >
-                                <Dropdown.Toggle className="w-100">{`${selectedDevice ? selectedDevice.name : 'Choose device'}`}</Dropdown.Toggle>
-                                <Dropdown.Menu >
+                                <Dropdown.Toggle
+                                    className="w-100">{`${selectedDevice ? selectedDevice.name : 'Choose device'}`}</Dropdown.Toggle>
+                                <Dropdown.Menu>
                                     {devices.map((item) => {
                                         return (
                                             <Dropdown.Item key={`${item.id}`} onClick={() => {
@@ -131,4 +126,5 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, bas
     )
 }
 
-export default AddDeviceModal;
+
+export default AddDeviceModal

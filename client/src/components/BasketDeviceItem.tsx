@@ -23,7 +23,7 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice
                 <Col>{++index}</Col>
                 <Col className="col-3"><Link to={`/device/${basketDevice.device?.id}`}>{basketDevice.device?.name}</Link></Col>
                 <Col className="text-center">
-                    <BasketImage imageUrl={basketDevice.device?.img!}/>
+                    <BasketImage alt={basketDevice.device?.name!} imageUrl={basketDevice.device?.img!} />
                 </Col>
                 <Col className="text-center">
                     <AddToCart
@@ -37,18 +37,19 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice
                 <Col
                     className="text-end bi bi-x-circle"
                     onClick={() => {
-                        // Basket View mode
-                        if (basket) {
-                            removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(basketParam => {
-                                basket.setBasket(basketParam)
-                            })
-                            // Admin order view mode
-                        } else {
+                        // Admin order view mode
+                        if (setBasketDevices) {
                             removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(() => {
                                 if (setBasketDevices){
                                     setBasketDevices(basketDevices!.filter(device => device !== basketDevice))
                                 }
                             })
+                        // Basket View mode
+                        } else {
+                            removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(basketParam => {
+                                basket.setBasket(basketParam)
+                            })
+
                         }
                     }}
                 ></Col>

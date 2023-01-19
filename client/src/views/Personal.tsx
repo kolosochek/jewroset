@@ -135,6 +135,7 @@ const Personal = () => {
                                                 <Col className="text-center">
                                                     <BasketImage
                                                         key={`order-basket-basketdevice-basketimage-${item.device?.id}`}
+                                                        alt={item.device?.name!}
                                                         imageUrl={item.device?.img!}/>
                                                 </Col>
                                                 <Col className="text-center">{item.quantity}</Col>

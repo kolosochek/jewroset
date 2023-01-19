@@ -8,16 +8,13 @@ import {Context} from "../../index";
 interface AddToCartProps extends PropsWithChildren {
     basketDevice: BasketDeviceI,
     basketDevices?: BasketDeviceI[],
-    setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void;
+    setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void,
 }
 
 const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevices, setBasketDevices}) => {
     const {basket} = useContext(Context)
-    // debug
-    console.log(`basket.getDeviceBasketQuantityById(basketDevice.device?.id!`)
-    console.log(basket.getDeviceBasketQuantityById(basketDevice.device?.id!))
-    //
-    const [deviceQuantity, setDeviceQuantity] = useState<number>(setBasketDevices ? basketDevice.quantity : basket.getDeviceBasketQuantityById(basketDevice.device?.id!) )
+    const [deviceQuantity, setDeviceQuantity] = useState<BasketDeviceI['quantity']>(setBasketDevices && basketDevices ? basketDevice.quantity : basket.getDeviceBasketQuantityById(basketDevice.device?.id!))
+
     const getBasketDeviceIndex = () => {
         let index = -1
         for (let [i, item] of basketDevices!.entries()) {
@@ -28,7 +25,7 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
         return index
     }
 
-    const incrementDevice = (basketDevice:BasketDeviceI) => {
+    const incrementDevice = (basketDevice: BasketDeviceI) => {
         incrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
             basketDevice.quantity += 1
             setDeviceQuantity(basketDevice.quantity)
@@ -40,7 +37,8 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
             }
         })
     }
-    const decrementDevice = (basketDevice:BasketDeviceI) => {
+
+    const decrementDevice = (basketDevice: BasketDeviceI) => {
         decrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
             basketDevice.quantity -= 1
             setDeviceQuantity(basketDevice.quantity)
@@ -66,8 +64,8 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
                                     if (setBasketDevices) {
                                         decrementDevice(basketDevice)
                                     } else {
+                                        setDeviceQuantity(deviceQuantity - 1)
                                         basket.decrementBasketDevice(basketDevice.deviceId).then(() => {
-                                            setDeviceQuantity(deviceQuantity - 1)
                                         })
                                     }
                                 }}

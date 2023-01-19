@@ -1,14 +1,21 @@
-import React from 'react';
-import {RouteI} from "../utils/Routes";
-import {useNavigate} from "react-router-dom";
+import React, {useContext} from 'react';
 import {Container} from "react-bootstrap";
-import {NavLink} from "react-router-dom";
+import {Context} from "../index";
 
 const EmptyDeviceList = () => {
+    const {device} = useContext(Context)
+
 
     return (
         <Container className="d-flex my-5">
-            <NavLink className="container" to={`/` as RouteI['path']}>{`No items. Go back?`}</NavLink>
+            <p>No items.<a
+                className="container"
+                onClick={() => {
+                    device.clearSelectedCategory()
+                    device.clearSelectedBrand()
+                }}
+            >{`Clear filters?`}</a>
+            </p>
         </Container>
     )
 }

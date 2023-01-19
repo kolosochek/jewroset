@@ -2,10 +2,11 @@ import React, {useContext, useState} from 'react';
 import {Button, ListGroup, Row, Container} from "react-bootstrap";
 import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
 import CreateBrandModal from "../../components/modals/CreateBrandModal";
-import CreateDeviceModal from "../../components/modals/CreateDeviceModal";
+import DeviceModal from "../../components/modals/DeviceModal";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
+import AdminAccessDenied from "../../components/admin/AdminAccessDenied";
 
 const AdminDashboard = () => {
     const {user} = useContext(Context)
@@ -26,7 +27,7 @@ const AdminDashboard = () => {
                     </section>
                 </Row>
             </Container>)
-            : (<h1>Not enough rights to access that page!</h1>)
+            : (<AdminAccessDenied />)
     )
 }
 

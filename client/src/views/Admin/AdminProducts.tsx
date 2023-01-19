@@ -1,54 +1,36 @@
-import React, {useContext, useState} from 'react';
-import {Button, ListGroup, Row, Container, Col} from "react-bootstrap";
-import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
-import CreateBrandModal from "../../components/modals/CreateBrandModal";
-import CreateDeviceModal from "../../components/modals/CreateDeviceModal";
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {Container, Row} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
+import AdminAccessDenied from "../../components/admin/AdminAccessDenied";
+import AdminProductList from "../../components/admin/product/AdminProductList";
+
+
+export const AdminProductContext = createContext({
+    isForceRender: false,
+    setIsForceRender: (bool:boolean) => {},
+})
+
 
 const AdminProducts = () => {
     const {user} = useContext(Context)
     const location = useLocation()
     const adminSection = location.pathname.split('/').pop()
-    const [isBrandVisible, setBrandVisible] = useState(false)
-    const [isCategoryVisible, setCategoryVisible] = useState(false)
-    const [isDeviceVisible, setDeviceVisible] = useState(false)
+    const [isForceRender, setIsForceRender] = useState<boolean>(false)
+
 
     return (
         user.isAdmin
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <section className="col-10">
-                        <div className="wrapper d-flex flex-column">
-                            <Row className="pt-1 pb-1">
-                                <Col>Category:</Col>
-                                <Col className="text-end">
-                                    <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
-                                </Col>
-                            </Row>
-                            <Row className="pt-1 pb-1">
-                                <Col>Brand:</Col>
-                                <Col className="text-end">
-                                    <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
-                                </Col>
-                            </Row>
-                            <Row className="pt-1 pb-1">
-                                <Col>Device:</Col>
-                                <Col className="text-end">
-                                    <Button className="btn" onClick={() => setDeviceVisible(true)}>add device</Button>
-                                </Col>
-                            </Row>
-
-                            <CreateCategoryModal show={isCategoryVisible} onHide={() => setCategoryVisible(false)}/>
-                            <CreateBrandModal show={isBrandVisible} onHide={() => setBrandVisible(false)}/>
-                            <CreateDeviceModal show={isDeviceVisible} onHide={() => setDeviceVisible(false)}/>
-                        </div>
-                    </section>
+                    <AdminProductContext.Provider value={{isForceRender, setIsForceRender}}>
+                        <AdminProductList />
+                    </AdminProductContext.Provider>
                 </Row>
             </Container>)
-            : (<h1>Not enough rights to access that page!</h1>)
+            : (<AdminAccessDenied />)
     );
 };
 

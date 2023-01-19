@@ -3,19 +3,24 @@ import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
 import {createDevice, fetchBrands, fetchCategories} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
-import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
+import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 
 type ValueOf<T> = T[keyof T];
+type ModeT = "create" | "edit"
 
 interface CreateDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
+    mode: ModeT
 }
 
-const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide}) => {
+const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, mode}) => {
     const {device} = useContext(Context)
-    const [info, setInfo] = useState([] as DeviceInfoT[])
+    const [info, setInfo] = useState<DeviceInfoT[]>([])
+    const [category, setCategory] = useState<CategoryI['id']>()
+    const [brand, setBrand] = useState<BrandI['id']>()
     const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
     const [price, setPrice] = useState(0)
     const [rating, setRating] = useState(0)
     const [file, setFile] = useState<File | null>(null)
@@ -56,9 +61,9 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
     }
 
     useEffect(() => {
-        fetchCategories().then(data => device.setCategories(data))
-        fetchBrands().then(data => device.setBrands(data))
-    }, [])
+        fetchCategories().then(categoriesParam => device.setCategories(categoriesParam))
+        fetchBrands().then(brandsParam => device.setBrands(brandsParam))
+    }, [show])
 
 
     return (
@@ -75,18 +80,22 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Dropdown
-                        className="mt-2 mb-2">
-                        <Dropdown.Toggle>{device.selectedCategory.name ?? `Choose category`}</Dropdown.Toggle>
-                        <Dropdown.Menu>
+                    <div className="mb-2">
+                        <Form.Label className="form-label" htmlFor="name">Name</Form.Label>
+                        <Form.Select
+                            onChange={e => setCategory(+e.target?.value!)}
+                            value={category}
+                            className="form-control"
+                            placeholder="Device name"
+                            required
+                        >
                             {device.categories.map((category) => {
                                 return (
-                                    <Dropdown.Item onClick={() => device.setSelectedCategory(category!)}
-                                                   key={category?.id}>{category?.name}</Dropdown.Item>
+                                    <option value={category.id} key={category?.id}>{category?.name}</option>
                                 )
                             })}
-                        </Dropdown.Menu>
-                    </Dropdown>
+                        </Form.Select>
+                    </div>
                     <Dropdown className="mt-2 mb-2">
                         <Dropdown.Toggle>{device.selectedBrand.name ?? `Choose brand`}</Dropdown.Toggle>
                         <Dropdown.Menu>
@@ -98,20 +107,28 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
                             })}
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Form.Control
-                        onChange={e => setName(e.target!.value)}
-                        value={name}
-                        className="mt-3"
-                        placeholder="Device name"
-                    />
+                    <div className="mb-2">
+                        <Form.Label className="form-label" htmlFor="name">Name</Form.Label>
+                        <Form.Control
+                            onChange={e => setName(e.target!.value)}
+                            value={name}
+                            className="form-control"
+                            placeholder="Device name"
+                            required
+                        />
+                    </div>
+                    <div className="mb-2">
+                        <Form.Label className="form-label" htmlFor="price">Price</Form.Label>
                     <Form.Label>Price</Form.Label>
                     <Form.Control
                         onChange={e => setPrice(+e.target!.value)}
                         value={price}
-                        className="mt-3"
+                        className="form-control"
                         placeholder="Enter device price"
                         type="number"
+                        required
                     />
+                    </div>
                     <Form.Label>Rating</Form.Label>
                     <Form.Control
                         onChange={e => setRating(+e.target!.value)}
@@ -167,4 +184,4 @@ const CreateDeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onH
     )
 })
 
-export default CreateDeviceModal;
+export default DeviceModal;

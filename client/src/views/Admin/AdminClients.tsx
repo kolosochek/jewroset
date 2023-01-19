@@ -1,11 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {Button, ListGroup, Row, Container} from "react-bootstrap";
+import {Button, Row, Container} from "react-bootstrap";
 import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
 import CreateBrandModal from "../../components/modals/CreateBrandModal";
-import CreateDeviceModal from "../../components/modals/CreateDeviceModal";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
+import AdminAccessDenied from "../../components/admin/AdminAccessDenied";
 
 const AdminClients = () => {
     const {user} = useContext(Context)
@@ -13,7 +13,6 @@ const AdminClients = () => {
     const adminSection = location.pathname.split('/').pop()
     const [isBrandVisible, setBrandVisible] = useState(false)
     const [isCategoryVisible, setCategoryVisible] = useState(false)
-    const [isDeviceVisible, setDeviceVisible] = useState(false)
 
     return (
         user.isAdmin
@@ -24,15 +23,13 @@ const AdminClients = () => {
                         <div className="wrapper d-flex flex-column">
                             <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
                             <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
-                            <Button className="btn" onClick={() => setDeviceVisible(true)}>add device</Button>
                             <CreateCategoryModal show={isCategoryVisible} onHide={() => setCategoryVisible(false)}/>
                             <CreateBrandModal show={isBrandVisible} onHide={() => setBrandVisible(false)}/>
-                            <CreateDeviceModal show={isDeviceVisible} onHide={() => setDeviceVisible(false)}/>
                         </div>
                     </section>
                 </Row>
             </Container>)
-            : (<h1>Not enough rights to access that page!</h1>)
+            : (<AdminAccessDenied />)
     )
 }
 

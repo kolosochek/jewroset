@@ -2,23 +2,22 @@ import React, {useContext} from 'react';
 import {Button, Modal} from "react-bootstrap";
 import {UserI} from "../../store/UserStore";
 import {OrderI} from "../../store/OrderStore";
-import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 
 interface ConfirmRemoveOrderModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
     adminRemoveOrder: (userId:ConfirmRemoveOrderModalProps['userId'], orderId:ConfirmRemoveOrderModalProps['orderId']) => Promise<Record<string, boolean>>,
     userId: UserI['id'],
-    orderId: OrderI['id']
+    orderId: OrderI['id'],
+    isForceParentRender: boolean,
+    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void,
 }
 
-const ConfirmRemoveOrderModal: React.FC<ConfirmRemoveOrderModalProps> = ({show, onHide, adminRemoveOrder, userId, orderId}) => {
-    const {isRender, setIsRender} = useContext(AdminOrderContext);
-    const forceParentRender = () => setIsRender(!isRender);
+const ConfirmRemoveOrderModal: React.FC<ConfirmRemoveOrderModalProps> = ({show, onHide, adminRemoveOrder, userId, orderId, isForceParentRender, setIsForceParentRender}) => {
     const removeOrder = () => {
         adminRemoveOrder(userId, orderId).then((result) => {
             if (result.result === true) {
-                forceParentRender()
+                setIsForceParentRender(!isForceParentRender)
                 onHide()
             }
         })

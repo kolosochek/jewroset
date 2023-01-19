@@ -43,7 +43,7 @@ class DeviceController {
                 {model: Brand, attributes: ['id', 'name']}
             ],
             attributes: [
-              'id', 'name', 'price', 'rating', 'img'
+              'id', 'name', 'description', 'price', 'rating', 'img'
             ],
             limit,
             offset

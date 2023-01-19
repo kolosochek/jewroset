@@ -10,14 +10,16 @@ import ConfirmRemoveOrderModal from "../../modals/ConfirmRemoveOrderModal";
 interface AdminOrderActionsProps extends PropsWithChildren {
     order: OrderI,
     basketDevices: BasketDeviceI[],
-    setBasketDevices: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void;
+    setBasketDevices: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void,
+    isForceParentRender: boolean,
+    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void,
 }
 
-const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketDevices, setBasketDevices}) => {
+const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketDevices, setBasketDevices, isForceParentRender, setIsForceParentRender}) => {
     const {user} = useContext(Context)
     const [isEditOrderVisible, setEditOrderVisible] = useState(false)
     const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false)
-    const [isConfirmRemoveOrderModal, setisConfirmRemoveOrderModal] = useState(false)
+    const [isConfirmRemoveOrderModal, setIsConfirmRemoveOrderModal] = useState(false)
 
 
     return (
@@ -47,12 +49,14 @@ const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketD
                 show={isEditOrderVisible}
                 order={order}
                 basketDevices={basketDevices}
+                isForceParentRender={isForceParentRender}
+                setIsForceParentRender={setIsForceParentRender}
                 onHide={() => {
                     setEditOrderVisible(false)
                 }
                 }/>
             <button className="btn btn-danger" onClick={() => {
-                setisConfirmRemoveOrderModal(true)
+                setIsConfirmRemoveOrderModal(true)
             }
             }>Delete order
             </button>
@@ -61,17 +65,12 @@ const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketD
                 adminRemoveOrder={adminRemoveOrder}
                 userId={user.id!}
                 orderId={order.id}
+                isForceParentRender={isForceParentRender}
+                setIsForceParentRender={setIsForceParentRender}
                 onHide={() => {
-                setisConfirmRemoveOrderModal(false)
-            }
-                    /*
-                        adminRemoveOrder(user.id!, order.id!).then(result => {
-                            if (result.result === true) {
-                                forceParentRender()
-                            }
-                        })
-                         */
-            }/>
+                    setIsConfirmRemoveOrderModal(false)
+                }
+                }/>
         </>
     )
 }

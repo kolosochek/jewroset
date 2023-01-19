@@ -3,15 +3,19 @@ import {Figure} from "react-bootstrap";
 import styles from "./BasketImage.module.css"
 
 interface BasketImageProps extends PropsWithChildren {
-    imageUrl: string
+    alt: string,
+    imageUrl: string,
 }
 
-const BasketImage: React.FC<BasketImageProps> = (imageUrl) => {
+const BasketImage: React.FC<BasketImageProps> = ({imageUrl, alt}) => {
     return (
         <Figure className={`${styles['b-basket-image-figure']}`}>
             <Figure.Image className={`m-0 ${styles['b-basket-image']}`}
-                          src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${imageUrl.imageUrl}`}
-                          width={30} height={30}/>
+                          src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${imageUrl}`}
+                          width={30}
+                          height={30}
+                          alt={alt}
+            />
         </Figure>
     )
 }

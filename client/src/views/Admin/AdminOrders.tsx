@@ -4,6 +4,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
 import AdminOrderList from "../../components/admin/order/AdminOrderList";
+import AdminAccessDenied from "../../components/admin/AdminAccessDenied";
 
 export interface AdminOrderFilterI {
     orderBy: "status" | "createdAt"
@@ -11,15 +12,10 @@ export interface AdminOrderFilterI {
 
 }
 
-export const AdminOrderContext = createContext({
-    isRender: false,
-    setIsRender: (bool:boolean) => {},
-})
 const AdminOrders = () => {
     const {user} = useContext(Context)
     const location = useLocation()
     const adminSection = location.pathname.split('/').pop()
-    const [isRender, setIsRender] = useState(false);
 
 
     return (
@@ -27,12 +23,10 @@ const AdminOrders = () => {
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <AdminOrderContext.Provider value={{isRender, setIsRender}}>
-                        <AdminOrderList />
-                    </AdminOrderContext.Provider>
+                    <AdminOrderList/>
                 </Row>
             </Container>)
-            : (<h1>Not enough rights to access that page!</h1>)
+            : (<AdminAccessDenied />)
     );
 };
 

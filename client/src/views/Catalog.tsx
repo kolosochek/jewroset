@@ -5,7 +5,7 @@ import {
     fetchCategories,
     fetchDevices
 } from "../http/deviceAPI";
-import Sidebar from "../components/Sidebar";
+import Categorybar from "../components/Categorybar";
 import Brandbar from "../components/Brandbar";
 import DeviceList from "../components/DeviceList";
 import {observer} from "mobx-react-lite";
@@ -50,7 +50,7 @@ const Catalog = observer(() => {
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">
             <aside className="col-3 flex-inline">
-                <Sidebar/>
+                <Categorybar/>
             </aside>
             <section className="col-9 flex py-3">
                 <Brandbar/>
