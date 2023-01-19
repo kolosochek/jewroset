@@ -2,7 +2,7 @@ import {$authHost, $host} from "./index";
 import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
 
 
-export const createDevice = async (device: Partial<DeviceI>) => {
+export const createDevice = async (device: DeviceI) => {
     const {data} = await $authHost.post(`api/device`, device)
     return data
 }

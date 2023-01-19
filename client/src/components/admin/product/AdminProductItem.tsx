@@ -1,7 +1,7 @@
 import React, {PropsWithChildren} from 'react';
 import {DeviceI} from "../../../store/DeviceStore";
 import {Col, Row} from "react-bootstrap";
-import {NavLink, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import BasketImage from "../../BasketImage/BasketImage";
 import AdminProductItemActions from "./AdminProductItemActions";
 
@@ -26,7 +26,7 @@ const AdminProductItem: React.FC<AdminProductItemProps> = ({device, index}) => {
                     >{device.name}</a>
                 </Col>
                 <Col
-                    className="col-3">{device.description?.slice(0, 100)}<button className="btn p-0 ps-1 outline-none">...</button></Col>
+                    className="col-3">{device.description?.slice(0, 50)}<button className="btn p-0 ps-1 outline-none">...</button></Col>
                 <Col className="text-center">
                         <BasketImage alt={device.name} imageUrl={device.img} />
                 </Col>

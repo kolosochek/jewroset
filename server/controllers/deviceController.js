@@ -6,11 +6,19 @@ const APIError = require('../error/APIError')
 class DeviceController {
     async create(req, res, next) {
         try {
-            let {name, price, rating, brandId, categoryId, info} = req.body
+            // debug
+            console.log(`req.body`)
+            console.log(req.body)
+            //
+            // debug
+            console.log(`req.files`)
+            console.log(req.files)
+            //
+            let {name, description, price, rating, brandId, categoryId, info} = req.body
             const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const device = await Device.create({name, price, rating, brandId, categoryId, img: fileName});
+            const device = await Device.create({name, description, price, rating, brandId, categoryId, img: fileName});
 
             if (info) {
                 info = JSON.parse(info)
@@ -45,6 +53,7 @@ class DeviceController {
             attributes: [
               'id', 'name', 'description', 'price', 'rating', 'img'
             ],
+            order: [['createdAt', 'desc']],
             limit,
             offset
         }
@@ -75,7 +84,7 @@ class DeviceController {
                 {model: DeviceInfo, as: 'info'}
             ],
             attributes: [
-                'id', 'name', 'price', 'rating', 'img'
+                'id', 'name', 'description', 'price', 'rating', 'img'
             ],
         });
         return res.json(device)

@@ -42,11 +42,12 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
 
 
     useEffect(() => {
+        fetchDevices(undefined, undefined, undefined, undefined, undefined, deviceLimit).then((devices) => {
+            setDeviceArr(devices.rows as unknown as DeviceI[])
+        })
+
         // if modal is visible
         if (show) {
-            fetchDevices(undefined, undefined, undefined, undefined, undefined, deviceLimit).then((devices) => {
-                setDeviceArr(devices.rows as unknown as DeviceI[])
-            })
 
             const form: HTMLFormElement = document.querySelector('form.needs-validation')!
 

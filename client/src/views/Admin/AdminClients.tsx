@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Button, Row, Container} from "react-bootstrap";
-import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
+import CreateCategoryModal from "../../components/modals/CreateCategoryModal";
 import CreateBrandModal from "../../components/modals/CreateBrandModal";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import {Context} from "../../index";
