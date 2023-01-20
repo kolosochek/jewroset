@@ -1,6 +1,8 @@
 import {$authHost, $host} from "./index";
 import jwtDecode from "jwt-decode";
 import {UserI} from "../store/UserStore";
+import {PaginatorI} from "../store/DeviceStore";
+import {AdminClientFilterI} from "../views/Admin/AdminClients";
 
 
 export const setUserCookie = (email: UserI['email'], setCookieFunction:Function) => {
@@ -48,4 +50,13 @@ export const userCheck = async () => {
     } else {
         throw new Error('No token recieved!')
     }
+}
+
+export const adminGetAllUsers = async (page: PaginatorI['page'], limit: PaginatorI['limit'], orderBy:AdminClientFilterI["orderBy"], orderDirection:AdminClientFilterI["orderDirection"]) => {
+    const {data} = await $authHost.get('api/user/all', {
+        params: {
+            page, limit, orderBy, orderDirection
+        }
+    })
+    return data
 }

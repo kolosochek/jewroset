@@ -37,7 +37,7 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice
                 <Col
                     className="text-end bi bi-x-circle"
                     onClick={() => {
-                        // Admin order view mode
+                        // Admin Order view mode
                         if (setBasketDevices) {
                             removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(() => {
                                 if (setBasketDevices){

@@ -4,7 +4,7 @@ import {useLocation} from "react-router-dom";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
 import AdminAccessDenied from "../../components/Admin/AdminAccessDenied";
-import AdminProductList from "../../components/Admin/product/AdminProductList";
+import AdminProductList from "../../components/Admin/Product/AdminProductList";
 
 
 export const AdminProductContext = createContext({
@@ -13,7 +13,7 @@ export const AdminProductContext = createContext({
 })
 
 export interface AdminProductFilterI {
-    orderBy: "price" | "createdAt"
+    orderBy: "id" | "name" | "description" | "price"
     orderDirection: "asc" | "desc"
 
 }

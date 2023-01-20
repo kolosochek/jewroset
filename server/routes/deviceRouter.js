@@ -8,5 +8,7 @@ router.post('/remove', checkRoleMiddleware("ADMIN"), deviceController.adminRemov
 router.post('/update', checkRoleMiddleware("ADMIN"), deviceController.adminUpdateDevice)
 router.get('/', deviceController.getAll)
 router.get('/:id', deviceController.getById)
+// admin
+router.get('/all', checkRoleMiddleware("ADMIN"), deviceController.adminGetAll)
 
 module.exports = router

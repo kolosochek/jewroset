@@ -1,7 +1,6 @@
 import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
-import {Col, Row, Spinner} from "react-bootstrap";
+import {Spinner} from "react-bootstrap";
 import {OrderI} from "../../../store/OrderStore";
-import {Context} from "../../../index";
 import AdminOrderListActions from "./AdminOrderListActions";
 import {adminGetAllOrders} from "../../../http/orderAPI";
 import {AdminOrderContext, AdminOrderFilterI} from "../../../views/Admin/AdminOrders";

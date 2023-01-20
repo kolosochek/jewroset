@@ -3,7 +3,7 @@ import {Row, Container, Spinner} from "react-bootstrap";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
-import AdminOrderList from "../../components/Admin/order/AdminOrderList";
+import AdminOrderList from "../../components/Admin/Order/AdminOrderList";
 import AdminAccessDenied from "../../components/Admin/AdminAccessDenied";
 
 export interface AdminOrderFilterI {

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Col, Row} from "react-bootstrap";
-import CreateBrandModal from "../../components/modals/CreateBrandModal";
+import CreateBrandModal from "../../components/Modals/CreateBrandModal";
 
 const AdminBrands = () => {
     const [isBrandVisible, setBrandVisible] = useState(false)

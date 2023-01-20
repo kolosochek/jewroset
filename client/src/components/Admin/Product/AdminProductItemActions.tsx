@@ -1,7 +1,7 @@
 import React, {PropsWithChildren, useState} from 'react';
 import {DeviceI} from "../../../store/DeviceStore";
-import ConfirmRemoveProductModal from "../../modals/ConfirmRemoveProductModal";
-import DeviceModal from "../../modals/DeviceModal";
+import ConfirmRemoveProductModal from "../../Modals/ConfirmRemoveProductModal";
+import DeviceModal from "../../Modals/DeviceModal";
 
 interface AdminProductItemActionsProps extends PropsWithChildren {
     device: DeviceI,

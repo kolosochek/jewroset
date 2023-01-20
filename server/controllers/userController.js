@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Basket } = require('../models/models')
+const { User, Basket, Category, Brand, DeviceInfo, Device} = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {
@@ -124,21 +124,25 @@ class UserController {
         return res.json({token})
     }
 
-    async findOrCreateGuest(req, res, next) {
-        const {email, password, role} = req.body
-        if (!email || !password) {
-            return next(APIError.badRequestError(`No error or password was given!`))
+    async adminGetAll(req, res, next) {
+        let {orderBy, orderDirection, limit, page} = req.query;
+        page = page || 1
+        limit = limit || 10
+        let offset = page * limit - limit
+        const options = {
+            where: {},
+            order: [['id', 'desc']],
+            limit,
+            offset
         }
-        const candidate = await User.findOne({where: {email}})
-
-        if (candidate) {
-            return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
+        if (orderBy) {
+            options.order = [[orderBy, orderDirection]]
         }
-        const passwordHash = await bcrypt.hash(password, 5)
-        let user = await User.findOrCreate({where: {email: email, password:passwordHash, role: role}})
-        user = user[0].dataValues
-        const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
+        const users = await User.findAndCountAll(options)
+        if (!users){
+            return next(APIError.internalError(`Can't get all users by admin request`))
+        }
+        return res.json(users)
     }
 }
 

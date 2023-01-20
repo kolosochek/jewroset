@@ -13,41 +13,36 @@ const Brandbar = observer(() => {
 
 
     return (
-        <section className="b-filter-wrapper container p-0 d-flex">
-            <div className="col-9 d-flex">
-                <ListGroup className="b-filter d-flex flex-row flex-wrap">
-                    <ListGroup.Item
-                        className={`p-2 me-2 border-0 rounded`}
-                        active={!device.selectedBrand.id ?? true}
-                        role="button"
-                    >
-                        <div
-                            onClick={() => device.setSelectedBrand({id: 0, name:`All`})}
-                            className={(!device.selectedBrand.id ?? true) ? "text-white text-decoration-none" : "text-decoration-none"}>All
-                        </div>
-                    </ListGroup.Item>
-                    {device.brands.map((brand: BrandI) => {
-                        return (
-                            <ListGroup.Item
+        <div className="col-9 d-flex">
+            <ListGroup className="b-filter d-flex flex-row flex-wrap">
+                <ListGroup.Item
+                    className={`p-2 me-2 border-0 rounded`}
+                    active={!device.selectedBrand.id ?? true}
+                    role="button"
+                >
+                    <div
+                        onClick={() => device.setSelectedBrand({id: 0, name: `All`})}
+                        className={(!device.selectedBrand.id ?? true) ? "text-white text-decoration-none" : "text-decoration-none"}>All
+                    </div>
+                </ListGroup.Item>
+                {device.brands.map((brand: BrandI) => {
+                    return (
+                        <ListGroup.Item
+                            key={brand.id}
+                            className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
+                            active={!device.selectedBrand.id ? brand.id === 0 : brand.id === id}
+                            role="button"
+                        >
+                            <div
                                 key={brand.id}
-                                className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
-                                active={!device.selectedBrand.id ? brand.id === 0 : brand.id === id}
-                                role="button"
-                            >
-                                <div
-                                    key={brand.id}
-                                    onClick={() => device.setSelectedBrand(brand!)}
-                                    className={(!device.selectedBrand.id ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
-                                </div>
-                            </ListGroup.Item>
-                        )
-                    })}
-                </ListGroup>
-            </div>
-            <div className="d-flex ms-auto align-items-center">
-                <Filterbar/>
-            </div>
-        </section>
+                                onClick={() => device.setSelectedBrand(brand!)}
+                                className={(!device.selectedBrand.id ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
+                            </div>
+                        </ListGroup.Item>
+                    )
+                })}
+            </ListGroup>
+        </div>
     );
 })
 

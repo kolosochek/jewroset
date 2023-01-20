@@ -17,7 +17,7 @@ const AdminProductItem: React.FC<AdminProductItemProps> = ({device, index}) => {
 
     return (
         <>
-            {/* order header */}
+            {/* Order header */}
             <Row key={device.id} className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
                 <Col className="col-1 text-start">{device.id}</Col>
                 <Col className="col-3">

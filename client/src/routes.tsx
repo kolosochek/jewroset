@@ -11,6 +11,8 @@ import Personal from "./views/Personal";
 import AdminProducts from "./views/Admin/AdminProducts";
 import AdminOrders from "./views/Admin/AdminOrders";
 import AdminClients from "./views/Admin/AdminClients";
+import AdminCategories from "./views/Admin/AdminCategories";
+import AdminBrands from "./views/Admin/AdminBrands";
 
 export const defaultRoute: RouteI = {path: '/', View: Index}
 const adminRoutes: RouteI[] = [
@@ -18,13 +20,19 @@ const adminRoutes: RouteI[] = [
         path: '/admin', View: AdminDashboard,
     },
     {
-        path: '/Admin/products', View: AdminProducts,
+        path: '/admin/products', View: AdminProducts,
     },
     {
-        path: '/Admin/orders', View: AdminOrders,
+        path: '/admin/orders', View: AdminOrders,
     },
     {
-        path: '/Admin/clients', View: AdminClients,
+        path: '/admin/clients', View: AdminClients,
+    },
+    {
+        path: '/admin/categories', View: AdminCategories,
+    },
+    {
+        path: '/admin/brands', View: AdminBrands,
     },
 ]
 const commonRoutes: RouteI[] = [

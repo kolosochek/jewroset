@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Spinner} from "react-bootstrap";
 import {DeviceI, PaginatorI} from "../../../store/DeviceStore";
-import {fetchDevices} from "../../../http/deviceAPI";
+import {adminGetDevices, fetchDevices} from "../../../http/deviceAPI";
 import AdminProductListActions from "./AdminProductListActions";
 import AdminProductListHeader from "./AdminProductListHeader";
 import AdminProductItem from "./AdminProductItem";
@@ -17,14 +17,14 @@ const AdminProductList = () => {
     const [page, setPage] = useState<PaginatorI['page']>(1)
     const limit = 10
     // filterbar
-    const [orderBy, setOrderBy] = useState<AdminProductFilterI['orderBy']>('createdAt')
+    const [orderBy, setOrderBy] = useState<AdminProductFilterI['orderBy']>('id')
     const [orderDirection, setOrderDirection] = useState<AdminProductFilterI['orderDirection']>('desc')
     // loading
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
-        fetchDevices(undefined, undefined, undefined, undefined, page, limit).then(devicesParam => {
+        adminGetDevices(undefined, undefined, orderBy, orderDirection, page, limit).then(devicesParam => {
             setTotalCount(devicesParam.count)
             setDevices(devicesParam.rows)
         }).finally(() => setIsLoading(false))
@@ -37,7 +37,7 @@ const AdminProductList = () => {
     return (
         <section className="col-10">
             <div className="wrapper d-flex flex-column">
-                <AdminProductListActions />
+                <AdminProductListActions orderBy={orderBy} setOrderBy={setOrderBy} orderDirection={orderDirection} setOrderDirection={setOrderDirection} setPage={setPage} />
                 <section className="mt-3 mb-3">
                     {devices
                         ? (<>

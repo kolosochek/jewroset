@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useContext, useState} from 'react';
+import React, {ClassAttributes, PropsWithChildren, useContext, useState} from 'react';
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import styles from "./AddToCart.module.css"
@@ -9,9 +9,10 @@ interface AddToCartProps extends PropsWithChildren {
     basketDevice: BasketDeviceI,
     basketDevices?: BasketDeviceI[],
     setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void,
+    className?: string
 }
 
-const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevices, setBasketDevices}) => {
+const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevices, setBasketDevices, className}) => {
     const {basket} = useContext(Context)
     const [deviceQuantity, setDeviceQuantity] = useState<BasketDeviceI['quantity']>(setBasketDevices && basketDevices ? basketDevice.quantity : basket.getDeviceBasketQuantityById(basketDevice.device?.id!))
 
@@ -55,7 +56,7 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
         <>
             {deviceQuantity > 0
                 ? (<section className="b-add-to-cart-wrapper">
-                    <div className="b-add-to-cart d-flex">
+                    <div className={`b-add-to-cart ${className ? className : 'd-flex'}`}>
                         <span className="input-group-btn d-inline-block">
                             <button
                                 type="button"

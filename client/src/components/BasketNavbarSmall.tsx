@@ -14,6 +14,7 @@ const BasketNavbarSmall:React.FC<BasketNavbarSmallProps> = (basket) => {
 
     return (
         <Button className="bg-primary btn btn-primary ms-2"
+                style={{minWidth: '65px'}}
                 onClick={() => navigate('/basket' as RouteI['path'])}>
             <i className={`bi ${basket.count !== 0 ? 'bi-basket-fill pe-1' : 'bi-basket'}`}></i>{basket.count !== 0 ? basket.count : ''}</Button>
     )

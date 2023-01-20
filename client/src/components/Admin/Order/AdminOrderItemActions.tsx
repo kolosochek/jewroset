@@ -1,10 +1,10 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
-import OrderModal from "../../modals/OrderModal";
+import OrderModal from "../../Modals/OrderModal";
 import {OrderI} from "../../../store/OrderStore";
 import {Context} from "../../../index";
 import {BasketDeviceI} from "../../../store/BasketStore";
-import AddDeviceModal from "../../modals/AddDeviceModal";
-import ConfirmRemoveOrderModal from "../../modals/ConfirmRemoveOrderModal";
+import AddDeviceModal from "../../Modals/AddDeviceModal";
+import ConfirmRemoveOrderModal from "../../Modals/ConfirmRemoveOrderModal";
 
 interface AdminOrderActionsProps extends PropsWithChildren {
     order: OrderI,

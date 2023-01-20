@@ -21,8 +21,8 @@ export interface CategoryI {
 }
 
 export interface FilterI {
-    type: 'price' | `rating` | `none`,
-    direction: `asc` | `desc` | `none`
+    type: 'price' | `rating` | 'id'
+    direction: `asc` | `desc`
 }
 
 export type DeviceInfoT = Record<string, string | number | Date>

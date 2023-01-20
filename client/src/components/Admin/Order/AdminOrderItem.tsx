@@ -47,7 +47,7 @@ const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index}) => {
 
     return (
         <>
-            {/* order header */}
+            {/* Order header */}
             <Row key={order.id} className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
                 <Col>{order.id}</Col>
                 <Col className="">{order.user?.email}</Col>
@@ -74,13 +74,13 @@ const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index}) => {
             {/* collapse */}
             <section key={`order-expanded-${order.id}`} className="collapse card card-body"
                      id={`collapse${order.id}`}>
-                {/* order basketDevice header */}
+                {/* Order basketDevice header */}
                 <BasketDeviceListHeader />
                 <hr/>
                 {basketDevices.length > 0
                     ? (
                         <>
-                            {/* order basketDevice body */}
+                            {/* Order basketDevice body */}
                             <BasketDeviceList basketDevices={basketDevices} setBasketDevices={setBasketDevices}/>
                             <hr/>
                         </>

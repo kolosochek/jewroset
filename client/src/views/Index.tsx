@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite";
 import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
 import DeviceListPagination from "../components/DeviceListPagination";
 import {Spinner} from "react-bootstrap";
+import Filterbar from "../components/Filterbar";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
@@ -34,12 +35,15 @@ const Index = observer(() => {
     return (
         <section className="content flex-row d-inline-flex container p-0 m-0">
             <aside className="col-3 flex-inline">
-                <Categorybar />
+                <Categorybar/>
             </aside>
             <section className="col-9 flex py-3">
-                <Brandbar />
-                <DeviceList categoryItems={device.devices} />
-                <DeviceListPagination />
+                <section className="b-filter-wrapper container p-0 d-flex">
+                    <Brandbar/>
+                    <Filterbar/>
+                </section>
+                <DeviceList categoryItems={device.devices}/>
+                <DeviceListPagination/>
             </section>
         </section>
     )

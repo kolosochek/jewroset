@@ -45,7 +45,7 @@ const Navbar = observer(() => {
                     {user.isAuth ?
                         <>
                             {user.isAdmin && <Button className="bg-primary btn"
-                                                                   onClick={() => navigate('/Admin' as RouteI['path'])}>Admin</Button>}
+                                                                   onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
                             <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
                             <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
 

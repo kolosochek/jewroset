@@ -101,7 +101,7 @@ BasketDevice.belongsTo(Basket)
 Basket.belongsToMany(Device, {through: BasketDevice, onDelete: 'CASCADE'})
 Device.belongsToMany(Basket, {through: BasketDevice, onDelete: 'CASCADE'})
 
-// order
+// Order
 User.hasOne(Order)
 Order.belongsTo(User)
 

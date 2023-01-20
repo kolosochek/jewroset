@@ -1,6 +1,6 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
-import OrderModal from "../../modals/OrderModal";
+import OrderModal from "../../Modals/OrderModal";
 import AdminOrderFilterbar from "./AdminOrderFilterbar";
 import {AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 import {PaginatorI} from "../../../store/DeviceStore";

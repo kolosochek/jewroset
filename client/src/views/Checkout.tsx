@@ -20,7 +20,7 @@ const Checkout = observer(() => {
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
     const createUserOrder = (form:HTMLFormElement) => {
-        // order
+        // Order
         const orderObj: Partial<OrderI> = {
             userId: user.id,
             basketId: basket.id,
@@ -31,7 +31,7 @@ const Checkout = observer(() => {
             zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
             status: "awaitingPayment"
         }
-        // create new order
+        // create new Order
         createOrder(orderObj).then(orderParam => {
             // clear basket
             clearBasket(user.id!, basket.id!).then((newBasket) => {
@@ -87,7 +87,7 @@ const Checkout = observer(() => {
                         })
                     }
 
-                    // create new order
+                    // create new Order
                     createUserOrder(form)
                     navigate('/payment' as RouteI['path'])
                 }

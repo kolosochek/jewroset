@@ -1,5 +1,6 @@
 import {$authHost, $host} from "./index";
 import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
+import {AdminProductFilterI} from "../views/Admin/AdminProducts";
 
 
 export const createCategory = async (category: Partial<CategoryI>) => {
@@ -37,6 +38,15 @@ export const fetchOneDevice = async (id: number) => {
     return data
 }
 
+
+export const adminGetDevices = async (categoryId?: CategoryI['id'], brandId?: BrandI['id'], orderBy?: AdminProductFilterI['orderBy'], orderDirection?: AdminProductFilterI['orderDirection'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 9) => {
+    const {data} = await $host.get('api/device/all', {
+        params: {
+            categoryId, brandId, orderBy, orderDirection, page, limit
+        }
+    })
+    return data
+}
 export const adminCreateDevice = async (device: FormData) => {
     const {data} = await $authHost.post(`api/device`, device)
     return data

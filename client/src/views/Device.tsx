@@ -39,7 +39,7 @@ const Device: React.FC<DeviceViewProps> = ({}) => {
     }
 
     return (
-        <section className="b-device-wrapper card border-0">
+        <section className="b-device-wrapper card border-0 pt-5 pb-5">
             <div className="container-fliud">
                 <div className="b-device wrapper row">
                     <div className="preview col-md-6">
@@ -81,17 +81,19 @@ const Device: React.FC<DeviceViewProps> = ({}) => {
                         </Row>
                         <Row>
                             <Col className="text-end">
-                                {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice}/>}
+                                {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice} className="d-block" />}
                                 {!deviceQuantity && <AddToCart basketDevice={basketDevice}/>}
                             </Col>
                         </Row>
                         <Row>
-                            <button
-                                className="mt-3 w-100 btn btn-primary btn-lg"
-                                type="submit"
-                                onClick={() => navigate('/basket' as RouteI['path'])}
-                            >Buy now
-                            </button>
+                            <Col>
+                                <button
+                                    className="mt-3 w-100 btn btn-primary btn-lg"
+                                    type="submit"
+                                    onClick={() => navigate('/basket' as RouteI['path'])}
+                                >Buy now
+                                </button>
+                            </Col>
                         </Row>
                     </div>
 

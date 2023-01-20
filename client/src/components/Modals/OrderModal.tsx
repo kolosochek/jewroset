@@ -43,7 +43,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
 
     const manageOrder = () => {
         const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-        // create new order params object
+        // create new Order params object
         const orderObj: Partial<OrderI> = {
             email: email,
             addressone: addressone,
@@ -81,7 +81,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
                     }
                     // let's add basketDevices to created basket
                     addBasketDevices().then(() => {
-                        // create new order
+                        // create new Order
                         createOrder(orderObj).then(() => {
                             forceRender()
                             onHide()

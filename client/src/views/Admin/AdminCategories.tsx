@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Col, Row} from "react-bootstrap";
-import CreateCategoryModal from "../../components/modals/CreateCategoryModal";
+import CreateCategoryModal from "../../components/Modals/CreateCategoryModal";
 
 const AdminCategories = () => {
     const [isCategoryVisible, setCategoryVisible] = useState(false)

@@ -14,13 +14,13 @@ const AdminSidebar:React.FC<AdminSidebarProps> = (children) => {
             <ListGroup className="list-unstyled ps-0 shadow-sm">
                 <ListGroup.Item
                     key='dashboard'
-                    active={sidebarItem === 'Admin'}
+                    active={sidebarItem === 'admin'}
                     className=""
                 >
                     <Link to={`/admin` as RouteI['path']}
                           key="dashboard"
                           onClick={() => setSidebarItem('Admin')}
-                          className={`d-block text-decoration-none ${(sidebarItem === 'Admin') ? 'text-white d-block text-decoration-none' : 'text-black'}`}>
+                          className={`d-block text-decoration-none ${(sidebarItem === 'admin') ? 'text-white d-block text-decoration-none' : 'text-black'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                              strokeLinejoin="round" className="feather feather-home align-text-bottom"
@@ -48,6 +48,43 @@ const AdminSidebar:React.FC<AdminSidebarProps> = (children) => {
                             <polyline points="13 2 13 9 20 9"></polyline>
                         </svg>
                         &nbsp;Products
+                    </Link>
+                </ListGroup.Item>
+
+                <ListGroup.Item
+                    key='categories'
+                    active={sidebarItem === 'categories'}
+                    className=""
+                >
+                    <Link to={`/admin/categories` as RouteI['path']}
+                          key="categories"
+                          onClick={() => setSidebarItem('categories')}
+                          className={`d-block text-decoration-none ${(sidebarItem === 'categories') ? 'text-white d-block text-decoration-none' : 'text-black'}`}>
+                        <svg viewBox="0 0 26 26" width="18" height="18" stroke="currentColor" strokeWidth="2"
+                             fill="none" strokeLinecap="round" strokeLinejoin="round" className="feather feather-menu align-text-bottom">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                        &nbsp;Categories
+                    </Link>
+                </ListGroup.Item>
+                <ListGroup.Item
+                    key='brands'
+                    active={sidebarItem === 'brands'}
+                    className=""
+                >
+                    <Link to={`/admin/brands` as RouteI['path']}
+                          key="brands"
+                          onClick={() => setSidebarItem('brands')}
+                          className={`d-block text-decoration-none ${(sidebarItem === 'brands') ? 'text-white d-block text-decoration-none' : 'text-black'}`}>
+                        <svg viewBox="0 0 26 26" width="18" height="18" stroke="currentColor" strokeWidth="2"
+                             fill="none" strokeLinecap="round" strokeLinejoin="round" className="feather feather-trello align-text-bottom">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <rect x="7" y="7" width="3" height="9"></rect>
+                            <rect x="14" y="7" width="3" height="5"></rect>
+                        </svg>
+                        &nbsp;Brands
                     </Link>
                 </ListGroup.Item>
                 <ListGroup.Item

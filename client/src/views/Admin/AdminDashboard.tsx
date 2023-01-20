@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {Button, ListGroup, Row, Container} from "react-bootstrap";
-import CreateCategoryModal from "../../components/modals/CreateCategoryModal"
-import CreateBrandModal from "../../components/modals/CreateBrandModal";
-import DeviceModal from "../../components/modals/DeviceModal";
+import CreateCategoryModal from "../../components/Modals/CreateCategoryModal"
+import CreateBrandModal from "../../components/Modals/CreateBrandModal";
+import DeviceModal from "../../components/Modals/DeviceModal";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";

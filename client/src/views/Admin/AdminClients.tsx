@@ -1,32 +1,37 @@
-import React, {useContext, useState} from 'react';
+import React, {createContext, useContext, useState} from 'react';
 import {Button, Row, Container} from "react-bootstrap";
-import CreateCategoryModal from "../../components/modals/CreateCategoryModal";
-import CreateBrandModal from "../../components/modals/CreateBrandModal";
+import CreateCategoryModal from "../../components/Modals/CreateCategoryModal";
+import CreateBrandModal from "../../components/Modals/CreateBrandModal";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
 import AdminAccessDenied from "../../components/Admin/AdminAccessDenied";
+import AdminClientList from "../../components/Admin/Clients/AdminClientList";
 
+
+export interface AdminClientFilterI {
+    orderBy: "id" | "email" | "firstname" | "lastname" | "role"
+    orderDirection: "asc" | "desc"
+
+}
+export const AdminClientContext = createContext({
+    isForceRender: false,
+    setIsForceRender: (bool:boolean) => {},
+})
 const AdminClients = () => {
     const {user} = useContext(Context)
     const location = useLocation()
     const adminSection = location.pathname.split('/').pop()
-    const [isBrandVisible, setBrandVisible] = useState(false)
-    const [isCategoryVisible, setCategoryVisible] = useState(false)
+    const [isForceRender, setIsForceRender] = useState<boolean>(false)
 
     return (
         user.isAdmin
             ? (<Container className="p-0 pt-3 pb-3">
                 <Row>
                     <AdminSidebar activeItem={adminSection!}/>
-                    <section className="col-10">
-                        <div className="wrapper d-flex flex-column">
-                            <Button className="btn" onClick={() => setCategoryVisible(true)}>add category</Button>
-                            <Button className="btn" onClick={() => setBrandVisible(true)}>add brand</Button>
-                            <CreateCategoryModal show={isCategoryVisible} onHide={() => setCategoryVisible(false)}/>
-                            <CreateBrandModal show={isBrandVisible} onHide={() => setBrandVisible(false)}/>
-                        </div>
-                    </section>
+                    <AdminClientContext.Provider value={{isForceRender, setIsForceRender}}>
+                        <AdminClientList />
+                    </AdminClientContext.Provider>
                 </Row>
             </Container>)
             : (<AdminAccessDenied />)

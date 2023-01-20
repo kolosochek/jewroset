@@ -58,6 +58,44 @@ class DeviceController {
         return res.json(device)
     }
 
+    async adminGetAll(req, res) {
+        let {brandId, categoryId, orderBy, orderDirection, limit, page} = req.query;
+        brandId = brandId === `0` ? undefined : brandId
+        categoryId = categoryId === `0` ? undefined : categoryId
+        page = page || 1
+        limit = limit || 9
+        let offset = page * limit - limit
+        const options = {
+            where: {},
+            include: [
+                {model: Category, attributes: ['id', 'name']},
+                {model: Brand, attributes: ['id', 'name']},
+                {model: DeviceInfo, as: 'info'}
+            ],
+            attributes: [
+                'id', 'name', 'description', 'price', 'rating', 'img'
+            ],
+            order: [['id', 'desc']],
+            limit,
+            offset
+        }
+
+        if (!categoryId && brandId) {
+            options.where = {brandId}
+        }
+        if (categoryId && !brandId) {
+            options.where = {categoryId}
+        }
+        if (categoryId && brandId) {
+            options.where = {categoryId, brandId}
+        }
+        if (orderBy) {
+            options.order = [[orderBy, orderDirection]]
+        }
+        const devices = await Device.findAndCountAll(options)
+        return res.json(devices)
+    }
+
     async adminCreateDevice(req, res, next) {
         try {
             let {name, description, price, rating, brandId, categoryId, info} = req.body
