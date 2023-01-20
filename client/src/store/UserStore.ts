@@ -8,6 +8,8 @@ export interface UserI {
     newEmail?: string,
     firstName?: string,
     lastName?: string,
+    firstname?: string,
+    lastname?: string,
     password?: string,
     phone?: string,
     role?: "USER" | "ADMIN" | "GUEST",

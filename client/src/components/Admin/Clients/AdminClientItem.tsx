@@ -17,21 +17,22 @@ const AdminClientItem: React.FC<AdminClientItemProps> = ({user, index}) => {
             {/* User header */}
             <Row key={user.id} className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
                 <Col className="col-1 text-start">{user.id}</Col>
-                <Col className="col-3">
+                <Col className="col-5">
                     <a
                         className="link"
                         onClick={() => navigate(`/device/${user.id}`)}
                         role="button"
                     >{user.email}</a>
                 </Col>
-                <Col
-                    className="col-3">
-
+                <Col className="text-center">
+                    {user.firstname}
                 </Col>
                 <Col className="text-center">
+                    {user.lastname}
                 </Col>
                 <Col className="text-center">{user.role}</Col>
-                <Col className="text-end col-2">
+                <Col className="text-center col-2">{user.phone}</Col>
+                <Col className="text-end col-1">
                     {/* <AdminClientItemActions user={user}/> */}
                 </Col>
             </Row>
