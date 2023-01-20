@@ -1,12 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Col, Row, Spinner} from "react-bootstrap";
+import {Spinner} from "react-bootstrap";
 import {DeviceI, PaginatorI} from "../../../store/DeviceStore";
 import {fetchDevices} from "../../../http/deviceAPI";
-import {AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 import AdminProductListActions from "./AdminProductListActions";
 import AdminProductListHeader from "./AdminProductListHeader";
 import AdminProductItem from "./AdminProductItem";
-import {AdminProductContext} from "../../../views/Admin/AdminProducts";
+import {AdminProductContext, AdminProductFilterI} from "../../../views/Admin/AdminProducts";
 
 
 const AdminProductList = () => {
@@ -17,8 +16,8 @@ const AdminProductList = () => {
     const [page, setPage] = useState<PaginatorI['page']>(1)
     const limit = 10
     // filterbar
-    const [orderBy, setOrderBy] = useState<AdminOrderFilterI['orderBy']>('createdAt')
-    const [orderDirection, setOrderDirection] = useState<AdminOrderFilterI['orderDirection']>('desc')
+    const [orderBy, setOrderBy] = useState<AdminProductFilterI['orderBy']>('createdAt')
+    const [orderDirection, setOrderDirection] = useState<AdminProductFilterI['orderDirection']>('desc')
     // loading
     const [isLoading, setIsLoading] = useState<boolean>(true);
 

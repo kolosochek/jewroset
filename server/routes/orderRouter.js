@@ -1,13 +1,13 @@
 const Router = require('express')
 const router = new Router()
 const orderController = require('../controllers/orderController')
-const authMiddleware = require('../middleware/authMiddleware')
+const checkRoleMiddleware = require('../middleware/checkRoleMiddleware')
 
 router.post('/', orderController.createOrder)
 router.post('/get', orderController.getOrders)
 // admin
-router.get('/all', authMiddleware, orderController.adminGetAll)
-router.post('/update', authMiddleware, orderController.adminUpdateOrder)
-router.post('/remove', authMiddleware, orderController.adminRemoveOrder)
+router.get('/all', checkRoleMiddleware("ADMIN"), orderController.adminGetAll)
+router.post('/update', checkRoleMiddleware("ADMIN"), orderController.adminUpdateOrder)
+router.post('/remove', checkRoleMiddleware("ADMIN"), orderController.adminRemoveOrder)
 
 module.exports = router

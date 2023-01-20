@@ -63,26 +63,10 @@ class OrderController {
     }
 
     async adminGetAll(req, res, next) {
-        if (!(req.user && req.user.role === "ADMIN")){
-            return next(APIError.internalError(`User is not ADMIN!`))
-        }
-        let {userId, limit, page, orderBy, orderDirection} = req.query;
+        let {limit, page, orderBy, orderDirection} = req.query;
         page = page || 1
         limit = limit || 10
         let offset = page * limit - limit
-        // find user instance
-        const user = await User.findOne({
-            where: {
-                id: userId
-            }
-        })
-        if (!user){
-            return next(APIError.internalError(`User with id: ${userId} is not found!`))
-        }
-        // and check admin role
-        if (user.role !== "ADMIN"){
-            return next(APIError.internalError(`User with id: ${userId} have no admin role!`))
-        }
 
         // get all orders
         const order = await Order.findAndCountAll({
@@ -111,23 +95,8 @@ class OrderController {
     }
 
     async adminRemoveOrder(req, res, next) {
-        if (!(req.user && req.user.role === "ADMIN")){
-            return next(APIError.internalError(`User is not ADMIN!`))
-        }
-        const {userId, orderId} = req.body.params;
-        // find user instance
-        const user = await User.findOne({
-            where: {
-                id: userId
-            }
-        })
-        if (!user){
-            return next(APIError.internalError(`User with id: ${userId} is not found!`))
-        }
-        // and check admin role
-        if (user.role !== "ADMIN"){
-            return next(APIError.internalError(`User with id: ${userId} have no admin role!`))
-        }
+        const {orderId} = req.body.params;
+
         // get all orders
         const order = await Order.findOne({
             where: {
@@ -142,23 +111,8 @@ class OrderController {
     }
 
     async adminUpdateOrder(req, res, next) {
-        if (!(req.user && req.user.role === "ADMIN")){
-            return next(APIError.internalError(`User is not ADMIN!`))
-        }
-        const {email, userId, id, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
-        // find user instance
-        const user = await User.findOne({
-            where: {
-                id: userId,
-            }
-        })
-        if (!user){
-            return next(APIError.internalError(`User with id: ${userId} or email: ${email} is not found!`))
-        }
-        // and check admin role
-        if (user.role !== "ADMIN"){
-            return next(APIError.internalError(`User with id: ${userId} have no admin role!`))
-        }
+        const {userId, id, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
+
         const order = await Order.findOne({
             where: {
                 id: id

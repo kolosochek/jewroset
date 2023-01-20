@@ -1,13 +1,13 @@
 import React, {PropsWithChildren, useState} from 'react';
-import OrderModal from "../../modals/OrderModal";
-import ConfirmRemoveOrderModal from "../../modals/ConfirmRemoveOrderModal";
-import {adminRemoveOrder} from "../../../http/orderAPI";
 import {DeviceI} from "../../../store/DeviceStore";
+import ConfirmRemoveProductModal from "../../modals/ConfirmRemoveProductModal";
+import DeviceModal from "../../modals/DeviceModal";
 
 interface AdminProductItemActionsProps extends PropsWithChildren {
     device: DeviceI,
 }
-const AdminProductItemActions:React.FC<AdminProductItemActionsProps> = ({device}) => {
+
+const AdminProductItemActions: React.FC<AdminProductItemActionsProps> = ({device}) => {
     const [isEditProductVisible, setEditProductVisible] = useState(false)
     const [isConfirmRemoveProductModal, setIsConfirmRemoveProductModal] = useState(false)
 
@@ -19,13 +19,19 @@ const AdminProductItemActions:React.FC<AdminProductItemActionsProps> = ({device}
                 }
             >Edit
             </button>
+            <DeviceModal deviceParam={device} mode="edit" show={isEditProductVisible} onHide={() => setEditProductVisible(false)}/>
 
             <button className="btn btn-danger" onClick={() => {
                 setIsConfirmRemoveProductModal(true)
             }
             }>Delete
             </button>
-
+            <ConfirmRemoveProductModal
+                show={isConfirmRemoveProductModal}
+                onHide={() => {
+                    setIsConfirmRemoveProductModal(false)
+                }}
+                deviceId={device.id!}/>
         </>
     )
 }

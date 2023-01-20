@@ -26,7 +26,7 @@ interface OrderModalProps extends React.PropsWithChildren {
     setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void
 }
 
-const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, order, isForceParentRender, setIsForceParentRender}) => {
+const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order,isForceParentRender,setIsForceParentRender}) => {
     const {user} = useContext(Context)
     const [email, setEmail] = useState(mode === 'edit' && order!.user?.email ? order!.user?.email : '')
     const [addressone, setAddressone] = useState(mode === 'edit' && order!.addressone ? order!.addressone : '')
@@ -34,86 +34,101 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
     const [country, setCountry] = useState(mode === 'edit' && order!.country ? order!.country : undefined)
     const [city, setCity] = useState(mode === 'edit' && order!.city ? order!.city : undefined)
     const [zip, setZip] = useState(mode === 'edit' && order!.zip ? order!.zip : '')
-    const [status, setStatus] = useState(mode === 'edit' && order!.status ? order!.status : 'created')
+    const [status, setStatus] = useState<OrderI["status"]>(mode === 'edit' && order!.status ? order!.status : 'awaitingPayment')
     const [deviceArr, setDeviceArr] = useState<DeviceI[]>([])
     const deviceLabelArr = mode === 'create' ? ['Collapse', 'Add device'] : ['Collapse', 'Edit devices']
     // fetch all devices
     const deviceLimit = 999;
 
+    const manageOrder = () => {
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+        // create new order params object
+        const orderObj: Partial<OrderI> = {
+            email: email,
+            addressone: addressone,
+            addresstwo: addresstwo,
+            country: country ? country : (form.querySelector('#country') as HTMLSelectElement).value,
+            city: city ? city : (form.querySelector('#city') as HTMLSelectElement).value,
+            zip: zip,
+            status: status ? status : "awaitingPayment",
+        }
+
+        // if form is valid
+        if (form.checkValidity()) {
+            if (mode === 'create') {
+                createNewOrder(form, orderObj)
+            } else if (mode === 'edit') {
+                updateExistingOrder(form, orderObj)
+            }
+        }
+
+        form.classList.add('was-validated')
+    }
+    const createNewOrder = (form: HTMLFormElement, orderObj: Partial<OrderI>) => {
+        findUserData(orderObj.email!).then((userParam) => {
+            orderObj.userId = userParam.id
+            // create new closed basket
+            createBasket(orderObj.userId!, 'closed').then((basketParam) => {
+                orderObj.basketId = basketParam.id
+                // CREATE ORDER MODE
+                if (mode === 'create') {
+                    const orderDeviceParam = (form.querySelector('select#orderDevice') as HTMLSelectElement).selectedOptions
+                    const addBasketDevices = async () => {
+                        for (let item of orderDeviceParam) {
+                            await incrementBasket(orderObj.basketId!, +item.value!)
+                        }
+                    }
+                    // let's add basketDevices to created basket
+                    addBasketDevices().then(() => {
+                        // create new order
+                        createOrder(orderObj).then(() => {
+                            setIsForceParentRender(!isForceParentRender)
+                            onHide()
+                        })
+                    })
+                    // EDIT EXISTING ORDER
+                } else if (mode === 'edit') {
+                    orderObj.userId = user.id!
+                    orderObj.id = order?.id!
+                    updateOrder(orderObj).then(() => {
+                        setIsForceParentRender(!isForceParentRender)
+                        onHide()
+                    })
+                }
+
+            }).catch((e) => {
+                console.log(`Got an error, ${e}`)
+            })
+
+        }).catch((e) => {
+            console.log(`Got an error, ${e}`)
+        })
+    }
+
+    const updateExistingOrder = (form: HTMLFormElement, orderObj: Partial<OrderI>) => {
+        findUserData(orderObj.email!).then((userParam) => {
+            orderObj.userId = userParam.id
+            // create new closed basket
+            createBasket(orderObj.userId!, 'closed').then((basketParam) => {
+                orderObj.basketId = basketParam.id
+                orderObj.userId = user.id!
+                orderObj.id = order?.id!
+                updateOrder(orderObj).then(() => {
+                    setIsForceParentRender(!isForceParentRender)
+                    onHide()
+                })
+            }).catch((e) => {
+                console.log(`Got an error, ${e}`)
+            })
+        }).catch((e) => {
+            console.log(`Got an error, ${e}`)
+        })
+    }
 
     useEffect(() => {
         fetchDevices(undefined, undefined, undefined, undefined, undefined, deviceLimit).then((devices) => {
             setDeviceArr(devices.rows as unknown as DeviceI[])
         })
-
-        // if modal is visible
-        if (show) {
-
-            const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-
-            if (form !== null) {
-                form.addEventListener('submit', (e: SubmitEvent) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-
-                    // if form is valid
-                    if (form.checkValidity()) {
-                        // create new order params object
-                        const orderObj: Partial<OrderI> = {
-                            email: (form.querySelector('#email') as HTMLSelectElement).value,
-                            addressone: (form.querySelector('#addressone') as HTMLInputElement).value ?? undefined,
-                            addresstwo: (form.querySelector('#addresstwo') as HTMLInputElement).value ?? undefined,
-                            country: (form.querySelector('#country') as HTMLSelectElement).value ?? undefined,
-                            city: (form.querySelector('#city') as HTMLSelectElement).value ?? undefined,
-                            zip: (form.querySelector('#zip') as HTMLInputElement).value ?? undefined,
-                            status: ((form.querySelector('#status') as HTMLSelectElement).value as OrderI['status']) ?? "awaitingPayment",
-                        }
-
-                        findUserData(orderObj.email!).then((userParam) => {
-                            orderObj.userId = userParam.id
-                            // create new closed basket
-                            createBasket(orderObj.userId!, 'closed').then((basketParam) => {
-                                orderObj.basketId = basketParam.id
-                                // CREATE ORDER MODE
-                                if (mode === 'create') {
-                                    const orderDeviceParam = (form.querySelector('select#orderDevice') as HTMLSelectElement).selectedOptions
-                                    const addBasketDevices = async () => {
-                                        for (let item of orderDeviceParam) {
-                                            await incrementBasket(orderObj.basketId!, +item.value!)
-                                        }
-                                    }
-                                    // let's add basketDevices to created basket
-                                    addBasketDevices().then(() => {
-                                        // create new order
-                                        createOrder(orderObj).then(() => {
-                                            setIsForceParentRender(!isForceParentRender)
-                                            onHide()
-                                        })
-                                    })
-                                // EDIT EXISTING ORDER
-                                } else if (mode === 'edit') {
-                                    orderObj.userId = user.id!
-                                    orderObj.id = order?.id
-                                    updateOrder(orderObj).then(() => {
-                                        setIsForceParentRender(!isForceParentRender)
-                                        onHide()
-                                    })
-                                }
-
-
-                            }).catch((e) => {
-                                console.log(`Got an error, ${e}`)
-                            })
-
-                        }).catch((e) => {
-                            console.log(`Got an error, ${e}`)
-                        })
-                    }
-
-                    form.classList.add('was-validated')
-                })
-            }
-        }
     }, [show])
 
 
@@ -194,7 +209,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="status">Status</Form.Label>
                         <Form.Select
-                            onChange={e => setStatus(e.target!.value)}
+                            onChange={e => setStatus(e.target!.value as OrderI['status'])}
                             value={status}
                             className="form-control"
                             placeholder="awaitingPayment"
@@ -243,7 +258,10 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show, onHide, mode, ord
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button form="createOrderForm" type="submit" className="text-white btn-success btn-outline-success">{`
+                <Button
+                    className="text-white btn-success btn-outline-success"
+                    onClick={manageOrder}
+                >{`
                     ${mode && mode === 'edit' ? 'Change' : 'Create'} order`}</Button>
                 <Button className="text-white btn-danger btn-outline-danger" onClick={onHide}>Close</Button>
             </Modal.Footer>

@@ -1,6 +1,5 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
 import OrderModal from "../../modals/OrderModal";
-import {adminRemoveOrder} from "../../../http/orderAPI";
 import {OrderI} from "../../../store/OrderStore";
 import {Context} from "../../../index";
 import {BasketDeviceI} from "../../../store/BasketStore";
@@ -62,8 +61,6 @@ const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketD
             </button>
             <ConfirmRemoveOrderModal
                 show={isConfirmRemoveOrderModal}
-                adminRemoveOrder={adminRemoveOrder}
-                userId={user.id!}
                 orderId={order.id}
                 isForceParentRender={isForceParentRender}
                 setIsForceParentRender={setIsForceParentRender}

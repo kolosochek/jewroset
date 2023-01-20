@@ -12,6 +12,11 @@ export const AdminProductContext = createContext({
     setIsForceRender: (bool:boolean) => {},
 })
 
+export interface AdminProductFilterI {
+    orderBy: "price" | "createdAt"
+    orderDirection: "asc" | "desc"
+
+}
 
 const AdminProducts = () => {
     const {user} = useContext(Context)

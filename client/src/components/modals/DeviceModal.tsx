@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
 import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {createDevice, fetchBrands, fetchCategories} from "../../http/deviceAPI";
+import {adminCreateDevice, adminUpdateDevice, fetchBrands, fetchCategories} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {AdminProductContext} from "../../views/Admin/AdminProducts";
@@ -12,10 +12,11 @@ type ModeT = "create" | "edit"
 interface CreateDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
     onHide: () => void | undefined,
-    mode: ModeT
+    mode: ModeT,
+    deviceParam?: DeviceI,
 }
 
-const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, mode}) => {
+const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, mode, deviceParam}) => {
     const {device} = useContext(Context)
     const {isForceRender, setIsForceRender} = useContext(AdminProductContext);
     const forceRender = () => setIsForceRender(!isForceRender);
@@ -24,11 +25,51 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
     //const [categories, setCategories] = useState<CategoryI[]>([])
     //const [brands, setBrands] = useState<BrandI[]>([])
     const [brand, setBrand] = useState<BrandI['id']>()
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
+    const [name, setName] = useState<DeviceI['name']>('')
+    const [description, setDescription] = useState<DeviceI["description"]>('')
     const [price, setPrice] = useState(0)
     const [rating, setRating] = useState(0)
     const [file, setFile] = useState<File | null>(null)
+
+    const manageDevice = () => {
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+        const deviceObj = new FormData()
+        deviceObj.append(`name`, mode === 'edit' ? deviceParam?.name! : name)
+        deviceObj.append('price', `${mode === 'edit' ? deviceParam?.price! : price}`)
+        deviceObj.append('description', mode === 'edit' ? deviceParam?.description! : description!)
+        deviceObj.append('rating', `${mode === 'edit' ? deviceParam?.rating! : rating}`)
+        deviceObj.append('img', mode === 'edit' ? deviceParam?.img! : file!)
+        deviceObj.append('brandId', `${mode === 'edit' ? deviceParam?.brandId : brand ? brand : (form.querySelector('#brand') as HTMLSelectElement).value}`)
+        deviceObj.append('categoryId', `${mode === 'edit' ? deviceParam?.categoryId : category ? category : (form.querySelector('#category') as HTMLSelectElement).value}`)
+        deviceObj.append('info', mode === 'edit' ? JSON.stringify(deviceParam?.info!) : JSON.stringify(info!))
+
+        // if form is valid
+        if (form.checkValidity()) {
+            if (mode === 'create') {
+                createNewDevice(deviceObj)
+            } else if (mode === 'edit') {
+                updateExistingDevice(deviceObj)
+            }
+        }
+
+        form.classList.add('was-validated')
+    }
+    const createNewDevice = (deviceObj:FormData) => {
+        // send api request to create new device
+        adminCreateDevice(deviceObj).then(() => {
+            forceRender()
+            onHide()
+        })
+    }
+
+    const updateExistingDevice = (deviceObj:FormData) => {
+        deviceObj.append(`deviceId`, `${deviceParam?.id!}`)
+        // send api request to create new device
+        adminUpdateDevice(deviceObj).then(() => {
+            forceRender()
+            onHide()
+        })
+    }
 
     useEffect(() => {
         if (!device.categories?.length) {
@@ -36,43 +77,6 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
         }
         if (!device.brands?.length) {
             fetchBrands().then(brandsParam => device.setBrands(brandsParam))
-        }
-
-        // if modal is visible
-        if (show) {
-            const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-
-            if (form !== null) {
-                form.addEventListener('submit', (e: SubmitEvent) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-
-                    // if form is valid
-                    if (form.checkValidity()) {
-                        if (mode === "create") {
-                            // create new device formData with params
-                            const formData = new FormData()
-                            formData.append(`name`, name)
-                            formData.append('price', `${price}`)
-                            formData.append('description', description)
-                            formData.append('rating', `${rating}`)
-                            formData.append('img', file!)
-                            formData.append('brandId', `${brand}`)
-                            formData.append('categoryId', `${category}`)
-                            formData.append('info', JSON.stringify(info))
-                            // send api request to create new device
-                            createDevice(formData as unknown as DeviceI).then(() => {
-                                forceRender()
-                                onHide()
-                            })
-                        } else if(mode === "edit"){
-
-                        }
-                    }
-
-                    form.classList.add('was-validated')
-                })
-            }
         }
     }, [show])
 
@@ -114,6 +118,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         <Form.Label className="form-label" htmlFor="category">Category</Form.Label>
                         <Form.Select
                             as="select"
+                            id="category"
                             defaultValue={device.categories[0]?.id!}
                             onChange={e => setCategory(+e.currentTarget.value)}
                             value={category}
@@ -134,6 +139,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         <Form.Label className="form-label" htmlFor="brand">Brand</Form.Label>
                         <Form.Select
                             as="select"
+                            id="brand"
                             defaultValue={device.brands[0]?.id!}
                             onChange={e => setBrand(+e.target.value)}
                             value={brand}
@@ -200,12 +206,14 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                             value={rating}
                             name="rating"
                             className="form-control"
-                            placeholder="Enter device rating"
                             type="number"
                             step="1"
                             min="0"
                             max="5"
                         />
+                        <div className="invalid-feedback mb-2">
+                            Please set rating in range [0..5].
+                        </div>
                     </div>
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="file">Device image</Form.Label>
@@ -270,9 +278,8 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
             </Modal.Body>
             <Modal.Footer>
                 <Button
-                    form="deviceForm"
-                    type="submit"
                     className="text-white btn-success btn-outline-success"
+                    onClick={manageDevice}
                 >{`${mode && mode === 'edit' ? 'Change' : 'Create'} device`}</Button>
                 <Button className="text-white btn-danger btn-outline-danger" onClick={onHide}>Close</Button>
             </Modal.Footer>
@@ -280,4 +287,4 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
     )
 })
 
-    export default DeviceModal;
+export default DeviceModal;

@@ -2,11 +2,6 @@ import {$authHost, $host} from "./index";
 import {BrandI, CategoryI, DeviceI, FilterI, PaginatorI} from "../store/DeviceStore";
 
 
-export const createDevice = async (device: DeviceI) => {
-    const {data} = await $authHost.post(`api/device`, device)
-    return data
-}
-
 export const createCategory = async (category: Partial<CategoryI>) => {
     const {data} = await $authHost.post(`api/category`, category)
     return data
@@ -39,5 +34,23 @@ export const fetchDevices = async (categoryId?: CategoryI['id'], brandId?: Brand
 
 export const fetchOneDevice = async (id: number) => {
     const {data} = await $host.get(`api/device/${id}`)
+    return data
+}
+
+export const adminCreateDevice = async (device: FormData) => {
+    const {data} = await $authHost.post(`api/device`, device)
+    return data
+}
+export const adminRemoveDevice = async (deviceId: DeviceI["id"]) => {
+    const {data} = await $authHost.post('api/device/remove', {
+        params: {
+            deviceId
+        }
+    })
+    return data
+}
+
+export const adminUpdateDevice = async (deviceObj: FormData) => {
+    const {data} = await $authHost.post('api/order/update', deviceObj)
     return data
 }

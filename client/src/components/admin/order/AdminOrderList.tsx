@@ -15,7 +15,6 @@ interface AdminOrderListProps extends PropsWithChildren {
 
 }
 const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
-    const {user} = useContext(Context)
     const [orders, setOrders] = useState<OrderI[]>([]);
     const [isForceParentRender, setIsForceParentRender] = useState<boolean>(false)
     // pagination
@@ -30,7 +29,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
 
 
     useEffect(() => {
-        adminGetAllOrders(user.id!, page, limit, orderBy, orderDirection).then(orders => {
+        adminGetAllOrders(page, limit, orderBy, orderDirection).then(orders => {
             setOrders(orders.rows)
             setTotalCount(orders.count)
         }).finally(() => {
