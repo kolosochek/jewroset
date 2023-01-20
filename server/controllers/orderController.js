@@ -3,17 +3,6 @@ const {Basket, Device, BasketDevice, Order, User} = require('../models/models')
 
 
 class OrderController {
-
-    /*
-    include: [
-        {
-            model: Basket,
-            where: {id: basketId},
-            include: Device,
-            order: ['createdAt'],
-        }
-    ]
-     */
     async createOrder(req, res, next) {
         const {userId, basketId, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
         const order = await Order.create({

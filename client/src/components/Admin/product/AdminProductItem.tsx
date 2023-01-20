@@ -4,6 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import BasketImage from "../../BasketImage/BasketImage";
 import AdminProductItemActions from "./AdminProductItemActions";
+import {switchTitle} from "../../../views/Personal";
 
 interface AdminProductItemProps extends PropsWithChildren {
     device: DeviceI,
@@ -12,6 +13,7 @@ interface AdminProductItemProps extends PropsWithChildren {
 
 const AdminProductItem: React.FC<AdminProductItemProps> = ({device, index}) => {
     const navigate = useNavigate()
+    const changeDescriptionLabelArr = ['<=', '=>']
 
     return (
         <>
@@ -26,13 +28,29 @@ const AdminProductItem: React.FC<AdminProductItemProps> = ({device, index}) => {
                     >{device.name}</a>
                 </Col>
                 <Col
-                    className="col-3">{device.description?.slice(0, 50)}<button className="btn p-0 ps-1 outline-none">...</button></Col>
+                    className="col-3">
+                    {device.description?.slice(0, 50)}<span
+                    className="collapse"
+                    id={`expandDescription${device.id}`}
+                >{device.description?.slice(50, device.description?.length)}</span>
+                    <a
+                        role="button"
+                        className="p-0 ms-1 p-1 text-decoration-none"
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#expandDescription${device.id}`}
+                        aria-expanded="false"
+                        aria-controls={`expandDescription${device.id}`}
+                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                            switchTitle((e.target as HTMLAnchorElement), changeDescriptionLabelArr)
+                        }}
+                    >{changeDescriptionLabelArr[1]}</a>
+                </Col>
                 <Col className="text-center">
-                        <BasketImage alt={device.name} imageUrl={device.img} />
+                    <BasketImage alt={device.name} imageUrl={device.img}/>
                 </Col>
                 <Col className="text-center">{device.price}</Col>
                 <Col className="text-end col-2">
-                    <AdminProductItemActions device={device} />
+                    <AdminProductItemActions device={device}/>
                 </Col>
             </Row>
         </>

@@ -15,12 +15,13 @@ class DeviceController {
             where: {},
             include: [
                 {model: Category, attributes: ['id', 'name']},
-                {model: Brand, attributes: ['id', 'name']}
+                {model: Brand, attributes: ['id', 'name']},
+                {model: DeviceInfo, as: 'info'}
             ],
             attributes: [
                 'id', 'name', 'description', 'price', 'rating', 'img'
             ],
-            order: [['createdAt', 'desc']],
+            order: [['id', 'desc']],
             limit,
             offset
         }
@@ -75,7 +76,6 @@ class DeviceController {
                     })
                 })
             }
-
             return res.json(device)
         } catch (e) {
             next(APIError.badRequestError(e.message))
@@ -99,9 +99,29 @@ class DeviceController {
     }
 
     async adminUpdateDevice(req, res, next) {
+        // debug
+        console.log(`req.body`)
+        console.log(req.body)
+        console.log(`req.files.img`)
+        console.log(req.files.img)
+        // 
         try {
-            let {deviceId, name, description, price, rating, brandId, categoryId, info} = req.body
-            const {img} = req.files
+            let {deviceId, name, description, price, rating, brandId, categoryId, info, img} = req.body
+            const deviceObj = {
+                categoryId: categoryId,
+                brandId: brandId,
+                name: name,
+                description: description,
+                price: price,
+                rating: rating,
+            }
+
+            if (req.files.img) {
+                const {img} = req.files
+                let fileName = uuid.v4() + ".jpg"
+                img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                deviceObj.img = fileName
+            }
 
             const device = await Device.findOne({
                 where: {
@@ -109,18 +129,21 @@ class DeviceController {
                 }
             })
             if (!device) {
-                return next(APIError.internalError(`Can't find a device with giver params! ${req.body.deviceObj.toString()}`))
+                return next(APIError.internalError(`Can't find a device with giver params! ${req.body.toString()}`))
             }
-            const updatedDevice = await device.update({
-                categoryId: categoryId,
-                brandId: brandId,
-                name: name,
-                description: description,
-                price: price,
-                rating: rating,
-                info: info,
-                img: img
-            })
+            if (info) {
+                info = JSON.parse(info)
+                info.forEach(item => {
+                    DeviceInfo.findOrCreate({
+                        where: {
+                            title: item.title,
+                            description: item.description,
+                            deviceId: device.id,
+                        }
+                    })
+                })
+            }
+            const updatedDevice = await device.update(deviceObj)
             return res.json(updatedDevice)
         } catch (e) {
             next(APIError.badRequestError(e.message))

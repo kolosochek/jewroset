@@ -11,12 +11,9 @@ interface AdminOrderListActionsProps extends PropsWithChildren {
     orderDirection: AdminOrderFilterI['orderDirection'],
     setOrderDirection: (value: AdminOrderFilterI['orderDirection'] | ((prevVar: AdminOrderFilterI["orderDirection"]) => AdminOrderFilterI["orderDirection"])) => void,
     setPage: (value: PaginatorI["page"] | ((prevVar: PaginatorI["page"]) => PaginatorI["page"])) => void,
-    isForceParentRender: boolean,
-    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void
 }
-const AdminOrderListActions:React.FC<AdminOrderListActionsProps> = ({orderBy, setOrderBy, orderDirection, setOrderDirection, setPage, isForceParentRender, setIsForceParentRender}) => {
+const AdminOrderListActions:React.FC<AdminOrderListActionsProps> = ({orderBy, setOrderBy, orderDirection, setOrderDirection, setPage}) => {
     const [isCreateOrderVisible, setCreateOrderVisible] = useState(false)
-
 
     return (
         <Row className="mb-3">
@@ -29,10 +26,7 @@ const AdminOrderListActions:React.FC<AdminOrderListActionsProps> = ({orderBy, se
                         <OrderModal
                             mode="create"
                             show={isCreateOrderVisible}
-                            isForceParentRender={isForceParentRender}
-                            setIsForceParentRender={setIsForceParentRender}
                             onHide={() => {
-                                setIsForceParentRender(!isForceParentRender)
                                 setCreateOrderVisible(false)
                             }
                             }/>

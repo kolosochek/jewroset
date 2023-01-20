@@ -20,7 +20,6 @@ const AdminProductItemActions: React.FC<AdminProductItemActionsProps> = ({device
             >Edit
             </button>
             <DeviceModal deviceParam={device} mode="edit" show={isEditProductVisible} onHide={() => setEditProductVisible(false)}/>
-
             <button className="btn btn-danger" onClick={() => {
                 setIsConfirmRemoveProductModal(true)
             }

@@ -10,12 +10,9 @@ interface AdminOrderActionsProps extends PropsWithChildren {
     order: OrderI,
     basketDevices: BasketDeviceI[],
     setBasketDevices: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void,
-    isForceParentRender: boolean,
-    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void,
 }
 
-const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketDevices, setBasketDevices, isForceParentRender, setIsForceParentRender}) => {
-    const {user} = useContext(Context)
+const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketDevices, setBasketDevices}) => {
     const [isEditOrderVisible, setEditOrderVisible] = useState(false)
     const [isAddDeviceVisible, setIsAddDeviceVisible] = useState(false)
     const [isConfirmRemoveOrderModal, setIsConfirmRemoveOrderModal] = useState(false)
@@ -48,8 +45,6 @@ const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketD
                 show={isEditOrderVisible}
                 order={order}
                 basketDevices={basketDevices}
-                isForceParentRender={isForceParentRender}
-                setIsForceParentRender={setIsForceParentRender}
                 onHide={() => {
                     setEditOrderVisible(false)
                 }
@@ -62,8 +57,6 @@ const AdminOrderItemActions: React.FC<AdminOrderActionsProps> = ({order, basketD
             <ConfirmRemoveOrderModal
                 show={isConfirmRemoveOrderModal}
                 orderId={order.id}
-                isForceParentRender={isForceParentRender}
-                setIsForceParentRender={setIsForceParentRender}
                 onHide={() => {
                     setIsConfirmRemoveOrderModal(false)
                 }

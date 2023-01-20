@@ -5,6 +5,8 @@ import {adminCreateDevice, adminUpdateDevice, fetchBrands, fetchCategories} from
 import {observer} from "mobx-react-lite";
 import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {AdminProductContext} from "../../views/Admin/AdminProducts";
+import BasketImage from "../BasketImage/BasketImage";
+import {switchTitle} from "../../views/Personal";
 
 type ValueOf<T> = T[keyof T];
 type ModeT = "create" | "edit"
@@ -20,28 +22,29 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
     const {device} = useContext(Context)
     const {isForceRender, setIsForceRender} = useContext(AdminProductContext);
     const forceRender = () => setIsForceRender(!isForceRender);
-    const [info, setInfo] = useState<DeviceInfoT[]>([])
-    const [category, setCategory] = useState<CategoryI['id']>()
+    const [info, setInfo] = useState<DeviceInfoT[]>(mode === 'edit' ? deviceParam?.info! : [])
+    const [category, setCategory] = useState<CategoryI['id']>(mode === 'edit' ? deviceParam?.category?.id! : 1)
+    const [brand, setBrand] = useState<BrandI['id']>(mode === 'edit' ? deviceParam?.brand?.id! : 1)
     //const [categories, setCategories] = useState<CategoryI[]>([])
     //const [brands, setBrands] = useState<BrandI[]>([])
-    const [brand, setBrand] = useState<BrandI['id']>()
-    const [name, setName] = useState<DeviceI['name']>('')
-    const [description, setDescription] = useState<DeviceI["description"]>('')
-    const [price, setPrice] = useState(0)
-    const [rating, setRating] = useState(0)
+    const [name, setName] = useState<DeviceI['name']>(mode === 'edit' ? deviceParam?.name! : '')
+    const [description, setDescription] = useState<DeviceI["description"]>(mode === 'edit' ? deviceParam?.description! : '')
+    const [price, setPrice] = useState(mode === 'edit' ? deviceParam?.price! : 0)
+    const [rating, setRating] = useState(mode === 'edit' ? deviceParam?.rating! : 0)
     const [file, setFile] = useState<File | null>(null)
+    const changeImageLabelArr = ['Collapse', 'Change image']
 
     const manageDevice = () => {
         const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         const deviceObj = new FormData()
-        deviceObj.append(`name`, mode === 'edit' ? deviceParam?.name! : name)
-        deviceObj.append('price', `${mode === 'edit' ? deviceParam?.price! : price}`)
-        deviceObj.append('description', mode === 'edit' ? deviceParam?.description! : description!)
-        deviceObj.append('rating', `${mode === 'edit' ? deviceParam?.rating! : rating}`)
-        deviceObj.append('img', mode === 'edit' ? deviceParam?.img! : file!)
-        deviceObj.append('brandId', `${mode === 'edit' ? deviceParam?.brandId : brand ? brand : (form.querySelector('#brand') as HTMLSelectElement).value}`)
-        deviceObj.append('categoryId', `${mode === 'edit' ? deviceParam?.categoryId : category ? category : (form.querySelector('#category') as HTMLSelectElement).value}`)
-        deviceObj.append('info', mode === 'edit' ? JSON.stringify(deviceParam?.info!) : JSON.stringify(info!))
+        deviceObj.append(`name`, name)
+        deviceObj.append('price', `${price}`)
+        deviceObj.append('description', description!)
+        deviceObj.append('rating', `${rating}`)
+        deviceObj.append('img', file!)
+        deviceObj.append('brandId', `${brand ? brand : (form.querySelector('#brand') as HTMLSelectElement).value}`)
+        deviceObj.append('categoryId', `${category ? category : (form.querySelector('#category') as HTMLSelectElement).value}`)
+        deviceObj.append('info', JSON.stringify(info))
 
         // if form is valid
         if (form.checkValidity()) {
@@ -53,8 +56,9 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
         }
 
         form.classList.add('was-validated')
+
     }
-    const createNewDevice = (deviceObj:FormData) => {
+    const createNewDevice = (deviceObj: FormData) => {
         // send api request to create new device
         adminCreateDevice(deviceObj).then(() => {
             forceRender()
@@ -62,7 +66,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
         })
     }
 
-    const updateExistingDevice = (deviceObj:FormData) => {
+    const updateExistingDevice = (deviceObj: FormData) => {
         deviceObj.append(`deviceId`, `${deviceParam?.id!}`)
         // send api request to create new device
         adminUpdateDevice(deviceObj).then(() => {
@@ -119,7 +123,6 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         <Form.Select
                             as="select"
                             id="category"
-                            defaultValue={device.categories[0]?.id!}
                             onChange={e => setCategory(+e.currentTarget.value)}
                             value={category}
                             className="form-control"
@@ -127,7 +130,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         >
                             {device.categories.map((category) => {
                                 return (
-                                    <option value={category.id} key={category?.id}>{category?.name}</option>
+                                    <option key={category?.id} value={category.id}>{category?.name}</option>
                                 )
                             })}
                         </Form.Select>
@@ -140,7 +143,6 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         <Form.Select
                             as="select"
                             id="brand"
-                            defaultValue={device.brands[0]?.id!}
                             onChange={e => setBrand(+e.target.value)}
                             value={brand}
                             className="form-control"
@@ -148,7 +150,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         >
                             {device.brands.map((brand) => {
                                 return (
-                                    <option value={brand.id} key={brand?.id}>{brand?.name}</option>
+                                    <option key={brand?.id} value={brand.id}>{brand?.name}</option>
                                 )
                             })}
                         </Form.Select>
@@ -217,18 +219,57 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                     </div>
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="file">Device image</Form.Label>
-                        <Form.Control
-                            className="form-control"
-                            placeholder="Device image"
-                            type="file"
-                            name="file"
-                            accept="image/png, image/gif, image/jpeg, image/webp"
-                            onChange={selectFile}
-                            required
-                        />
-                        <div className="invalid-feedback mb-2">
-                            Please choose a valid device image file.
-                        </div>
+                        {mode === 'edit'
+                            ? (<>
+                                <Row className="d-flex align-items-center mb-2">
+                                    <Col className="col-8">{deviceParam?.img}</Col>
+                                    <Col>
+                                        <BasketImage alt={deviceParam?.name!} imageUrl={deviceParam?.img!}/>
+                                    </Col>
+                                    <Col className="col-3 text-end">
+                                        <Button
+                                            className="btn btn-primary"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#changeImage"
+                                            aria-expanded="false"
+                                            aria-controls="changeImage"
+                                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                                switchTitle((e.target as HTMLButtonElement), changeImageLabelArr)
+                                            }}
+                                        >{changeImageLabelArr[1]}</Button>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Control
+                                            id="changeImage"
+                                            className="collapse form-control"
+                                            placeholder="Device image"
+                                            type="file"
+                                            name="file"
+                                            accept="image/png, image/gif, image/jpeg, image/webp"
+                                            onChange={selectFile}
+                                        />
+                                        <div className="invalid-feedback mb-2">
+                                            Please choose a valid device image file.
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </>)
+                            : (<>
+                                <Form.Control
+                                    className="form-control"
+                                    placeholder="Device image"
+                                    type="file"
+                                    name="file"
+                                    accept="image/png, image/gif, image/jpeg, image/webp"
+                                    onChange={selectFile}
+                                />
+                                <div className="invalid-feedback mb-2">
+                                    Please choose a valid device image file.
+                                </div>
+                            </>)
+                        }
                     </div>
                     <div className="mt-5 mb-2">
                         <Button
@@ -237,7 +278,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                         >Add device info</Button>
                         {info.map((value: DeviceInfoT) => {
                             return (
-                                <Row className="mt-1" key={value.number as Key}>
+                                <Row key={`device-info-${value.number ?? value.id}`} className="mt-1">
                                     <Col md={4}>
                                         <div className="mb-1">
                                             <Form.Control

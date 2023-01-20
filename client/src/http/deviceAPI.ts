@@ -51,6 +51,6 @@ export const adminRemoveDevice = async (deviceId: DeviceI["id"]) => {
 }
 
 export const adminUpdateDevice = async (deviceObj: FormData) => {
-    const {data} = await $authHost.post('api/order/update', deviceObj)
+    const {data} = await $authHost.post('api/device/update', deviceObj)
     return data
 }

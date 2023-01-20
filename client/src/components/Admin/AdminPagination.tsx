@@ -1,17 +1,19 @@
-import React, {PropsWithChildren, useContext, useState} from 'react';
+import React, {PropsWithChildren} from 'react';
 import {Pagination as PaginationBootsrap} from "react-bootstrap";
-import {PaginatorI} from "../../../store/DeviceStore";
+import {PaginatorI} from "../../store/DeviceStore";
 
-interface AdminOrderListPaginationProps extends PropsWithChildren {
+interface AdminPaginationProps extends PropsWithChildren {
     page: PaginatorI['page'],
     totalCount: PaginatorI['totalCount'],
     limit: PaginatorI['limit'],
     setPage: (value: PaginatorI['page'] | ((prevVar: PaginatorI['page']) => PaginatorI['page'])) => void,
-    setIsLoading: (value: boolean | ((prevVar: boolean) => boolean)) => void,
+    isForceRender: boolean,
+    setIsForceRender: (bool: boolean) => void,
 }
-const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page, totalCount, limit, setPage, setIsLoading}) => {
+const AdminPagination:React.FC<AdminPaginationProps> = ({page, totalCount, limit, setPage, isForceRender, setIsForceRender}) => {
     const totalPages = Math.ceil(totalCount / limit)
     const pages:PaginatorI['page'][] = [...Array(totalPages+1).keys()].slice(1)
+    const forceRender = () => setIsForceRender(!isForceRender)
 
 
     if (pages.length > 1) {
@@ -26,7 +28,7 @@ const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page,
                                 active={item === page}
                                 onClick={() => {
                                     setPage(item)
-                                    setIsLoading(true)
+                                    forceRender()
                                 }}
                             >
                                 {item}
@@ -41,4 +43,4 @@ const AdminOrderListPagination:React.FC<AdminOrderListPaginationProps> = ({page,
 
 }
 
-export default AdminOrderListPagination;
+export default AdminPagination;

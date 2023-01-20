@@ -4,11 +4,11 @@ import {OrderI} from "../../../store/OrderStore";
 import {Context} from "../../../index";
 import AdminOrderListActions from "./AdminOrderListActions";
 import {adminGetAllOrders} from "../../../http/orderAPI";
-import {AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
+import {AdminOrderContext, AdminOrderFilterI} from "../../../views/Admin/AdminOrders";
 import AdminOrderItem from "./AdminOrderItem";
-import AdminOrderListPagination from "./AdminOrderListPagination";
 import {PaginatorI} from "../../../store/DeviceStore";
 import AdminOrderListHeader from "./AdminOrderListHeader";
+import AdminPagination from "../AdminPagination";
 
 
 interface AdminOrderListProps extends PropsWithChildren {
@@ -16,7 +16,7 @@ interface AdminOrderListProps extends PropsWithChildren {
 }
 const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     const [orders, setOrders] = useState<OrderI[]>([]);
-    const [isForceParentRender, setIsForceParentRender] = useState<boolean>(false)
+    const {isForceRender, setIsForceRender} = useContext(AdminOrderContext)
     // pagination
     const [totalCount, setTotalCount] = useState<PaginatorI['totalCount']>(0);
     const [page, setPage] = useState<PaginatorI["page"]>(1);
@@ -35,7 +35,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
         }).finally(() => {
             setIsLoading(false)
         })
-    }, [isForceParentRender, page, orderBy, orderDirection])
+    }, [isForceRender, page, orderBy, orderDirection])
 
     if (isLoading) {
         return <Spinner animation={"grow"}/>
@@ -50,8 +50,6 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
                     orderDirection={orderDirection}
                     setOrderDirection={setOrderDirection}
                     setPage={setPage}
-                    isForceParentRender={isForceParentRender}
-                    setIsForceParentRender={setIsForceParentRender}
                 />
                 <section className="mt-3 mb-3">
                     {orders
@@ -59,7 +57,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
                             <AdminOrderListHeader />
                             {(orders as OrderI[]).map((order: OrderI, index) => {
                                 return (
-                                    <AdminOrderItem key={order.id} order={order} index={index} isForceParentRender={isForceParentRender} setIsForceParentRender={setIsForceParentRender} />
+                                    <AdminOrderItem key={order.id} order={order} index={index}  />
                                 )
                             })}
                         </>)
@@ -67,7 +65,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
                     }
                 </section>
             </div>
-            <AdminOrderListPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} setIsLoading={setIsLoading} />
+            <AdminPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} setIsForceRender={setIsForceRender} isForceRender={isForceRender}/>
         </section>
     )
 }

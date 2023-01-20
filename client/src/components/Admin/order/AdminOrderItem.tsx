@@ -38,11 +38,9 @@ export const getOrderStatus = (status: string) => {
 interface AdminOrderItemProps extends PropsWithChildren {
     order: OrderI,
     index: number,
-    isForceParentRender: boolean,
-    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void
 }
 
-const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index, isForceParentRender, setIsForceParentRender}) => {
+const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index}) => {
     const [basketDevices, setBasketDevices] = useState<BasketDeviceI[]>(order.basket?.basket_devices!)
     const orderStatus = getOrderStatus(order.status)
 
@@ -100,7 +98,7 @@ const AdminOrderItem: React.FC<AdminOrderItemProps> = ({order, index, isForcePar
                 }
                 <Row key={`actions-${order.id}`} className="align-items-center">
                     <Col className="text-start">
-                        <AdminOrderItemActions order={order} basketDevices={basketDevices} setBasketDevices={setBasketDevices} isForceParentRender={isForceParentRender} setIsForceParentRender={setIsForceParentRender}/>
+                        <AdminOrderItemActions order={order} basketDevices={basketDevices} setBasketDevices={setBasketDevices}/>
                     </Col>
                     <Col className="text-end">{basketDevices.length > 0 && (<strong>Order
                         total: {getTotalPrice(basketDevices)}</strong>)}</Col>

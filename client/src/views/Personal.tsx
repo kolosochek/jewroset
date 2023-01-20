@@ -9,7 +9,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {BasketDeviceI} from "../store/BasketStore";
 import BasketImage from "../components/BasketImage/BasketImage";
 
-export const switchTitle = (element: HTMLButtonElement, values = ['Collapse', 'Expand']) => {
+export const switchTitle = (element: HTMLButtonElement|HTMLAnchorElement, values = ['Collapse', 'Expand']) => {
     if (element.hasAttributes() && element.hasAttribute('aria-expanded')) {
         if (element.getAttribute('aria-expanded') === 'true') {
             element.textContent = values[0]

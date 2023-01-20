@@ -5,7 +5,7 @@ const checkRoleMiddleware = require('../middleware/checkRoleMiddleware')
 
 router.post('/', orderController.createOrder)
 router.post('/get', orderController.getOrders)
-// admin
+// Admin
 router.get('/all', checkRoleMiddleware("ADMIN"), orderController.adminGetAll)
 router.post('/update', checkRoleMiddleware("ADMIN"), orderController.adminUpdateOrder)
 router.post('/remove', checkRoleMiddleware("ADMIN"), orderController.adminRemoveOrder)

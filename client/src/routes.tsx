@@ -18,13 +18,13 @@ const adminRoutes: RouteI[] = [
         path: '/admin', View: AdminDashboard,
     },
     {
-        path: '/admin/products', View: AdminProducts,
+        path: '/Admin/products', View: AdminProducts,
     },
     {
-        path: '/admin/orders', View: AdminOrders,
+        path: '/Admin/orders', View: AdminOrders,
     },
     {
-        path: '/admin/clients', View: AdminClients,
+        path: '/Admin/clients', View: AdminClients,
     },
 ]
 const commonRoutes: RouteI[] = [

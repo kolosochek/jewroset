@@ -6,10 +6,11 @@ import AdminProductListActions from "./AdminProductListActions";
 import AdminProductListHeader from "./AdminProductListHeader";
 import AdminProductItem from "./AdminProductItem";
 import {AdminProductContext, AdminProductFilterI} from "../../../views/Admin/AdminProducts";
+import AdminPagination from "../AdminPagination";
 
 
 const AdminProductList = () => {
-    const {isForceRender} = useContext(AdminProductContext)
+    const {isForceRender, setIsForceRender} = useContext(AdminProductContext)
     const [devices, setDevices] = useState<DeviceI[]>([])
     // pagination
     const [totalCount, setTotalCount] = useState<PaginatorI['totalCount']>(0);
@@ -51,6 +52,7 @@ const AdminProductList = () => {
                     }
                 </section>
             </div>
+            <AdminPagination page={page} totalCount={totalCount} limit={limit} setPage={setPage} setIsForceRender={setIsForceRender} isForceRender={isForceRender}/>
         </section>
     )
 }

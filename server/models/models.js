@@ -26,7 +26,7 @@ const Order = sequelize.define('order', {
     zip: {type: DataTypes.STRING, unique: false, allowNull: true},
 })
 
-const BasketDevice = sequelize.define('basket_device',{
+const BasketDevice = sequelize.define('basket_device', {
     quantity: {type: DataTypes.INTEGER, defaultValue: 1}
 })
 
@@ -87,10 +87,12 @@ Category.belongsToMany(Brand, {through: CategoryBrand})
 Brand.belongsToMany(Category, {through: CategoryBrand})
 
 // basket
-User.hasMany(Basket, {foreignKey: {
+User.hasMany(Basket, {
+    foreignKey: {
         name: 'userId',
         allowNull: false,
-    }})
+    }
+})
 Basket.belongsTo(User, {constraints: false})
 
 Basket.hasMany(BasketDevice)
@@ -105,7 +107,6 @@ Order.belongsTo(User)
 
 Basket.hasOne(Order)
 Order.belongsTo(Basket)
-
 
 
 module.exports = {

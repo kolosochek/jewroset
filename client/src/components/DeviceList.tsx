@@ -20,7 +20,6 @@ const DeviceList = ({categoryItems}: CategoryProps) => {
                     })
                     : <EmptyDeviceList/>
                 }
-
             </Row>
         </div>
     );

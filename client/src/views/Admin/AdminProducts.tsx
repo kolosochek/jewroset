@@ -1,10 +1,10 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {Container, Row} from "react-bootstrap";
 import {useLocation} from "react-router-dom";
-import AdminSidebar from "../../components/admin/AdminSidebar";
+import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
-import AdminAccessDenied from "../../components/admin/AdminAccessDenied";
-import AdminProductList from "../../components/admin/product/AdminProductList";
+import AdminAccessDenied from "../../components/Admin/AdminAccessDenied";
+import AdminProductList from "../../components/Admin/product/AdminProductList";
 
 
 export const AdminProductContext = createContext({

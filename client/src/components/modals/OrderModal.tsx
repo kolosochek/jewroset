@@ -12,6 +12,7 @@ import {BasketDeviceI, BasketI} from "../../store/BasketStore";
 import {findUserData} from "../../http/userAPI";
 import {switchTitle} from "../../views/Personal";
 import {Context} from "../../index";
+import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 
 
 type ModeT = "create" | "edit"
@@ -22,12 +23,12 @@ interface OrderModalProps extends React.PropsWithChildren {
     mode: ModeT,
     order?: OrderI,
     basketDevices?: BasketDeviceI[],
-    isForceParentRender: boolean,
-    setIsForceParentRender: (value: boolean | ((varPrev: boolean) => boolean)) => void
 }
 
-const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order,isForceParentRender,setIsForceParentRender}) => {
+const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}) => {
     const {user} = useContext(Context)
+    const {isForceRender, setIsForceRender} = useContext(AdminOrderContext);
+    const forceRender = () => setIsForceRender(!isForceRender);
     const [email, setEmail] = useState(mode === 'edit' && order!.user?.email ? order!.user?.email : '')
     const [addressone, setAddressone] = useState(mode === 'edit' && order!.addressone ? order!.addressone : '')
     const [addresstwo, setAddresstwo] = useState(mode === 'edit' && order!.addresstwo ? order!.addresstwo : '')
@@ -82,7 +83,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order,
                     addBasketDevices().then(() => {
                         // create new order
                         createOrder(orderObj).then(() => {
-                            setIsForceParentRender(!isForceParentRender)
+                            forceRender()
                             onHide()
                         })
                     })
@@ -91,7 +92,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order,
                     orderObj.userId = user.id!
                     orderObj.id = order?.id!
                     updateOrder(orderObj).then(() => {
-                        setIsForceParentRender(!isForceParentRender)
+                        forceRender()
                         onHide()
                     })
                 }
@@ -114,7 +115,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order,
                 orderObj.userId = user.id!
                 orderObj.id = order?.id!
                 updateOrder(orderObj).then(() => {
-                    setIsForceParentRender(!isForceParentRender)
+                    forceRender()
                     onHide()
                 })
             }).catch((e) => {
