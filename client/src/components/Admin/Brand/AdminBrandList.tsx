@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Spinner, Button} from "react-bootstrap";
 import BrandModal from "../../Modals/BrandModal";
 import {AdminBrandContext} from "../../../views/Admin/AdminBrands";
-import {getAllBrands} from "../../../http/deviceAPI";
+import {getAllBrands} from "../../../http/brandAPI";
 import {BrandI} from "../../../store/DeviceStore";
 import AdminBrandListActions from "./AdminBrandListActions";
 import AdminBrandListHeader from "./AdminBrandListHeader";

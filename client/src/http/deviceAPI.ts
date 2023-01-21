@@ -8,17 +8,6 @@ export const createCategory = async (category: Partial<CategoryI>) => {
     return data
 }
 
-export const fetchCategories = async () => {
-    const {data} = await $host.get(`api/category`)
-    return data
-}
-
-export const getAllBrands = async () => {
-    const {data} = await $host.get(`api/brand`)
-    return data
-}
-
-
 export const fetchDevices = async (categoryId?: CategoryI['id'], brandId?: BrandI['id'], filterByType?: FilterI['type'], filterByDirection?: FilterI['direction'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 9) => {
     const {data} = await $host.get('api/device', {
         params: {

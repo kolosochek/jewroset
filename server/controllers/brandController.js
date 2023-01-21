@@ -1,4 +1,4 @@
-const {Brand} = require("../models/models");
+const {Brand, Device} = require("../models/models");
 const APIError = require('../error/APIError')
 
 class BrandController {
@@ -15,6 +15,22 @@ class BrandController {
             return next(APIError.badRequestError(`Can't find brand by name: ${name}`))
         }
         return res.json(brand)
+    }
+
+    async adminRemoveBrand(req, res, next) {
+        const {brandId} = req.body.params;
+
+        // get all orders
+        const brand = await Brand.findOne({
+            where: {
+                id: brandId
+            }
+        })
+        if (!brand) {
+            return next(APIError.internalError(`Can't find brand with id: ${brandId}`))
+        }
+        await brand.destroy()
+        return res.json({result: true})
     }
 
     async getAll(req, res) {

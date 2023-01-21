@@ -1,14 +1,12 @@
 import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
-import {
-    getAllBrands,
-    fetchCategories,
-    fetchDevices
-} from "../http/deviceAPI";
+import {fetchDevices} from "../http/deviceAPI";
 import Categorybar from "../components/Categorybar";
 import Brandbar from "../components/Brandbar";
 import DeviceList from "../components/DeviceList";
 import {observer} from "mobx-react-lite";
+import {getAllCategories} from "../http/categoryAPI";
+import {getAllBrands} from "../http/brandAPI";
 
 const Catalog = observer(() => {
     const {device} = useContext(Context)
@@ -20,8 +18,8 @@ const Catalog = observer(() => {
 
 
     useEffect(() => {
-        fetchCategories().then(data => device.setCategories(data))
-        getAllBrands().then(data => device.setBrands(data))
+        getAllCategories().then(categoryParam => device.setCategories(categoryParam))
+        getAllBrands().then(brandParam => device.setBrands(brandParam))
         fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
     }, [categoryId, brandId, filterByType])
 

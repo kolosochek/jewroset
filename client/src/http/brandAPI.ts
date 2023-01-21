@@ -2,6 +2,11 @@ import {$authHost, $host} from "./index";
 import {BrandI} from "../store/DeviceStore";
 
 
+
+export const getAllBrands = async () => {
+    const {data} = await $host.get(`api/brand`)
+    return data
+}
 export const adminRemoveBrand = async (brandId: BrandI["id"]) => {
     const {data} = await $authHost.post('api/brand/remove', {
         params: {

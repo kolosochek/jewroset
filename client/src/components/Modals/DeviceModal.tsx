@@ -1,12 +1,14 @@
 import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
 import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {adminCreateDevice, adminUpdateDevice, getAllBrands, fetchCategories} from "../../http/deviceAPI";
+import {adminCreateDevice, adminUpdateDevice} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {AdminProductContext} from "../../views/Admin/AdminProducts";
 import BasketImage from "../BasketImage/BasketImage";
 import {switchTitle} from "../../views/Personal";
+import {getAllCategories} from "../../http/categoryAPI";
+import {getAllBrands} from "../../http/brandAPI";
 
 type ValueOf<T> = T[keyof T];
 type ModeT = "create" | "edit"
@@ -77,7 +79,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
 
     useEffect(() => {
         if (!device.categories?.length) {
-            fetchCategories().then(categoriesParam => device.setCategories(categoriesParam))
+            getAllCategories().then(categoriesParam => device.setCategories(categoriesParam))
         }
         if (!device.brands?.length) {
             getAllBrands().then(brandsParam => device.setBrands(brandsParam))
