@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {
-    fetchBrands,
+    getAllBrands,
     fetchCategories,
     fetchDevices
 } from "../http/deviceAPI";
@@ -21,30 +21,8 @@ const Catalog = observer(() => {
 
     useEffect(() => {
         fetchCategories().then(data => device.setCategories(data))
-        fetchBrands().then(data => device.setBrands(data))
+        getAllBrands().then(data => device.setBrands(data))
         fetchDevices(categoryId, brandId, filterByType, filterByDirection, page).then(data => device.setDevices(data.rows))
-        /*
-        // no category no brand no filter
-        if (!categoryId && !brandId && !filterBy){
-            fetchAllDevices().then(data => device.setDevices(data.rows))
-        }
-        // by category no brand no filter
-        if (categoryId && !brandId && !filterBy){
-            fetchDevices(categoryId).then(data => device.setDevices(data.rows))
-            //fetchDevicesByCategory(+categoryId!).then(data => device.setDevices(data.rows))
-        }
-        // by brand no category no filter
-        if (!categoryId && brandId && !filterBy){
-            fetchDevicesByBrand(+brandId!).then(data => device.setDevices(data.rows))
-        }
-        // by brand by category no filter
-        if (categoryId && brandId && !filterBy){
-            // debug
-            console.log()
-            //
-            fetchDevicesByCategoryAndBrand(+categoryId, +brandId).then(data => device.setDevices(data.rows))
-        }
-        */
     }, [categoryId, brandId, filterByType])
 
     return (

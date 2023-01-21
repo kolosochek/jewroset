@@ -40,7 +40,7 @@ return (
             <h2 className="text-center ">Are you really want to DELETE this device?</h2>
         </Modal.Body>
         <Modal.Footer>
-            <Button form="addDeviceForm" className="text-white btn-danger btn-outline-danger"
+            <Button className="text-white btn-danger btn-outline-danger"
                     onClick={() => removeDevice()}>REMOVE</Button>
             <Button className="text-white btn-success btn-outline-success" onClick={onHide}>Close</Button>
         </Modal.Footer>

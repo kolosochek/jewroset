@@ -1,12 +1,12 @@
 import React, {createContext, useContext, useState} from 'react';
 import {Button, Row, Container} from "react-bootstrap";
 import CreateCategoryModal from "../../components/Modals/CreateCategoryModal";
-import CreateBrandModal from "../../components/Modals/CreateBrandModal";
+import BrandModal from "../../components/Modals/BrandModal";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import {Context} from "../../index";
 import {useLocation} from "react-router-dom";
 import AdminAccessDenied from "../../components/Admin/AdminAccessDenied";
-import AdminClientList from "../../components/Admin/Clients/AdminClientList";
+import AdminClientList from "../../components/Admin/Client/AdminClientList";
 
 
 export interface AdminClientFilterI {

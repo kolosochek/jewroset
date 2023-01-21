@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
 import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
-import {adminCreateDevice, adminUpdateDevice, fetchBrands, fetchCategories} from "../../http/deviceAPI";
+import {adminCreateDevice, adminUpdateDevice, getAllBrands, fetchCategories} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
 import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {AdminProductContext} from "../../views/Admin/AdminProducts";
@@ -80,7 +80,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
             fetchCategories().then(categoriesParam => device.setCategories(categoriesParam))
         }
         if (!device.brands?.length) {
-            fetchBrands().then(brandsParam => device.setBrands(brandsParam))
+            getAllBrands().then(brandsParam => device.setBrands(brandsParam))
         }
     }, [show])
 

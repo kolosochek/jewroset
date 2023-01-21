@@ -12,5 +12,6 @@ router.post('/update', userController.updateUser)
 router.post('/auth', authMiddleware, userController.isAuthorized)
 // admin
 router.get('/all', checkRoleMiddleware("ADMIN"), userController.adminGetAll)
+router.post('/create', checkRoleMiddleware("ADMIN"), userController.adminCreateUser)
 
 module.exports = router

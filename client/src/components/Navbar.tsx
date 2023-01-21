@@ -21,8 +21,21 @@ const Navbar = observer(() => {
     const navigate = useNavigate()
 
 
-    const _logout = () => {
-        clearBasket(user.id!, basket.id!).then(() => {
+    const logout = () => {
+        if (basket.basket.id) {
+            clearBasket(user.id!, basket.id!).then(() => {
+                user.setUser({})
+                user.setIsAuth(false)
+                if (user.user.role === "ADMIN") {
+                    user.setIsAdmin(false)
+                }
+                localStorage.removeItem('token')
+                // remove cookie
+                eraseCookie('userEmail')
+                basket.setBasket({})
+                navigate('/' as RouteI['path'])
+            })
+        } else {
             user.setUser({})
             user.setIsAuth(false)
             if (user.user.role === "ADMIN") {
@@ -32,8 +45,8 @@ const Navbar = observer(() => {
             // remove cookie
             eraseCookie('userEmail')
             basket.setBasket({})
-            navigate('/' as RouteI['path'])
-        })
+        }
+
 
     }
 
@@ -47,7 +60,7 @@ const Navbar = observer(() => {
                             {user.isAdmin && <Button className="bg-primary btn"
                                                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
                             <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
-                            <Button className="ms-2 bg-primary btn" onClick={() => _logout()}>Logout</Button>
+                            <Button className="ms-2 bg-primary btn" onClick={() => logout()}>Logout</Button>
 
                         </>
                         :

@@ -12,8 +12,8 @@ export const setUserCookie = (email: UserI['email'], setCookieFunction:Function)
     })
 }
 export const userSignUp = async (user: Partial<UserI> = {}) => {
-    const {email, password, role} = user
-    const {data} = await $host.post(`api/user/signup`, {email, password, role: role ?? 'USER'})
+    const {email, password} = user
+    const {data} = await $host.post(`api/user/signup`, {email, password, role: 'USER'})
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }
@@ -58,5 +58,24 @@ export const adminGetAllUsers = async (page: PaginatorI['page'], limit: Paginato
             page, limit, orderBy, orderDirection
         }
     })
+    return data
+}
+
+export const adminRemoveUser = async (userId: UserI["id"]) => {
+    const {data} = await $authHost.post('api/user/remove', {
+        params: {
+            userId
+        }
+    })
+    return data
+}
+
+export const adminCreateUser = async (userObj:Partial<UserI>) => {
+    const {data} = await $authHost.post('api/user/create', {userObj})
+    return data
+}
+
+export const adminUpdateUser = async (userObj:Partial<UserI>) => {
+    const {data} = await $authHost.post(`api/user/update`, {userObj})
     return data
 }

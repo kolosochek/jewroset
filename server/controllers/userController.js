@@ -144,6 +144,49 @@ class UserController {
         }
         return res.json(users)
     }
+
+    async adminCreateUser(req, res, next) {
+            const {email, password, role, firstname, lastname, phone} = req.body.userObj
+            if (!email || !password) {
+                return next(APIError.badRequestError(`No email or password was given!`))
+            }
+            const candidate = await User.findOne({where: {email}})
+            if (candidate) {
+                return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
+            }
+            const passwordHash = await bcrypt.hash(password, 5)
+            const userObj = {
+                email: email,
+                password: passwordHash,
+                role: role,
+                firstname: firstname,
+                lastname: lastname,
+                phone: phone
+            }
+            const user = await User.create(userObj)
+            return res.json(user)
+    }
+
+    async adminUpdateUser(req, res, next) {
+        const {email, password, role, firstname, lastname, phone} = req.body.userObj
+        const candidate = await User.findOne({where: {email}})
+        if (candidate) {
+            return next(APIError.badRequestError(`Can't find user with given email: ${email}`))
+        }
+        const userObj = {
+            email: email,
+            role: role,
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone
+        }
+        if (password) {
+            userObj.password = await bcrypt.hash(password, 5)
+        }
+
+        const user = await User.update(userObj)
+        return res.json(user)
+    }
 }
 
 module.exports = new UserController()

@@ -1,26 +1,22 @@
 import {UserI} from "../../../store/UserStore";
-import {useNavigate} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
+import AdminClientItemActions from "./AdminClientItemActions";
 
 interface AdminClientItemProps extends PropsWithChildren {
     user: UserI,
     index: number,
 }
-
 const AdminClientItem: React.FC<AdminClientItemProps> = ({user, index}) => {
-    const navigate = useNavigate()
-    const changeDescriptionLabelArr = ['<=', '=>']
 
     return (
         <>
             {/* User header */}
-            <Row key={user.id} className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
+            <Row className={`align-items-center mb-2 mt-2 ${index % 2 ? 'bg-light' : ''}`}>
                 <Col className="col-1 text-start">{user.id}</Col>
-                <Col className="col-5">
+                <Col className="col-3">
                     <a
                         className="link"
-                        onClick={() => navigate(`/device/${user.id}`)}
                         role="button"
                     >{user.email}</a>
                 </Col>
@@ -32,8 +28,8 @@ const AdminClientItem: React.FC<AdminClientItemProps> = ({user, index}) => {
                 </Col>
                 <Col className="text-center">{user.role}</Col>
                 <Col className="text-center col-2">{user.phone}</Col>
-                <Col className="text-end col-1">
-                    {/* <AdminClientItemActions user={user}/> */}
+                <Col className="text-end col-2">
+                    <AdminClientItemActions user={user}/>
                 </Col>
             </Row>
         </>

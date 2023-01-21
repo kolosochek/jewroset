@@ -4,7 +4,7 @@ import DeviceList from "../components/DeviceList";
 import Brandbar from "../components/Brandbar";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {fetchCategories, fetchBrands, fetchDevices} from "../http/deviceAPI";
+import {fetchCategories, getAllBrands, fetchDevices} from "../http/deviceAPI";
 import DeviceListPagination from "../components/DeviceListPagination";
 import {Spinner} from "react-bootstrap";
 import Filterbar from "../components/Filterbar";
@@ -21,7 +21,7 @@ const Index = observer(() => {
 
     useEffect(() => {
         fetchCategories().then(data => device.setCategories(data))
-        fetchBrands().then(data => device.setBrands(data))
+        getAllBrands().then(data => device.setBrands(data))
         fetchDevices(categoryId, brandId, filterByType, filterByDirection, page, limit).then((data) => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)

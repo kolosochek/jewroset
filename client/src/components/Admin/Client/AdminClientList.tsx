@@ -1,7 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {OrderI} from "../../../store/OrderStore";
 import {PaginatorI} from "../../../store/DeviceStore";
-import {adminGetAllOrders} from "../../../http/orderAPI";
 import {Spinner} from "react-bootstrap";
 import {AdminClientContext, AdminClientFilterI} from "../../../views/Admin/AdminClients";
 import AdminPagination from "../AdminPagination";

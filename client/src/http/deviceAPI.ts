@@ -8,17 +8,12 @@ export const createCategory = async (category: Partial<CategoryI>) => {
     return data
 }
 
-export const createBrand = async (brand: Partial<BrandI>) => {
-    const {data} = await $authHost.post(`api/brand`, brand)
-    return data
-}
-
 export const fetchCategories = async () => {
     const {data} = await $host.get(`api/category`)
     return data
 }
 
-export const fetchBrands = async () => {
+export const getAllBrands = async () => {
     const {data} = await $host.get(`api/brand`)
     return data
 }
@@ -40,7 +35,7 @@ export const fetchOneDevice = async (id: number) => {
 
 
 export const adminGetDevices = async (categoryId?: CategoryI['id'], brandId?: BrandI['id'], orderBy?: AdminProductFilterI['orderBy'], orderDirection?: AdminProductFilterI['orderDirection'], page?: PaginatorI['page'], limit: PaginatorI['limit'] = 9) => {
-    const {data} = await $host.get('api/device/all', {
+    const {data} = await $authHost.get('api/device/all', {
         params: {
             categoryId, brandId, orderBy, orderDirection, page, limit
         }
@@ -59,8 +54,9 @@ export const adminRemoveDevice = async (deviceId: DeviceI["id"]) => {
     })
     return data
 }
-
 export const adminUpdateDevice = async (deviceObj: FormData) => {
     const {data} = await $authHost.post('api/device/update', deviceObj)
     return data
 }
+
+
