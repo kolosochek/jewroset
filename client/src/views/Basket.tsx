@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, Container, Figure, Row} from "react-bootstrap";
+import React, {useContext} from 'react';
+import {Button, Col, Container, Row} from "react-bootstrap";
 import {Context} from "../index";
 import EmptyBasket from "../components/EmptyBasket";
 import {observer} from "mobx-react-lite";
@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import BasketDeviceList from "../components/BasketDeviceList";
 import BasketDeviceListHeader from "../components/BasketDeviceListHeader";
+
 
 const Basket = observer(() => {
     const {basket} = useContext(Context)
@@ -16,9 +17,8 @@ const Basket = observer(() => {
 
     return (
         <Container className="mt-5 p-0">
-            {isBasketEmpty
-                ? (<EmptyBasket/>)
-                : (<>
+            {!isBasketEmpty
+                ? (<>
                         <BasketDeviceListHeader />
                         <hr/>
                         <BasketDeviceList />
@@ -33,6 +33,7 @@ const Basket = observer(() => {
                         </section>
                     </>
                 )
+                : (<EmptyBasket/>)
             }
         </Container>
     )

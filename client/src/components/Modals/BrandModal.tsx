@@ -65,7 +65,7 @@ const BrandModal: React.FC<BrandModalProps> = ({show, onHide, mode, brand}) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form>
+                <Form id="brandForm" className="needs-validation" noValidate={true} >
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}

@@ -4,7 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import BasketImage from "../../BasketImage/BasketImage";
 import AdminProductItemActions from "./AdminProductItemActions";
-import {switchTitle} from "../../../views/Personal";
+import {switchTitle} from "../../../views/Orders";
 
 interface AdminProductItemProps extends PropsWithChildren {
     device: DeviceI,

@@ -12,6 +12,7 @@ import {clearBasket} from "../http/basketAPI";
 import SelectCountry from "../components/SelectCountry";
 import SelectCity from "../components/SelectCity";
 
+
 const Checkout = observer(() => {
     const {user} = useContext(Context)
     const {basket} = useContext(Context)
@@ -19,80 +20,73 @@ const Checkout = observer(() => {
     const navigate = useNavigate()
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
-    const createUserOrder = (form:HTMLFormElement) => {
-        // Order
-        const orderObj: Partial<OrderI> = {
-            userId: user.id,
-            basketId: basket.id,
-            addressone: (form.querySelector('input#addressone') as HTMLInputElement).value ?? undefined,
-            addresstwo: (form.querySelector('input#addresstwo') as HTMLInputElement).value ?? undefined,
-            country: (form.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
-            city: (form.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
-            zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
-            status: "awaitingPayment"
-        }
-        // create new Order
-        createOrder(orderObj).then(orderParam => {
-            // clear basket
-            clearBasket(user.id!, basket.id!).then((newBasket) => {
-                basket.setBasket(newBasket)
-            })
-        })
-    }
+    const createUserOrder = async () => {
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+        // validation
+        if (form !== null) {
+            // if form is valid
+            if (form.checkValidity()) {
+                const userObj: Partial<UserI> = {
+                    phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
+                    firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
+                    lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
+                    role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
+                }
 
+
+                // if user is authorized
+                if (user.isAuth) {
+                    userObj.email = user.user.email
+                    updateUser(userObj).then(() => {
+                        //user.setUser(userParam as unknown as UserI)
+                        findUserData(user.user.email!).then((userInfo) => {
+                            user.setUserInfo(userInfo)
+                        })
+                    })
+                    // if user is guest
+                } else {
+                    userObj.email = user.user.email
+                    userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
+                    userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
+
+                    updateUser(userObj).then(userParam => {
+                        user.setUser(userParam as unknown as UserI)
+                        user.setIsAuth(true)
+                        setUserCookie(user.user.email!, setCookie)
+                    })
+                }
+
+                // Order
+                const orderObj: Partial<OrderI> = {
+                    userId: user.id,
+                    basketId: basket.id,
+                    addressone: (form.querySelector('input#addressone') as HTMLInputElement).value ?? undefined,
+                    addresstwo: (form.querySelector('input#addresstwo') as HTMLInputElement).value ?? undefined,
+                    country: (form.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
+                    city: (form.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
+                    zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
+                    status: "awaitingPayment"
+                }
+                // create new Order
+                createOrder(orderObj).then(orderParam => {
+                    // clear basket
+                    clearBasket(user.id!, basket.id!).then((newBasket) => {
+                        basket.setBasket(newBasket)
+                        // goto payment
+                        navigate('/payment' as RouteI['path'])
+                    })
+                })
+            }
+
+            form.classList.add('was-validated')
+        }
+    }
 
     useEffect(() => {
         // if user is authorized, get all user data
         if (user.isAuth) {
             findUserData(user.user.email!).then((userInfo) => {
                 user.setUserInfo(userInfo)
-            })
-        }
-
-
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-        // validation
-        if (form !== null) {
-            form.addEventListener('submit', (e: SubmitEvent) => {
-                e.preventDefault()
-                e.stopPropagation()
-
-                // if form is valid
-                if (form.checkValidity()) {
-                    const userObj: Partial<UserI> = {
-                        phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
-                        firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
-                        lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
-                        role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
-                    }
-                    // if user is authorized
-                    if (user.isAuth) {
-                        userObj.email = user.user.email
-                        updateUser(userObj).then(() => {
-                            //user.setUser(userParam as unknown as UserI)
-                            findUserData(user.user.email!).then((userInfo) => {
-                                user.setUserInfo(userInfo)
-                            })
-                        })
-                        // if user is guest
-                    } else {
-                        userObj.email = user.user.email
-                        userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
-                        userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
-
-                        updateUser(userObj).then(userParam => {
-                            user.setUser(userParam as unknown as UserI)
-                            user.setIsAuth(true)
-                            setUserCookie(user.user.email!, setCookie)
-                        })
-                    }
-
-                    // create new Order
-                    createUserOrder(form)
-                    navigate('/payment' as RouteI['path'])
-                }
-
-                form.classList.add('was-validated')
             })
         }
 
@@ -192,11 +186,11 @@ const Checkout = observer(() => {
                             </div>
 
                             <div className="col-md-5">
-                                <SelectCountry />
+                                <SelectCountry/>
                             </div>
 
                             <div className="col-md-4">
-                                <SelectCity />
+                                <SelectCity/>
                             </div>
 
                             <div className="col-md-3">
@@ -207,76 +201,14 @@ const Checkout = observer(() => {
                                 </div>
                             </div>
                         </div>
-
-                        {/*
                         <hr className="my-4"/>
-
-                        <h4 className="mb-3">Payment</h4>
-
-                        <div className="my-3">
-                            <div className="form-check">
-                                <input id="credit" name="paymentMethod" type="radio"
-                                       className="form-check-input" defaultChecked/>
-                                <label className="form-check-label" htmlFor="credit">Credit card</label>
-                            </div>
-                            <div className="form-check">
-                                <input id="debit" name="paymentMethod" type="radio" className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="debit">Debit card</label>
-                            </div>
-                            <div className="form-check">
-                                <input id="paypal" name="paymentMethod" type="radio"
-                                       className="form-check-input"/>
-                                <label className="form-check-label" htmlFor="paypal">PayPal</label>
-                            </div>
-                        </div>
-
-                        <div className="row gy-3">
-                            <div className="col-md-6">
-                                <label htmlFor="cc-name" className="form-label">Name on card</label>
-                                <input type="text" className="form-control" id="cc-name" placeholder=""/>
-                                <small className="text-muted">Full name as displayed on card</small>
-                                <div className="invalid-feedback">
-                                    Name on card is required
-                                </div>
-                            </div>
-
-                            <div className="col-md-6">
-                                <label htmlFor="cc-number" className="form-label">Credit card number</label>
-                                <input type="text" className="form-control" id="cc-number" placeholder=""/>
-                                <div className="invalid-feedback">
-                                    Credit card number is required
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <label htmlFor="cc-expiration" className="form-label">Expiration</label>
-                                <input type="text" className="form-control" id="cc-expiration" placeholder=""/>
-                                <div className="invalid-feedback">
-                                    Expiration date required
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <label htmlFor="cc-cvv" className="form-label">CVV</label>
-                                <input type="text" className="form-control" id="cc-cvv" placeholder=""/>
-                                <div className="invalid-feedback">
-                                    Security code required
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr className="my-4"/>
-                        */}
-
-                        <hr className="my-4"/>
-
-                        <button
-                            className="w-100 btn btn-primary btn-lg"
-                            type="submit"
-                        >Continue to
-                            payment
-                        </button>
                     </form>
+                    <button
+                        className="w-100 btn btn-primary btn-lg"
+                        onClick={() => createUserOrder()}
+                    >Continue to
+                        payment
+                    </button>
                 </div>
             </div>
         </section>

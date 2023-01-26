@@ -23,7 +23,8 @@ class DeviceController {
             ],
             order: [['id', 'desc']],
             limit,
-            offset
+            offset,
+            distinct:true
         }
 
         if (!categoryId && brandId) {
@@ -81,7 +82,8 @@ class DeviceController {
             ],
             order: [['id', 'desc']],
             limit,
-            offset
+            offset,
+            distinct:true
         }
 
         if (!categoryId && brandId) {
@@ -141,14 +143,8 @@ class DeviceController {
     }
 
     async adminUpdateDevice(req, res, next) {
-        // debug
-        console.log(`req.body`)
-        console.log(req.body)
-        console.log(`req.files.img`)
-        console.log(req.files.img)
-        // 
         try {
-            let {deviceId, name, description, price, rating, brandId, categoryId, info, img} = req.body
+            let {deviceId, name, description, price, rating, brandId, categoryId, info} = req.body
             const deviceObj = {
                 categoryId: categoryId,
                 brandId: brandId,
@@ -158,7 +154,7 @@ class DeviceController {
                 rating: rating,
             }
 
-            if (req.files.img) {
+            if (req.files && req.files.img) {
                 const {img} = req.files
                 let fileName = uuid.v4() + ".jpg"
                 img.mv(path.resolve(__dirname, '..', 'static', fileName))

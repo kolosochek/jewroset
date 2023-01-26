@@ -1,4 +1,4 @@
-const {Brand, Device} = require("../models/models");
+const {Brand} = require("../models/models");
 const APIError = require('../error/APIError')
 
 class BrandController {

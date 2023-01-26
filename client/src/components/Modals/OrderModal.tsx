@@ -10,7 +10,7 @@ import {createOrder, updateOrder} from "../../http/orderAPI";
 import {createBasket, incrementBasket} from "../../http/basketAPI";
 import {BasketDeviceI, BasketI} from "../../store/BasketStore";
 import {findUserData} from "../../http/userAPI";
-import {switchTitle} from "../../views/Personal";
+import {switchTitle} from "../../views/Orders";
 import {Context} from "../../index";
 import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 

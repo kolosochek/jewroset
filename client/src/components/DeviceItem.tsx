@@ -27,15 +27,16 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
     return (
         <section className="b-device-item-wrapper col border-0">
             <div className="b-device-item card shadow-sm">
-                <Figure className="b-device-item-figure-wrapper p-3 m-0 text-center"
-                        onClick={() => navigate(`/device/${deviceItem.id}`)}>
+                <Figure
+                    className="b-device-item-figure-wrapper p-3 m-0 text-center"
+                    onClick={() => navigate(`/device/${deviceItem.id}`)}>
                     <img
                         src={`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}/${deviceItem.img}`}
                         alt={deviceItem.name}
-                        width="200"
                         height="200"
                         className="b-device-item-figure rounded"
                         role="button"
+                        style={{maxWidth: '240px'}}
                     />
                 </Figure>
                 <section className="b-device-item-info-wrapper p-3">
@@ -65,6 +66,7 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
                     </p>
                     <h4
                         className="text-center mb-4"
+                        style={{minHeight: '2.4em'}}
                     >
                         <NavLink
                             to={`/device/${deviceItem.id}`}

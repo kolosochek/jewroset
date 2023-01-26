@@ -1,6 +1,6 @@
 import {Col, Row} from "react-bootstrap";
 import React, {PropsWithChildren, useEffect, useState} from 'react';
-import {getTotalPrice, switchTitle} from "../../../views/Personal";
+import {getTotalPrice, switchTitle} from "../../../views/Orders";
 import {BasketDeviceI} from "../../../store/BasketStore";
 import AdminOrderItemActions from "./AdminOrderItemActions";
 import {OrderI} from "../../../store/OrderStore";

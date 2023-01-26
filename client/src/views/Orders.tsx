@@ -31,11 +31,11 @@ export const getTotalPrice = (basketDevices: BasketDeviceI[]) => {
     return resultTotal
 }
 
-const Personal = () => {
+const Orders = () => {
     const {user} = useContext(Context)
     const navigate = useNavigate()
-    const [orders, setOrders] = useState([] as Partial<OrderI>[]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [orders, setOrders] = useState<Partial<OrderI>[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const Personal = () => {
 
     return (
         <Container className="mt-5 mb-5 p-0">
-            {orders
+            {orders.length
                 ? (<>
                 <Row>
                     <Col>Order id</Col>
@@ -166,13 +166,10 @@ const Personal = () => {
             </section>
         </>
 )
-: (
-    <EmptyPersonal/>
-)
-
+: (<EmptyPersonal/>)
 }
 </Container>
 )
 }
 
-    export default Personal;
+    export default Orders;

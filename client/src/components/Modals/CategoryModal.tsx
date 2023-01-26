@@ -65,7 +65,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({show, onHide, mode, catego
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form>
+                <Form id="categoryForm" className="needs-validation" noValidate={true} >
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}

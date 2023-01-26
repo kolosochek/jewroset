@@ -6,7 +6,7 @@ import {observer} from "mobx-react-lite";
 import {CategoryI, BrandI, DeviceI, DeviceInfoT} from "../../store/DeviceStore";
 import {AdminProductContext} from "../../views/Admin/AdminProducts";
 import BasketImage from "../BasketImage/BasketImage";
-import {switchTitle} from "../../views/Personal";
+import {switchTitle} from "../../views/Orders";
 import {getAllCategories} from "../../http/categoryAPI";
 import {getAllBrands} from "../../http/brandAPI";
 
@@ -266,6 +266,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                                     name="file"
                                     accept="image/png, image/gif, image/jpeg, image/webp"
                                     onChange={selectFile}
+                                    required
                                 />
                                 <div className="invalid-feedback mb-2">
                                     Please choose a valid device image file.

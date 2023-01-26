@@ -15,6 +15,7 @@ export interface UserI {
     role?: "USER" | "ADMIN" | "GUEST",
     basket?: Partial<BasketI>,
     userInfo: Record<string, string|number>,
+    stripeID?: string,
     createdAt?: string,
     updatedAt?: string,
 }
@@ -23,7 +24,9 @@ export default class UserStore {
     constructor(
         private _isAuth: boolean = false,
         private _isAdmin: boolean = false,
-        private _user: Partial<UserI> = {}) {
+        private _user: Partial<UserI> = {},
+        private _stripeId: UserI["stripeID"] = ''
+        ) {
 
         makeAutoObservable(this)
     }
@@ -37,6 +40,10 @@ export default class UserStore {
 
     setUser(user: Partial<UserI>) {
         this._user = user
+    }
+
+    setStripeId(stripeId: UserI["stripeID"]) {
+        this._stripeId = stripeId
     }
 
     setUserInfo(userInfo: UserI['userInfo']) {
@@ -61,5 +68,9 @@ export default class UserStore {
 
     get userInfo() {
         return this.user.userInfo
+    }
+
+    get stripeId() {
+        return this._stripeId
     }
 }

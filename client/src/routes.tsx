@@ -7,7 +7,7 @@ import Catalog from "./views/Catalog";
 import Device from "./views/Device";
 import Checkout from "./views/Checkout";
 import Payment from "./views/Payment";
-import Personal from "./views/Personal";
+import Orders from "./views/Orders";
 import AdminProducts from "./views/Admin/AdminProducts";
 import AdminOrders from "./views/Admin/AdminOrders";
 import AdminClients from "./views/Admin/AdminClients";
@@ -52,7 +52,7 @@ export const authorizedRoutes: RouteI[] = [
     ...commonRoutes,
     ...adminRoutes,
     {
-        path: '/personal', View: Personal,
+        path: '/personal', View: Orders,
     }
 ]
 

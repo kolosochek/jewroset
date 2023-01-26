@@ -3,7 +3,7 @@ import {UserI} from "../../store/UserStore";
 import {AdminClientContext} from "../../views/Admin/AdminClients";
 import {adminCreateUser, adminUpdateUser} from "../../http/userAPI";
 import {Modal, Form, Row, Col, Button} from "react-bootstrap";
-import {switchTitle} from "../../views/Personal";
+import {switchTitle} from "../../views/Orders";
 
 type ModeT = "create" | "edit"
 
