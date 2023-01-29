@@ -1,10 +1,10 @@
-import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
-import {Context} from "../../index";
 import {fetchDevices} from "../../http/deviceAPI";
-import {DeviceI, DeviceInfoT} from "../../store/DeviceStore";
+import {DeviceI} from "../../store/DeviceStore";
 import {BasketDeviceI, incrementBasketDevice} from "../../store/BasketStore";
 import {OrderI} from "../../store/OrderStore";
+import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 
 interface AddDeviceModalProps extends React.PropsWithChildren {
     show: boolean,
@@ -15,17 +15,29 @@ interface AddDeviceModalProps extends React.PropsWithChildren {
 }
 
 const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, basketDevices, setBasketDevices}) => {
-    const {device} = useContext(Context)
+    const {isForceRender, setIsForceRender} = useContext(AdminOrderContext)
+    const forceRender = () => setIsForceRender(!isForceRender)
     const [devices, setDevices] = useState<DeviceI[]>([])
     const [selectedDevice, setSelectedDevice] = useState<DeviceI | undefined>(undefined)
     const [quantity, setQuantity] = useState<BasketDeviceI['quantity']>(1)
     const limit = 999;
 
     const addDevice = () => {
-        incrementBasketDevice(order.basketId, selectedDevice?.id!, quantity).then((result) => {
-            setBasketDevices(result.basket_devices)
-        })
-        onHide()
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+
+        if (form !== null) {
+            // if form is valid
+            if (form.checkValidity()) {
+                incrementBasketDevice(order.basketId, selectedDevice?.id!, quantity).then((result) => {
+                    setBasketDevices(result.basket_devices)
+                    forceRender()
+                    onHide()
+                })
+
+            }
+
+            form.classList.add('was-validated')
+        }
     }
 
     useEffect(() => {
@@ -34,25 +46,6 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, bas
                 setSelectedDevice(devices[0])
             }
         )
-
-        if (show) {
-
-            const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-
-            if (form !== null) {
-                form.addEventListener('submit', (e: SubmitEvent) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-
-                    // if form is valid
-                    if (form.checkValidity()) {
-
-                    }
-
-                    form.classList.add('was-validated')
-                })
-            }
-        }
     }, [show])
 
 
@@ -118,8 +111,8 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, bas
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button type="submit" form="addDeviceForm" className="text-white btn-success btn-outline-success"
-                        onClick={() => addDevice()}>Add device</Button>
+                <Button form="addDeviceForm" className="text-white btn-success btn-outline-success"
+                        onClick={addDevice}>Add device</Button>
                 <Button className="text-white btn-danger btn-outline-danger" onClick={onHide}>Close</Button>
             </Modal.Footer>
         </Modal>

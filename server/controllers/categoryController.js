@@ -10,11 +10,14 @@ class CategoryController {
     }
 
     async adminUpdateCategory(req, res, next) {
-        const {name} = req.body.categoryObj
-        const category = await Category.findOne({where: {name}})
+        const {id, name} = req.body.categoryObj
+        const category = await Category.findOne({where: {id}})
         if (!category) {
             return next(APIError.badRequestError(`Can't find category by name: ${category}`))
         }
+        category.update({
+            name: name,
+        })
         return res.json(category)
     }
 

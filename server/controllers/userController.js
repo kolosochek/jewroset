@@ -15,11 +15,12 @@ class UserController {
     async signup(req, res, next) {
         const {email, password, role} = req.body
         if (!email || !password) {
-            return next(APIError.badRequestError(`No error or password was given!`))
+            return res.json({error: `No error or password was given!`})
         }
         const candidate = await User.findOne({where: {email}})
         if (candidate) {
-            return next(APIError.badRequestError(`User with given email: ${email} already exist!`))
+            return res.json({error: `User with given email: ${email} already exist!`})
+
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
@@ -32,11 +33,11 @@ class UserController {
     async signin(req, res, next){
         const {email, password} = req.body
         if(!email || !password) {
-            return next(APIError.badRequestError(`No email or password was given!`))
+            return res.json({error: `No email or password was given!`})
         }
         const user = await User.findOne({where: {email}})
         if (!user) {
-            return next(APIError.internalError(`Can't find user by given email: ${email}`))
+            return res.json({error: `Can't find user by given email: ${email}`})
         }
         let comparePassword = bcrypt.compareSync(password, user.password)
         if(!comparePassword) {
@@ -45,7 +46,7 @@ class UserController {
         const userId = user.id
         const basket = await Basket.findOrCreate({where: {id:userId}})
         if (!basket[0]){
-            return next(APIError.internalError(`Can't find or creat basket for user with id: ${userId}`))
+            return res.json({error: `Can't find or creat basket for user with id: ${userId}`})
         }
         // update basket
         await basket[0].update({userId: userId})
@@ -54,15 +55,6 @@ class UserController {
         return res.json({token})
     }
 
-    async findUser(req, res, next){
-        const {email} = req.body
-        const user = await User.findOne({where: {email: email}})
-        if (!user) {
-            return next(APIError.internalError(`Can't find user by given email: ${email}`))
-        }
-        const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
-    }
 
     async findUser(req, res, next){
         const {email} = req.body

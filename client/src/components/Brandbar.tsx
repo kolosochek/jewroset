@@ -25,7 +25,24 @@ const Brandbar = observer(() => {
                         className={(!device.selectedBrand.id ?? true) ? "text-white text-decoration-none" : "text-decoration-none"}>All
                     </div>
                 </ListGroup.Item>
-                {device.brands.map((brand: BrandI) => {
+                {device.selectedCategory.id
+                    ? device.brands.filter((brand) => device.selectedCategory.id === brand.categoryId).map((brand: BrandI) => {
+                    return (
+                    <ListGroup.Item
+                    key={brand.id}
+                    className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
+                    active={!device.selectedBrand.id ? brand.id === 0 : brand.id === id}
+                    role="button"
+                    >
+                    <div
+                    key={brand.id}
+                    onClick={() => device.setSelectedBrand(brand!)}
+                    className={(!device.selectedBrand.id ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
+                    </div>
+                    </ListGroup.Item>
+                    )
+                    })
+                    : device.brands.map((brand: BrandI) => {
                     return (
                         <ListGroup.Item
                             key={brand.id}

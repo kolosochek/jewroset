@@ -21,6 +21,6 @@ export const adminCreateCategory = async (categoryObj: CategoryI) => {
 }
 
 export const adminUpdateCategory = async (categoryObj: CategoryI) => {
-    const {data} = await $authHost.post(`api/brand/update`, categoryObj)
+    const {data} = await $authHost.post(`api/brand/update`, {categoryObj})
     return data
 }

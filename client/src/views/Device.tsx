@@ -28,7 +28,9 @@ const Device: React.FC<DeviceViewProps> = ({}) => {
     }
 
     const buyNow = () => {
-        basket.incrementBasketDevice(device.id)
+        if (basket.getDeviceBasketQuantityById(+id!) === 0) {
+            basket.incrementBasketDevice(device.id)
+        }
         navigate('/basket' as RouteI['path'])
     }
 
@@ -74,9 +76,9 @@ const Device: React.FC<DeviceViewProps> = ({}) => {
                         </Row>
                         <Row>
                             {device.description && <div id="description">
-                                <p className="product-description">
+                                <div className="product-description">
                                     <ReactMarkdown children={device.description!}/>
-                                </p>
+                                </div>
                             </div>}
                         </Row>
                         <Row>

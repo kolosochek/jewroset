@@ -115,7 +115,7 @@ const Orders = () => {
                             </Row>
                             <section key={`order-expanded-${order.id}`} className="collapse card card-body"
                                      id={`collapse${order.id}`}>
-                                <Row>
+                                <Row key={`order-expanded-row-${order.id}`}>
                                     <Col>#</Col>
                                     <Col className="col-3">Name</Col>
                                     <Col className="text-center">Img</Col>
@@ -147,7 +147,7 @@ const Orders = () => {
                                     )
                                 })}
                 <hr/>
-                <Row>
+                <Row key={`order-total-price-${order.id}`}>
                     <Col className="text-end"><strong>Order
                         total: {getTotalPrice(order.basket?.basket_devices!)}</strong></Col>
                 </Row>

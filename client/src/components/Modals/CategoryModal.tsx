@@ -1,8 +1,9 @@
-import React, {PropsWithChildren, useContext, useState} from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {CategoryI} from "../../store/DeviceStore";
 import {AdminCategoryContext} from "../../views/Admin/AdminCategories";
-import {adminCreateCategory, adminUpdateCategory} from "../../http/categoryAPI";
+import {adminCreateCategory, adminUpdateCategory, getAllCategories} from "../../http/categoryAPI";
+import {getAllBrands} from "../../http/brandAPI";
 
 type ModeT = "create" | "edit"
 interface CategoryModalProps extends PropsWithChildren {
@@ -43,6 +44,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({show, onHide, mode, catego
             if (mode === 'create') {
                 createNewCategory(categoryObj)
             } else if (mode === 'edit') {
+                categoryObj.id = category?.id!
                 updateExistingCategory(categoryObj)
             }
         }

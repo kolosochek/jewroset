@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import {Routes, Route, Navigate} from "react-router-dom";
 import {authorizedRoutes, defaultRoute, unauthorizedRoutes} from "../routes";
 import {RouteI} from "../utils/Routes";
@@ -9,7 +9,6 @@ import {observer} from "mobx-react-lite";
 
 const AppRouter = observer(() => {
     const {user} = useContext(Context)
-    const {basket} = useContext(Context)
 
 
     return (

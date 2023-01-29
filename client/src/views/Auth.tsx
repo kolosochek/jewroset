@@ -13,6 +13,7 @@ const Auth = observer(() => {
     const {basket} = useContext(Context)
     const location = useLocation();
     const [email, setEmail] = useState('')
+    const [formSubmitError, setFormSubmitError] = useState('')
     const [password, setPassword] = useState('')
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
@@ -20,23 +21,52 @@ const Auth = observer(() => {
     if (location.pathname as RouteI['path'] === '/signin' as RouteI['path']) {
         isLoginView = true;
     }
-    const click = async (e: any) => {
-        e.preventDefault()
-        let responseUser;
-        if (isLoginView) {
-            responseUser = await userSignIn({email, password})
-        } else {
-            responseUser = await userSignUp({email, password})
-        }
-        if (responseUser) {
-            user.setUser(responseUser)
-            user.setIsAuth(true)
-            if (user.user.role === "ADMIN") {
-                user.setIsAdmin(true)
+
+    const authManage = async () => {
+        // validate form
+        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
+        if (form.checkValidity()) {
+            let responseUser;
+            // login view
+            if (isLoginView) {
+                responseUser = await userSignIn({email, password}).then(response => {
+                    if (response.error) {
+                    setFormSubmitError(response.error)
+                    } else {
+                        user.setUser(response)
+                        user.setIsAuth(true)
+                        if (user.user.role === "ADMIN") {
+                            user.setIsAdmin(true)
+                        }
+                        setUserCookie(user.user.email!, setCookie)
+                        navigate('/' as RouteI['path'])
+                    }
+                }).catch(() => {
+                    setFormSubmitError(`Email or password is incorrect`)
+                })
+            // signup view
+            } else {
+                const userObj = {
+                    email,
+                    password
+                }
+                responseUser = await userSignUp(userObj).then(response => {
+                    if (response.error) {
+                        setFormSubmitError(response.error)
+                    } else {
+                        user.setUser(response)
+                        user.setIsAuth(true)
+                        if (user.user.role === "ADMIN") {
+                            user.setIsAdmin(true)
+                        }
+                        setUserCookie(user.user.email!, setCookie)
+                        navigate('/' as RouteI['path'])
+                    }
+                })
             }
-            setUserCookie(user.user.email!, setCookie)
-            navigate('/' as RouteI['path'])
         }
+
+        form.classList.add('was-validated')
     }
 
     return (
@@ -45,74 +75,95 @@ const Auth = observer(() => {
                 <div className="text-center">
                     <h2 className="">{isLoginView ? 'Login' : 'Register'}</h2>
                 </div>
-                <Form className="needs-validation" noValidate={true}>
+                <Form className="needs-validation mt-5" noValidate={true}>
                     {isLoginView &&
                         <>
                             <div className="mb-3">
-                                <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+                                <Form.Label htmlFor="email" className="form-label">Email address</Form.Label>
                                 <Form.Control
                                     type="email"
+                                    name="email"
                                     className="form-control"
-                                    id="emailInput"
-                                    aria-describedby="emailHelp"
+                                    id="email"
                                     placeholder="some@email.com"
-                                    required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
+                                    required
                                 />
+                                <div className="invalid-feedback mb-2">
+                                    Please enter a valid email.
+                                </div>
                             </div>
-                            <div className="mb-5">
-                                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+                            <div className="mb-3">
+                                <Form.Label htmlFor="password" className="form-label">Password</Form.Label>
                                 <Form.Control
                                     type="password"
+                                    name="password"
                                     className="form-control"
-                                    id="passwordInput"
-                                    required
+                                    id="password"
+                                    placeholder="*****"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
+                                    required
                                 />
+                                <div className="invalid-feedback mb-2">
+                                    Please enter a valid password.
+                                </div>
                             </div>
                         </>
                     }
                     {!isLoginView &&
                         <>
                             <div className="mb-3">
-                                <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+                                <Form.Label htmlFor="email" className="form-label">Email address</Form.Label>
                                 <Form.Control
                                     type="email"
+                                    name="email"
                                     className="form-control"
-                                    id="emailInput"
-                                    aria-describedby="emailHelp"
+                                    id="email"
                                     placeholder="some@email.com"
-                                    required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
+                                    required
                                 />
-                                <div id="emailHelp" className="form-text">We'll never share your email with anyone
-                                    else.
+                                <div className="invalid-feedback mb-2">
+                                    Please enter a valid email.
                                 </div>
                             </div>
-                            <div className="mb-5">
-                                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">Password</label>
                                 <Form.Control
                                     type="password"
+                                    name="password"
                                     className="form-control"
-                                    id="passwordInput"
-                                    required
+                                    id="password"
+                                    placeholder="*****"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
+                                    required
                                 />
+                                <div className="invalid-feedback mb-2">
+                                    Please enter a valid password.
+                                </div>
                             </div>
                         </>
                     }
-                    <div className="text-center mt-3">
+                    <div className="mb-2" style={{minHeight: '2em'}}>
+                        {formSubmitError && (<p className="text-danger">{formSubmitError}</p>)}
+                    </div>
+                    <div className="text-center mt-5">
                         <Button
-                            onClick={click}
-                            type="submit"
-                            className="me-2 btn btn-primary"
+                            onClick={authManage}
+                            className="me-3 btn btn-primary"
                         >{isLoginView ? 'Log In' : 'Sign Up'}</Button>
-                        <NavLink to={isLoginView ? "/signup" : "/signin"}
-                                 className="btn-lg-. btn-primary">{isLoginView ? 'Sign Up' : 'Log In'}</NavLink>
+                        <NavLink
+                            to={isLoginView ? "/signup" : "/signin"}
+                            className="btn-lg-. btn-primary"
+                            onClick={() => {
+                                // clear previous error messages
+                                setFormSubmitError('')
+                            }}
+                        >{isLoginView ? 'Sign Up' : 'Log In'}</NavLink>
                     </div>
                 </Form>
             </Card>

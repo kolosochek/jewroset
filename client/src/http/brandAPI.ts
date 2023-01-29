@@ -22,6 +22,6 @@ export const adminCreateBrand = async (brandObj: BrandI) => {
 }
 
 export const adminUpdateBrand = async (brandObj: BrandI) => {
-    const {data} = await $authHost.post(`api/brand/update`, brandObj)
+    const {data} = await $authHost.post(`api/brand/update`, {brandObj})
     return data
 }

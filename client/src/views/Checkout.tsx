@@ -11,6 +11,7 @@ import {RouteI} from "../utils/Routes";
 import {clearBasket} from "../http/basketAPI";
 import SelectCountry from "../components/SelectCountry";
 import SelectCity from "../components/SelectCity";
+import {adminCreateInvoice} from "../http/paymentAPI";
 
 
 const Checkout = observer(() => {
@@ -21,6 +22,12 @@ const Checkout = observer(() => {
     const [cookies, setCookie] = useCookies(["userEmail"]);
 
     const createUserOrder = async () => {
+        adminCreateInvoice(basket.priceTotal).then(data => {
+            // debug
+            console.log(`data`)
+            console.log(data)
+            //
+        })
         const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         // validation
         if (form !== null) {
@@ -32,7 +39,6 @@ const Checkout = observer(() => {
                     lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
                     role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
                 }
-
 
                 // if user is authorized
                 if (user.isAuth) {
@@ -68,6 +74,7 @@ const Checkout = observer(() => {
                     status: "awaitingPayment"
                 }
                 // create new Order
+                /*
                 createOrder(orderObj).then(orderParam => {
                     // clear basket
                     clearBasket(user.id!, basket.id!).then((newBasket) => {
@@ -76,6 +83,7 @@ const Checkout = observer(() => {
                         navigate('/payment' as RouteI['path'])
                     })
                 })
+                 */
             }
 
             form.classList.add('was-validated')

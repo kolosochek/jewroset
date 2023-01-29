@@ -1,11 +1,12 @@
 import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import BasketImage from "./BasketImage/BasketImage";
 import AddToCart from "./AddToCart/AddToCart";
 import BasketStore, {BasketDeviceI, removeBasketDevice} from "../store/BasketStore";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import {RouteI} from "../utils/Routes";
 
 interface BasketDeviceItemProps extends PropsWithChildren{
     basketDevice: BasketDeviceI,
@@ -15,6 +16,7 @@ interface BasketDeviceItemProps extends PropsWithChildren{
 }
 const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice, index, basketDevices, setBasketDevices}) => {
     const {basket} = useContext(Context)
+    const location = useLocation()
 
 
     return (
@@ -37,17 +39,17 @@ const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice
                 <Col
                     className="text-end bi bi-x-circle"
                     onClick={() => {
+                        // Basket View mode
+                        if (location.pathname === '/basket' as RouteI['path']){
+                            removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(basketParam => {
+                                basket.setBasket(basketParam)
+                            })
                         // Admin Order view mode
-                        if (setBasketDevices) {
+                        } else if (setBasketDevices) {
                             removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(() => {
                                 if (setBasketDevices){
                                     setBasketDevices(basketDevices!.filter(device => device !== basketDevice))
                                 }
-                            })
-                        // Basket View mode
-                        } else {
-                            removeBasketDevice(basketDevice.basketId!, basketDevice.deviceId!).then(basketParam => {
-                                basket.setBasket(basketParam)
                             })
 
                         }

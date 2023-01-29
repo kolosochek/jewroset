@@ -3,6 +3,7 @@ import {makeAutoObservable} from "mobx";
 export interface BrandI {
     id: number,
     name: string,
+    categoryId?: CategoryI['id'],
     createdAt?: string,
     updatedAt?: string,
 }

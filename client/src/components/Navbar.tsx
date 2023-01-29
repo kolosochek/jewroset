@@ -57,15 +57,15 @@ const Navbar = observer(() => {
                 <Nav className="ml-auto">
                     {user.isAuth ?
                         <>
-                            {user.isAdmin && <Button className="bg-primary btn"
+                            {user.isAdmin && <Button className="btn"
                                                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
-                            <Button className="ms-2 bg-primary btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
-                            <Button className="ms-2 bg-primary btn" onClick={() => logout()}>Logout</Button>
+                            <Button className="ms-2 btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
+                            <Button className="ms-2 btn" onClick={() => logout()}>Logout</Button>
 
                         </>
                         :
                         <>
-                            <Button className="bg-primary btn btn-primary "
+                            <Button className="btn btn-primary "
                                     onClick={() => navigate('/signin' as RouteI['path'])}>Login</Button>
                         </>
 

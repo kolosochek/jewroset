@@ -3,17 +3,21 @@ const APIError = require('../error/APIError')
 
 class BrandController {
     async adminCreateBrand(req, res) {
-        const {name} = req.body.brandObj
-        const brand = await Brand.create({name})
+        const {name, categoryId} = req.body.brandObj
+        const brand = await Brand.create({name, categoryId})
         return res.json(brand)
     }
 
     async adminUpdateBrand(req, res, next) {
-        const {name} = req.body.brandObj
-        const brand = await Brand.findOne({where: {name}})
+        const {name, categoryId, id} = req.body.brandObj
+        const brand = await Brand.findOne({where: {id}})
         if (!brand) {
             return next(APIError.badRequestError(`Can't find brand by name: ${name}`))
         }
+        brand.update({
+            name: name,
+            categoryId: categoryId
+        })
         return res.json(brand)
     }
 

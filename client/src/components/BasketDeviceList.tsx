@@ -11,6 +11,7 @@ interface BasketDeviceListProps extends PropsWithChildren {
 const BasketDeviceList: React.FC<BasketDeviceListProps> = ({basketDevices, setBasketDevices}) => {
     const {basket} = useContext(Context)
 
+
     return (
         <>
             {setBasketDevices

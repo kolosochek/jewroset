@@ -11,11 +11,28 @@ export const setUserCookie = (email: UserI['email'], setCookieFunction:Function)
         maxAge: 24 * 60 * 60 * 183 // 6 month,
     })
 }
+
+export const userSignIn = async (user: Partial<UserI> = {}) => {
+    const {email, password} = user
+    const {data} = await $host.post(`api/user/signin`, {email, password})
+    if (data.error) {
+        return data
+    } else {
+        localStorage.setItem('token', data.token)
+        return jwtDecode(data.token)
+    }
+}
+
 export const userSignUp = async (user: Partial<UserI> = {}) => {
     const {email, password} = user
     const {data} = await $host.post(`api/user/signup`, {email, password, role: 'USER'})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
+    if (data.error) {
+        return data
+    } else {
+        localStorage.setItem('token', data.token)
+        return jwtDecode(data.token)
+    }
+
 }
 
 export const findUser = async (email:UserI['email']) => {
@@ -31,12 +48,6 @@ export const findUserData = async (email:UserI['email']) => {
 
 export const updateUser = async (userObj:Partial<UserI>) => {
     const {data} = await $host.post(`api/user/update`, {userObj})
-    localStorage.setItem('token', data.token)
-    return jwtDecode(data.token)
-}
-export const userSignIn = async (user: Partial<UserI> = {}) => {
-    const {email, password} = user
-    const {data} = await $host.post(`api/user/signin`, {email, password})
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token)
 }

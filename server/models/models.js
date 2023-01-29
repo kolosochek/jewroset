@@ -83,8 +83,13 @@ Device.belongsTo(Category)
 Brand.hasMany(Device, {as: 'brand'})
 Device.belongsTo(Brand)
 
-Category.belongsToMany(Brand, {through: CategoryBrand})
+
+Category.hasMany(Brand)
 Brand.belongsToMany(Category, {through: CategoryBrand})
+
+// backup
+//Category.belongsToMany(Brand, {through: CategoryBrand})
+//Brand.belongsToMany(Category, {through: CategoryBrand})
 
 // basket
 User.hasMany(Basket, {
