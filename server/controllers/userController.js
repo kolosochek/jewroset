@@ -1,7 +1,7 @@
 const APIError = require('../error/APIError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User, Basket, Category, Brand, DeviceInfo, Device} = require('../models/models')
+const { User, Basket } = require('../models/models')
 
 
 const generateJwt = (id, email, role) => {

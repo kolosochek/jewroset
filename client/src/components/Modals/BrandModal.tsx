@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, SetStateAction, useContext, useEffect, useState} from 'react';
+import React, {PropsWithChildren, SetStateAction, useContext, useEffect, useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {BrandI} from "../../store/DeviceStore";
 import {AdminBrandContext} from "../../views/Admin/AdminBrands";
@@ -20,6 +20,7 @@ const BrandModal: React.FC<BrandModalProps> = ({show, onHide, mode, brand}) => {
     const forceRender = () => setIsForceRender(!isForceRender);
     const [name, setName] = useState<BrandI["name"]>(mode === "edit" ? brand?.name! : '')
     const [categoryId, setCategoryId] = useState<BrandI["categoryId"]>(mode === "edit" ? brand?.categoryId! : 0)
+    const form = useRef<HTMLFormElement | null>(null);
 
 
     const createNewBrand = (brandObj: BrandI) => {
@@ -37,23 +38,24 @@ const BrandModal: React.FC<BrandModalProps> = ({show, onHide, mode, brand}) => {
     }
 
     const manageBrand = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         const brandObj: BrandI = {
             "name": name,
             "categoryId": categoryId,
         } as BrandI
 
-        // if form is valid
-        if (form.checkValidity()) {
-            if (mode === 'create') {
-                createNewBrand(brandObj)
-            } else if (mode === 'edit') {
-                brandObj.id = brand?.id!
-                updateExistingBrand(brandObj)
+        if (form && form.current) {
+            // if form is valid
+            if (form.current.checkValidity()) {
+                if (mode === 'create') {
+                    createNewBrand(brandObj)
+                } else if (mode === 'edit') {
+                    brandObj.id = brand?.id!
+                    updateExistingBrand(brandObj)
+                }
             }
-        }
 
-        form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
+        }
 
     }
 
@@ -77,7 +79,7 @@ const BrandModal: React.FC<BrandModalProps> = ({show, onHide, mode, brand}) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="brandForm" className="needs-validation" noValidate={true} >
+                <Form id="brandForm" className="needs-validation" ref={form} noValidate={true} >
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="brand">Brand title</Form.Label>
                         <Form.Control

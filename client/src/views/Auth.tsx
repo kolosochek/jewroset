@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {Container, Form, Card, Button} from "react-bootstrap";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
@@ -8,14 +8,14 @@ import {Context} from "../index";
 import {useCookies} from "react-cookie";
 
 const Auth = observer(() => {
-    const navigate = useNavigate()
-    const {user} = useContext(Context)
-    const {basket} = useContext(Context)
+    const navigate = useNavigate();
+    const {user} = useContext(Context);
     const location = useLocation();
-    const [email, setEmail] = useState('')
-    const [formSubmitError, setFormSubmitError] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('');
+    const [formSubmitError, setFormSubmitError] = useState('');
+    const [password, setPassword] = useState('');
     const [cookies, setCookie] = useCookies(["userEmail"]);
+    const form = useRef<HTMLFormElement | null>(null);
 
     let isLoginView: boolean = false;
     if (location.pathname as RouteI['path'] === '/signin' as RouteI['path']) {
@@ -23,50 +23,51 @@ const Auth = observer(() => {
     }
 
     const authManage = async () => {
-        // validate form
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-        if (form.checkValidity()) {
-            let responseUser;
-            // login view
-            if (isLoginView) {
-                responseUser = await userSignIn({email, password}).then(response => {
-                    if (response.error) {
-                    setFormSubmitError(response.error)
-                    } else {
-                        user.setUser(response)
-                        user.setIsAuth(true)
-                        if (user.user.role === "ADMIN") {
-                            user.setIsAdmin(true)
+        if (form && form.current) {
+            // validate form
+            if (form.current.checkValidity()) {
+                let responseUser;
+                // login view
+                if (isLoginView) {
+                    responseUser = await userSignIn({email, password}).then(response => {
+                        if (response.error) {
+                            setFormSubmitError(response.error)
+                        } else {
+                            user.setUser(response)
+                            user.setIsAuth(true)
+                            if (user.user.role === "ADMIN") {
+                                user.setIsAdmin(true)
+                            }
+                            setUserCookie(user.user.email!, setCookie)
+                            navigate('/' as RouteI['path'])
                         }
-                        setUserCookie(user.user.email!, setCookie)
-                        navigate('/' as RouteI['path'])
+                    }).catch(() => {
+                        setFormSubmitError(`Email or password is incorrect`)
+                    })
+                    // signup view
+                } else {
+                    const userObj = {
+                        email,
+                        password
                     }
-                }).catch(() => {
-                    setFormSubmitError(`Email or password is incorrect`)
-                })
-            // signup view
-            } else {
-                const userObj = {
-                    email,
-                    password
+                    responseUser = await userSignUp(userObj).then(response => {
+                        if (response.error) {
+                            setFormSubmitError(response.error)
+                        } else {
+                            user.setUser(response)
+                            user.setIsAuth(true)
+                            if (user.user.role === "ADMIN") {
+                                user.setIsAdmin(true)
+                            }
+                            setUserCookie(user.user.email!, setCookie)
+                            navigate('/' as RouteI['path'])
+                        }
+                    })
                 }
-                responseUser = await userSignUp(userObj).then(response => {
-                    if (response.error) {
-                        setFormSubmitError(response.error)
-                    } else {
-                        user.setUser(response)
-                        user.setIsAuth(true)
-                        if (user.user.role === "ADMIN") {
-                            user.setIsAdmin(true)
-                        }
-                        setUserCookie(user.user.email!, setCookie)
-                        navigate('/' as RouteI['path'])
-                    }
-                })
             }
-        }
 
-        form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
+        }
     }
 
     return (
@@ -75,7 +76,7 @@ const Auth = observer(() => {
                 <div className="text-center">
                     <h2 className="">{isLoginView ? 'Login' : 'Register'}</h2>
                 </div>
-                <Form className="needs-validation mt-5" noValidate={true}>
+                <Form className="needs-validation mt-5" noValidate={true} ref={form}>
                     {isLoginView &&
                         <>
                             <div className="mb-3">

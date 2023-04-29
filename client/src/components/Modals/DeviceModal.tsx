@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Key, useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, Key, useContext, useEffect, useRef, useState} from 'react';
 import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {Context} from "../../index";
 import {adminCreateDevice, adminUpdateDevice} from "../../http/deviceAPI";
@@ -35,29 +35,31 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
     const [rating, setRating] = useState(mode === 'edit' ? deviceParam?.rating! : 0)
     const [file, setFile] = useState<File | null>(null)
     const changeImageLabelArr = ['Collapse', 'Change image']
+    const form = useRef<HTMLFormElement | null>(null);
 
     const manageDevice = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         const deviceObj = new FormData()
         deviceObj.append(`name`, name)
         deviceObj.append('price', `${price}`)
         deviceObj.append('description', description!)
         deviceObj.append('rating', `${rating}`)
         deviceObj.append('img', file!)
-        deviceObj.append('brandId', `${brand ? brand : (form.querySelector('#brand') as HTMLSelectElement).value}`)
-        deviceObj.append('categoryId', `${category ? category : (form.querySelector('#category') as HTMLSelectElement).value}`)
+        deviceObj.append('brandId', `${brand ? brand : (form.current!.querySelector('#brand') as HTMLSelectElement).value}`)
+        deviceObj.append('categoryId', `${category ? category : (form.current!.querySelector('#category') as HTMLSelectElement).value}`)
         deviceObj.append('info', JSON.stringify(info))
 
-        // if form is valid
-        if (form.checkValidity()) {
-            if (mode === 'create') {
-                createNewDevice(deviceObj)
-            } else if (mode === 'edit') {
-                updateExistingDevice(deviceObj)
+        if (form && form.current) {
+            // if form is valid
+            if (form.current.checkValidity()) {
+                if (mode === 'create') {
+                    createNewDevice(deviceObj)
+                } else if (mode === 'edit') {
+                    updateExistingDevice(deviceObj)
+                }
             }
-        }
 
-        form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
+        }
 
     }
     const createNewDevice = (deviceObj: FormData) => {
@@ -119,7 +121,7 @@ const DeviceModal: React.FC<CreateDeviceModalProps> = observer(({show, onHide, m
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="deviceForm" className="needs-validation" noValidate={true}>
+                <Form id="deviceForm" className="needs-validation" ref={form} noValidate={true}>
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="category">Category</Form.Label>
                         <Form.Select

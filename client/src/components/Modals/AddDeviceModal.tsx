@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Button, Col, Dropdown, Form, Modal, Row} from "react-bootstrap";
 import {fetchDevices} from "../../http/deviceAPI";
 import {DeviceI} from "../../store/DeviceStore";
@@ -6,7 +6,7 @@ import {BasketDeviceI, incrementBasketDevice} from "../../store/BasketStore";
 import {OrderI} from "../../store/OrderStore";
 import {AdminOrderContext} from "../../views/Admin/AdminOrders";
 
-interface AddDeviceModalProps extends React.PropsWithChildren {
+interface IAddDeviceModalProps {
     show: boolean,
     onHide: () => void | undefined,
     order: OrderI,
@@ -14,29 +14,28 @@ interface AddDeviceModalProps extends React.PropsWithChildren {
     setBasketDevices: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void;
 }
 
-const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, basketDevices, setBasketDevices}) => {
+const AddDeviceModal = ({show, onHide, order, basketDevices, setBasketDevices}: IAddDeviceModalProps) => {
+    const form = useRef<HTMLFormElement | null>(null);
     const {isForceRender, setIsForceRender} = useContext(AdminOrderContext)
-    const forceRender = () => setIsForceRender(!isForceRender)
+    const forceParentRender = () => setIsForceRender(!isForceRender)
     const [devices, setDevices] = useState<DeviceI[]>([])
     const [selectedDevice, setSelectedDevice] = useState<DeviceI | undefined>(undefined)
     const [quantity, setQuantity] = useState<BasketDeviceI['quantity']>(1)
     const limit = 999;
 
     const addDevice = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-
-        if (form !== null) {
+        if (form && form.current) {
             // if form is valid
-            if (form.checkValidity()) {
+            if (form.current.checkValidity()) {
                 incrementBasketDevice(order.basketId, selectedDevice?.id!, quantity).then((result) => {
-                    setBasketDevices(result.basket_devices)
-                    forceRender()
-                    onHide()
+                    setBasketDevices(result.basket_devices);
+                    forceParentRender();
+                    onHide();
                 })
 
             }
 
-            form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
         }
     }
 
@@ -62,7 +61,7 @@ const AddDeviceModal: React.FC<AddDeviceModalProps> = ({show, onHide, order, bas
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="addDeviceForm" className="needs-validation" noValidate={true}>
+                <Form id="addDeviceForm" ref={form} className="needs-validation" noValidate={true}>
                     <Row>
                         <Col className="col-9 align-items-center ">
                             Name

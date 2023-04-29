@@ -3,6 +3,7 @@ import {Image, Figure} from "react-bootstrap";
 import {DeviceI} from "../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";
 import starImg from "../assets/star.png"
+import starImgNobg from "../assets/star_no_bg.png"
 import AddToCart from "./AddToCart/AddToCart";
 import {Context} from "../index";
 import {BasketDeviceI} from "../store/BasketStore";
@@ -76,7 +77,7 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
                     </h4>
                     <div className="d-flex justify-content-between">
                         <figure className="b-rating-wrapper m-0">
-                            <span className="b-rating d-flex align-items-center">{deviceItem.rating}&nbsp;<Image src={starImg} width={15} height={15}/></span>
+                            <span className="b-rating d-flex align-items-center">{deviceItem.rating}&nbsp;<Image src={!deviceItem.rating ? starImgNobg : starImg} width={16} height={16}/></span>
                         </figure>
                         <div className="b-price-wrapper">
                             <h5 className="b-device-item-price"><strong>${deviceItem.price}</strong></h5>

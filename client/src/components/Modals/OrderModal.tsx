@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {fetchDevices} from "../../http/deviceAPI";
 import {observer} from "mobx-react-lite";
@@ -40,30 +40,32 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
     const deviceLabelArr = mode === 'create' ? ['Collapse', 'Add device'] : ['Collapse', 'Edit devices']
     // fetch all devices
     const deviceLimit = 999;
+    const form = useRef<HTMLFormElement | null>(null)
 
     const manageOrder = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
-        // create new Order params object
-        const orderObj: Partial<OrderI> = {
-            email: email,
-            addressone: addressone,
-            addresstwo: addresstwo,
-            country: country ? country : (form.querySelector('#country') as HTMLSelectElement).value,
-            city: city ? city : (form.querySelector('#city') as HTMLSelectElement).value,
-            zip: zip,
-            status: status ? status : "awaitingPayment",
-        }
-
-        // if form is valid
-        if (form.checkValidity()) {
-            if (mode === 'create') {
-                createNewOrder(form, orderObj)
-            } else if (mode === 'edit') {
-                updateExistingOrder(form, orderObj)
+        if (form && form.current) {
+            // create new Order params object
+            const orderObj: Partial<OrderI> = {
+                email: email,
+                addressone: addressone,
+                addresstwo: addresstwo,
+                country: country ? country : (form.current.querySelector('#country') as HTMLSelectElement).value,
+                city: city ? city : (form.current.querySelector('#city') as HTMLSelectElement).value,
+                zip: zip,
+                status: status ? status : "awaitingPayment",
             }
-        }
 
-        form.classList.add('was-validated')
+            // if form is valid
+            if (form.current.checkValidity()) {
+                if (mode === 'create') {
+                    createNewOrder(form.current, orderObj)
+                } else if (mode === 'edit') {
+                    updateExistingOrder(form.current, orderObj)
+                }
+            }
+
+            form.current.classList.add('was-validated')
+        }
     }
     const createNewOrder = (form: HTMLFormElement, orderObj: Partial<OrderI>) => {
         findUserData(orderObj.email!).then((userParam) => {
@@ -146,7 +148,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="createOrderForm" className="needs-validation" noValidate={true}>
+                <Form id="createOrderForm" className="needs-validation" ref={form} noValidate={true}>
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="email">Email</Form.Label>
                         <Form.Control

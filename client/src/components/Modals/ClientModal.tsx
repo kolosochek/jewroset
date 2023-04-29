@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useRef, useState} from 'react';
 import {UserI} from "../../store/UserStore";
 import {AdminClientContext} from "../../views/Admin/AdminClients";
 import {adminCreateUser, adminUpdateUser} from "../../http/userAPI";
@@ -24,9 +24,9 @@ const ClientModal: React.FC<ClientModalProps> = ({show, onHide, mode, user}) => 
     const [lastname, setLastname] = useState<UserI["lastname"]>(mode === 'edit' ? user?.lastname! : '')
     const [phone, setPhone] = useState<UserI["firstname"]>(mode === 'edit' ? user?.phone! : '')
     const changePasswordLabelArr = ['Collapse', 'Change password']
+    const form = useRef<HTMLFormElement | null>(null)
 
     const manageUser = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         const userObj: UserI = {
             "email": email,
             "password": password,
@@ -36,16 +36,18 @@ const ClientModal: React.FC<ClientModalProps> = ({show, onHide, mode, user}) => 
             "phone": phone,
         } as UserI
 
-        // if form is valid
-        if (form.checkValidity()) {
-            if (mode === 'create') {
-                createNewUser(userObj)
-            } else if (mode === 'edit') {
-                updateExistingUser(userObj)
+        if (form && form.current) {
+            // if form is valid
+            if (form.current.checkValidity()) {
+                if (mode === 'create') {
+                    createNewUser(userObj)
+                } else if (mode === 'edit') {
+                    updateExistingUser(userObj)
+                }
             }
-        }
 
-        form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
+        }
 
     }
     const createNewUser = (userObj: UserI) => {
@@ -81,7 +83,7 @@ const ClientModal: React.FC<ClientModalProps> = ({show, onHide, mode, user}) => 
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="deviceForm" className="needs-validation" noValidate={true}>
+                <Form id="deviceForm" className="needs-validation" ref={form} noValidate={true}>
                     <div className="mb-2">
                         <Form.Label className="form-label" htmlFor="email">Email</Form.Label>
                         <Form.Control

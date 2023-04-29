@@ -1,4 +1,6 @@
-
+.dropdown-item.state__active {
+    background: #CCCCCC;
+}
 
 
 .bd-placeholder-img {

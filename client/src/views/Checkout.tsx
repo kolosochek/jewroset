@@ -1,14 +1,11 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {UserI} from "../store/UserStore";
 import {findUserData, setUserCookie, updateUser} from "../http/userAPI";
 import {useCookies} from "react-cookie";
 import {OrderI} from "../store/OrderStore";
-import {createOrder} from "../http/orderAPI";
 import {useNavigate} from "react-router-dom";
-import {RouteI} from "../utils/Routes";
-import {clearBasket} from "../http/basketAPI";
 import SelectCountry from "../components/SelectCountry";
 import SelectCity from "../components/SelectCity";
 import {adminCreateInvoice} from "../http/paymentAPI";
@@ -20,6 +17,7 @@ const Checkout = observer(() => {
     const {order} = useContext(Context)
     const navigate = useNavigate()
     const [cookies, setCookie] = useCookies(["userEmail"]);
+    const form = useRef<HTMLFormElement | null>(null)
 
     const createUserOrder = async () => {
         adminCreateInvoice(basket.priceTotal).then(data => {
@@ -28,15 +26,14 @@ const Checkout = observer(() => {
             console.log(data)
             //
         })
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         // validation
-        if (form !== null) {
+        if (form && form.current) {
             // if form is valid
-            if (form.checkValidity()) {
+            if (form.current.checkValidity()) {
                 const userObj: Partial<UserI> = {
-                    phone: (form.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
-                    firstName: (form.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
-                    lastName: (form.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
+                    phone: (form.current.querySelector('input#phone') as HTMLInputElement).value ?? undefined,
+                    firstName: (form.current.querySelector('input#firstName') as HTMLInputElement).value ?? undefined,
+                    lastName: (form.current.querySelector('input#lastName') as HTMLInputElement).value ?? undefined,
                     role: user.user.role === "ADMIN" ? "ADMIN" : "USER"
                 }
 
@@ -52,8 +49,8 @@ const Checkout = observer(() => {
                     // if user is guest
                 } else {
                     userObj.email = user.user.email
-                    userObj.newEmail = (form.querySelector('input#email') as HTMLInputElement).value
-                    userObj.password = (form.querySelector('input#password') as HTMLInputElement).value
+                    userObj.newEmail = (form.current.querySelector('input#email') as HTMLInputElement).value
+                    userObj.password = (form.current.querySelector('input#password') as HTMLInputElement).value
 
                     updateUser(userObj).then(userParam => {
                         user.setUser(userParam as unknown as UserI)
@@ -66,27 +63,16 @@ const Checkout = observer(() => {
                 const orderObj: Partial<OrderI> = {
                     userId: user.id,
                     basketId: basket.id,
-                    addressone: (form.querySelector('input#addressone') as HTMLInputElement).value ?? undefined,
-                    addresstwo: (form.querySelector('input#addresstwo') as HTMLInputElement).value ?? undefined,
-                    country: (form.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
-                    city: (form.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
-                    zip: (form.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
+                    addressone: (form.current.querySelector('input#addressone') as HTMLInputElement).value ?? undefined,
+                    addresstwo: (form.current.querySelector('input#addresstwo') as HTMLInputElement).value ?? undefined,
+                    country: (form.current.querySelector('select#country') as HTMLSelectElement).value ?? undefined,
+                    city: (form.current.querySelector('select#city') as HTMLSelectElement).value ?? undefined,
+                    zip: (form.current.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
                     status: "awaitingPayment"
                 }
-                // create new Order
-                /*
-                createOrder(orderObj).then(orderParam => {
-                    // clear basket
-                    clearBasket(user.id!, basket.id!).then((newBasket) => {
-                        basket.setBasket(newBasket)
-                        // goto payment
-                        navigate('/payment' as RouteI['path'])
-                    })
-                })
-                 */
             }
 
-            form.classList.add('was-validated')
+            form.current.classList.add('was-validated')
         }
     }
 
@@ -131,7 +117,7 @@ const Checkout = observer(() => {
                 </div>
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3">Billing address</h4>
-                    <form method="POST" className="needs-validation" noValidate={true}>
+                    <form method="POST" className="needs-validation" ref={form} noValidate={true}>
                         <div className="row g-3">
                             <div className="col-12">
                                 <label htmlFor="email" className="form-label">Email</label>

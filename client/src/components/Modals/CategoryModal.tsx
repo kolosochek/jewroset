@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {CategoryI} from "../../store/DeviceStore";
 import {AdminCategoryContext} from "../../views/Admin/AdminCategories";
@@ -17,6 +17,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({show, onHide, mode, catego
     const {isForceRender, setIsForceRender} = useContext(AdminCategoryContext);
     const forceRender = () => setIsForceRender(!isForceRender);
     const [name, setName] = useState<CategoryI["name"]>(mode === "edit" ? category?.name! : '')
+    const form = useRef<HTMLFormElement | null>(null)
 
 
     const createNewCategory = (categoryObj: CategoryI) => {
@@ -34,23 +35,23 @@ const CategoryModal: React.FC<CategoryModalProps> = ({show, onHide, mode, catego
     }
 
     const manageCategory = () => {
-        const form: HTMLFormElement = document.querySelector('form.needs-validation')!
         const categoryObj: CategoryI = {
             "name": name,
         } as CategoryI
 
-        // if form is valid
-        if (form.checkValidity()) {
-            if (mode === 'create') {
-                createNewCategory(categoryObj)
-            } else if (mode === 'edit') {
-                categoryObj.id = category?.id!
-                updateExistingCategory(categoryObj)
+        if (form && form.current) {
+            // if form is valid
+            if (form.current.checkValidity()) {
+                if (mode === 'create') {
+                    createNewCategory(categoryObj)
+                } else if (mode === 'edit') {
+                    categoryObj.id = category?.id!
+                    updateExistingCategory(categoryObj)
+                }
             }
+
+            form.current.classList.add('was-validated')
         }
-
-        form.classList.add('was-validated')
-
     }
 
 
@@ -67,7 +68,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({show, onHide, mode, catego
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id="categoryForm" className="needs-validation" noValidate={true} >
+                <Form id="categoryForm" className="needs-validation" ref={form} noValidate={true} >
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}

@@ -16,8 +16,7 @@ export const eraseCookie = (name:string) => {
 }
 
 const Navbar = observer(() => {
-    const {user} = useContext(Context)
-    const {basket} = useContext(Context)
+    const {user, basket, device} = useContext(Context)
     const navigate = useNavigate()
 
 
@@ -53,7 +52,10 @@ const Navbar = observer(() => {
     return (
         <NavbarBootstrap bg="" variant="light">
             <Container>
-                <NavLink to={'/' as RouteI['path']}>Jewroset</NavLink>
+                <NavLink onClick={() => {
+                    device.setSelectedCategory({id: 0, name: `All`})
+                    device.setSelectedBrand({id: 0, name: `All`})
+                }} to={'/' as RouteI['path']}>Jewroset</NavLink>
                 <Nav className="ml-auto">
                     {user.isAuth ?
                         <>
