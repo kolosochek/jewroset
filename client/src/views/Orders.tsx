@@ -99,7 +99,7 @@ const Orders = () => {
                                 <Col className="text-center">{order.city}</Col>
                                 <Col className={`text-center ${orderStatus.className}`}>{orderStatus.title}</Col>
                                 <Col className="text-end">
-                                    <button
+                                    <Button
                                         className="btn btn-primary"
                                         type="button"
                                         data-bs-toggle="collapse"
@@ -110,7 +110,14 @@ const Orders = () => {
                                             switchTitle((e.target as HTMLButtonElement))
                                         }}
                                     >Expand
-                                    </button>
+                                    </Button>
+                                    {order.status === "awaitingPayment" && (
+                                        <Button
+                                            onClick={() => {
+                                                navigate(`/payment/${order.id}`)
+                                            }}
+                                        >Pay</Button>
+                                    )}
                                 </Col>
                             </Row>
                             <section key={`order-expanded-${order.id}`} className="collapse card card-body"

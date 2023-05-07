@@ -34,6 +34,16 @@ export const adminRemoveOrder = async (orderId: OrderI["id"]) => {
 }
 
 export const updateOrder = async (orderObj: Partial<OrderI>) => {
+    const {data} = await $host.post('api/order/update', {orderObj})
+    return data
+}
+
+export const getOrder = async (id: OrderI["id"], userId: UserI["id"]) => {
+    const {data} = await $host.post('api/order/getbyid', {id, userId})
+    return data
+}
+
+export const updateOrderAdmin = async (orderObj: Partial<OrderI>) => {
     const {data} = await $authHost.post('api/order/update', {orderObj})
     return data
 }

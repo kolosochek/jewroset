@@ -36,4 +36,8 @@ export default class OrderStore {
     get order() {
         return this._order
     }
+
+    get id() {
+        return this._order.id
+    }
 }

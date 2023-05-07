@@ -42,9 +42,6 @@ const commonRoutes: RouteI[] = [
     {
         path: '/basket', View: Basket,
     },
-    {
-        path: '/payment', View: Payment,
-    },
 ]
 
 export const authorizedRoutes: RouteI[] = [
@@ -53,7 +50,13 @@ export const authorizedRoutes: RouteI[] = [
     ...adminRoutes,
     {
         path: '/personal', View: Orders,
-    }
+    },
+    {
+        path: '/payment', View: Payment,
+    },
+    {
+        path: '/payment/:id', View: Payment,
+    },
 ]
 
 export const unauthorizedRoutes: RouteI[] = [

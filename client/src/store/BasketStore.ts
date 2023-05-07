@@ -1,6 +1,7 @@
 import {makeAutoObservable} from "mobx";
 import {DeviceI} from "./DeviceStore";
-import {decrementBasket, incrementBasket, removeFromBasket} from "../http/basketAPI";
+import {clearBasket, decrementBasket, incrementBasket, removeFromBasket} from "../http/basketAPI";
+import {UserI} from "./UserStore";
 
 export interface BasketDeviceI {
     id?: number,

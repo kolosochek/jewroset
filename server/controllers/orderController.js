@@ -35,7 +35,6 @@ class OrderController {
             }, include: [
                 {
                     model: Basket,
-                    where: {status: 'closed'},
                     include: [{
                         model: BasketDevice,
                         order: [['createdAt', 'asc']],
@@ -49,6 +48,31 @@ class OrderController {
             return next(APIError.internalError(`Can't create an order with giver params! ${req.body.orderObj.toString()}`))
         }
         return res.json(order.rows)
+    }
+
+    async getOrderById(req, res, next) {
+        const {id, userId} = req.body;
+        const order = await Order.findOne({
+            where: {
+                id: id,
+                userId: userId,
+                status: 'awaitingPayment',
+            },
+            include: [
+                {
+                    model: Basket,
+                    include: [{
+                        model: BasketDevice,
+                        order: [['createdAt', 'asc']],
+                        include: Device
+                    }]
+                }
+            ]
+        })
+        if (!order) {
+            return next(APIError.internalError(`Can't create an order with giver params! ${req.body}`))
+        }
+        return res.json(order)
     }
 
     async adminGetAll(req, res, next) {
@@ -108,7 +132,7 @@ class OrderController {
             }
         })
         if (!order) {
-            return next(APIError.internalError(`Can't create an order with giver params! ${req.body.orderObj.toString()}`))
+            return next(APIError.internalError(`Can't get an order with given params! ${req.body.orderObj.toString()}`))
         }
         const updatedOrder = await order.update({
             userId: userId,

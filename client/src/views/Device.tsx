@@ -9,11 +9,7 @@ import {RouteI} from "../utils/Routes";
 import {BasketDeviceI} from "../store/BasketStore";
 import ReactMarkdown from 'react-markdown'
 
-interface DeviceViewProps extends React.PropsWithChildren {
-
-}
-
-const Device: React.FC<DeviceViewProps> = ({}) => {
+const Device = ({}) => {
     const {basket} = useContext(Context)
     const navigate = useNavigate()
     const {id} = useParams()

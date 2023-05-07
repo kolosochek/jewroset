@@ -8,24 +8,17 @@ import {OrderI} from "../store/OrderStore";
 import {useNavigate} from "react-router-dom";
 import SelectCountry from "../components/SelectCountry";
 import SelectCity from "../components/SelectCity";
-import {adminCreateInvoice} from "../http/paymentAPI";
+import {Form, Button} from "react-bootstrap";
+import {createOrder} from "../http/orderAPI";
 
 
 const Checkout = observer(() => {
-    const {user} = useContext(Context)
-    const {basket} = useContext(Context)
-    const {order} = useContext(Context)
+    const {user, basket, order} = useContext(Context)
     const navigate = useNavigate()
     const [cookies, setCookie] = useCookies(["userEmail"]);
     const form = useRef<HTMLFormElement | null>(null)
 
     const createUserOrder = async () => {
-        adminCreateInvoice(basket.priceTotal).then(data => {
-            // debug
-            console.log(`data`)
-            console.log(data)
-            //
-        })
         // validation
         if (form && form.current) {
             // if form is valid
@@ -70,6 +63,17 @@ const Checkout = observer(() => {
                     zip: (form.current.querySelector('input#zip') as HTMLInputElement).value ?? undefined,
                     status: "awaitingPayment"
                 }
+
+                // create an order with "awaiting payment" status
+                createOrder(orderObj).then((result) => {
+                    // get order ID from backend response and save it
+                    orderObj.id = result.id;
+                    // save current order obj in mobx state manager
+                    order.setOrder(orderObj);
+                    // goto payment
+                    navigate("/payment")
+                }).catch(error => console.log(`Can't update order, error: ${error.reason || error}`))
+
             }
 
             form.current.classList.add('was-validated')
@@ -117,12 +121,12 @@ const Checkout = observer(() => {
                 </div>
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3">Billing address</h4>
-                    <form method="POST" className="needs-validation" ref={form} noValidate={true}>
+                    <Form method="POST" className="needs-validation" ref={form} noValidate={true}>
                         <div className="row g-3">
                             <div className="col-12">
                                 <label htmlFor="email" className="form-label">Email</label>
                                 <input type="email" className="form-control" id="email" placeholder="you@example.com"
-                                       value={(user.isAuth && user.user.email) ? user.user.email : undefined} required/>
+                                       defaultValue={(user.isAuth && user.user.email) ? user.user.email : undefined} required/>
                                 <div className="invalid-feedback">
                                     Please enter a valid email address.
                                 </div>
@@ -196,13 +200,13 @@ const Checkout = observer(() => {
                             </div>
                         </div>
                         <hr className="my-4"/>
-                    </form>
-                    <button
+                    </Form>
+                    <Button
                         className="w-100 btn btn-primary btn-lg"
                         onClick={() => createUserOrder()}
                     >Continue to
                         payment
-                    </button>
+                    </Button>
                 </div>
             </div>
         </section>
