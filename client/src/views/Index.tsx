@@ -22,12 +22,20 @@ const Index = observer(() => {
     const limit = device.limit
 
     useEffect(() => {
-        getAllCategories().then(categoryParam => device.setCategories(categoryParam))
-        getAllBrands().then(brandsParam => device.setBrands(brandsParam))
-        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page, limit).then((data) => {
+        getAllCategories()
+            .then(categoryParam => device.setCategories(categoryParam))
+            .catch(error => console.error(`Can't fetch all categorues, reason: ${error.reason || error}`))
+        getAllBrands()
+            .then(brandsParam => device.setBrands(brandsParam))
+            .catch(error => console.error(`Can't get all brands, reason: ${error.reason || error}`))
+        fetchDevices(categoryId, brandId, filterByType, filterByDirection, page, limit)
+            .then((data) => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)
-        }).finally(() => setIsLoading(false))
+        }).catch(error => console.error(`Can't fetch all devices, reason: ${error.reason || error}`))
+        // debug
+        setIsLoading(false)
+        //
     }, [categoryId, brandId, filterByType, filterByDirection, page])
 
     if (isLoading) {
