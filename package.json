@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "",
   "scripts": {
-    "start": "cd server && node index.js & cd client && npm start",
+    "start": "cd server && node node --max_old_space_size=2560 index.js & cd client && npm start",
     "install-client": "cd client && npm install && npm run build && cd ..",
     "install-server": "cd server && npm install && cd .. ",
     "heroku-postbuild": "npm run install-client && npm run install-server"
