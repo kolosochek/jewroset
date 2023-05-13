@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const $host = axios.create({
-    baseURL: `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}`
+    baseURL: `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`
 })
 
 const $authHost = axios.create({
-    baseURL: `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_SERVER_PORT}`
+    baseURL: `${process.env.SERVER_URL}:${process.env.SERVER_PORT}`
 })
 
 
