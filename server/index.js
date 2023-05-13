@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const sequelize = require("./db")
+const {Sequelize} = require("sequelize");
 const models = require('./models/models')
 const cors = require('cors')
 const PORT = process.env.SERVER_PORT || 5000;
@@ -21,6 +22,20 @@ app.use(errorHandler)
 
 const start = async() => {
     try {
+        const sequelize = new Sequelize({
+            database: `${process.env.DB_NAME}`,
+            username: `${process.env.DB_USER}`,
+            password: `${process.env.DB_PASSWORD}`,
+            host: `${process.env.DB_HOST}`,
+            port: `${process.env.DB_PORT}`,
+            dialect: "postgres",
+            dialectOptions: {
+                ssl: {
+                    require: true, // This will help you. But you will see nwe error
+                    rejectUnauthorized: false // This line will fix new error
+                }
+            },
+        });
         await sequelize.authenticate()
         //await sequelize.sync()
         await sequelize.sync({ alter: true })
