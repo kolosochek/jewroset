@@ -62,7 +62,7 @@ const App = observer(() => {
             user.setUser(userParam as unknown as UserI)
             if (user.user.role !== 'GUEST'){
                 user.setIsAuth(true)
-                if (user.user.role == 'ADMIN'){
+                if (user.user.role === 'ADMIN'){
                     user.setIsAdmin(true)
                 }
             }

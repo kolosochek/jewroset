@@ -22,7 +22,7 @@ app.use(errorHandler)
 
 const start = async() => {
     try {
-        const sequelize = new Sequelize({
+        const sequelize = await new Sequelize({
             database: `${process.env.DB_NAME}`,
             username: `${process.env.DB_USER}`,
             password: `${process.env.DB_PASSWORD}`,
@@ -37,8 +37,8 @@ const start = async() => {
             },
         });
         await sequelize.authenticate()
-        //await sequelize.sync()
-        await sequelize.sync({ alter: true })
+        await sequelize.sync()
+        //await sequelize.sync({ alter: true })
         //await sequelize.drop()
 
         // express API server start
