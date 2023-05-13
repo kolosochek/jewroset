@@ -51,12 +51,6 @@ export const authorizedRoutes: RouteI[] = [
     {
         path: '/personal', View: Orders,
     },
-    {
-        path: '/payment', View: Payment,
-    },
-    {
-        path: '/payment/:id', View: Payment,
-    },
 ]
 
 export const unauthorizedRoutes: RouteI[] = [
@@ -76,5 +70,11 @@ export const unauthorizedRoutes: RouteI[] = [
     },
     {
         path: '/device/:id', View: Device,
+    },
+    {
+        path: '/payment', View: Payment,
+    },
+    {
+        path: '/payment/:id', View: Payment,
     },
 ]

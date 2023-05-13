@@ -124,7 +124,7 @@ class OrderController {
     }
 
     async adminUpdateOrder(req, res, next) {
-        const {userId, id, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
+        const {email, userId, id, addressone, addresstwo, country, city, zip, status} = req.body.orderObj;
 
         const order = await Order.findOne({
             where: {
@@ -135,6 +135,7 @@ class OrderController {
             return next(APIError.internalError(`Can't get an order with given params! ${req.body.orderObj.toString()}`))
         }
         const updatedOrder = await order.update({
+            email: email,
             userId: userId,
             addressone: addressone,
             addresstwo: addresstwo,
@@ -149,6 +150,7 @@ class OrderController {
                 }
             ]
         })
+        const saved = await order.save();
         return res.json(updatedOrder)
     }
 }

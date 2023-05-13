@@ -24,34 +24,31 @@ export default function OrderPayment() {
     const {id} = useParams()
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        if (id) {
-            getOrder(parseInt(id), user.id!).then(orderParam => {
-                setOrderById(orderParam);
-                setIsLoading(false);
-                // debug
-                console.log(orderById)
-
-            })
-        }
-    }, [isLoading])
-
     const payOrder = async () => {
         // validation
         if (form && form.current) {
 
             // if form is valid
             if (form.current.checkValidity()) {
-                const orderObj: Partial<OrderI> = {
-                    id: order.id,
-                    userId: order.order.userId,
-                    basketId: order.order.basketId,
-                    addressone: order.order.addressone,
-                    addresstwo: order.order.addresstwo,
-                    country: order.order.country,
-                    city: order.order.city,
-                    zip: order.order.zip,
-                    status: "awaitingShipping"
+                let orderObj: OrderI;
+
+                if (id) {
+                    orderObj = orderById!
+                    //orderObj.userId = orderObj.userId
+                    //orderObj.basketId = orderObj.basketId
+                    orderObj.status = "awaitingShipping"
+                } else {
+                    orderObj = {
+                        id: order.id!,
+                        userId: order.order.userId!,
+                        basketId: order.order.basketId!,
+                        addressone: order.order.addressone!,
+                        addresstwo: order.order.addresstwo,
+                        country: order.order.country!,
+                        city: order.order.city!,
+                        zip: order.order.zip!,
+                        status: "awaitingShipping"
+                    }
                 }
 
                 // get unpaid order
@@ -75,6 +72,19 @@ export default function OrderPayment() {
         }
     }
 
+    useEffect(() => {
+        if (id) {
+            getOrder(parseInt(id), user.id!).then(orderParam => {
+                setOrderById(orderParam)
+                // debug
+                console.log(`orderParam`);
+                console.log(orderParam);
+                //
+            }).catch(error => console.error(`Can't set an order by id ${id}, reason: ${error.reason || error}`));
+        }
+        setIsLoading(false);
+    }, [])
+
     if (isLoading) {
         return <Spinner animation={"grow"}/>
     }
@@ -88,10 +98,22 @@ export default function OrderPayment() {
                             <h4 className="d-flex justify-content-between align-items-center mb-2">
                                 <span className="text-primary">Your cart</span>
                                 <span
-                                    className="badge bg-primary rounded-pill">{id ? `${orderById!.basket?.basket_devices?.length}` : basket.itemsTotal}</span>
+                                    className="badge bg-primary rounded-pill">{id ? orderById?.basket?.basket_devices?.length! : basket.itemsTotal}</span>
                             </h4>
                             <ul className="list-group mb-3">
-                                {basket.basketDevices?.map((item) => {
+                                {id ? orderById?.basket?.basket_devices!.map((item) => {
+                                    return (
+                                        <li key={item.device?.id}
+                                            className="list-group-item d-flex justify-content-between lh-sm">
+                                            <div>
+                                                <h6 className="my-0">{item.device.name}</h6>
+                                                <small
+                                                    className="text-muted">{item.quantity === 1 ? `1 item` : `${item.quantity} items`}</small>
+                                            </div>
+                                            <span className="text-muted">${item.quantity * item.device.price!}</span>
+                                        </li>
+                                    )
+                                }) : basket.basketDevices!.map((item) => {
                                     return (
                                         <li key={item.device?.id}
                                             className="list-group-item d-flex justify-content-between lh-sm">

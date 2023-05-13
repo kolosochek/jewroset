@@ -17,7 +17,7 @@ const findUserByEmail = async (userEmail:UserI['email']) => {
     return foundUser
 }
 
-const createGuestUser = async (user:Partial<UserI>) => {
+export const createGuestUser = async (user:Partial<UserI>) => {
     const guest = await userSignUp(user)
     return guest
 }
@@ -46,7 +46,7 @@ const App = observer(() => {
             })
         } else {
             // create new guest user
-            const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"123123123"}
+            const guest: Partial<UserI> = {email: `${uuidv4()}@guest.com`, role: 'GUEST', password:"z!asasd@3f1"}
             createGuestUser(guest).then(userParam => {
                 const guestUser:UserI = userParam as unknown as UserI
                 // set user cookie

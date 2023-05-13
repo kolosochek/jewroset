@@ -91,6 +91,7 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
                     })
                     // EDIT EXISTING ORDER
                 } else if (mode === 'edit') {
+                    orderObj.email = email
                     orderObj.userId = user.id!
                     orderObj.id = order?.id!
                     updateOrder(orderObj).then(() => {
@@ -114,7 +115,8 @@ const OrderModal: React.FC<OrderModalProps> = observer(({show,onHide,mode,order}
             // create new closed basket
             createBasket(orderObj.userId!, 'closed').then((basketParam) => {
                 orderObj.basketId = basketParam.id
-                orderObj.userId = user.id!
+                orderObj.email = email
+                orderObj.userId = basketParam.userId
                 orderObj.id = order?.id!
                 updateOrder(orderObj).then(() => {
                     forceRender()

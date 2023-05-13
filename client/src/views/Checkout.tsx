@@ -81,12 +81,19 @@ const Checkout = observer(() => {
     }
 
     useEffect(() => {
+        // debug
+        console.log(`user`);
+        console.log(user);
+        //
+        findUserData(user.user.email!).then((userInfo) => {
+            user.setUserInfo(userInfo)
+        })
         // if user is authorized, get all user data
-        if (user.isAuth) {
-            findUserData(user.user.email!).then((userInfo) => {
-                user.setUserInfo(userInfo)
-            })
-        }
+        //if (user.isAuth) {
+        //    findUserData(user.user.email!).then((userInfo) => {
+        //        user.setUserInfo(userInfo)
+        //    })
+        //}
 
     }, [])
 
@@ -126,7 +133,7 @@ const Checkout = observer(() => {
                             <div className="col-12">
                                 <label htmlFor="email" className="form-label">Email</label>
                                 <input type="email" className="form-control" id="email" placeholder="you@example.com"
-                                       defaultValue={(user.isAuth && user.user.email) ? user.user.email : undefined} required/>
+                                       defaultValue={user.user.email ? user.user.email : undefined} required/>
                                 <div className="invalid-feedback">
                                     Please enter a valid email address.
                                 </div>

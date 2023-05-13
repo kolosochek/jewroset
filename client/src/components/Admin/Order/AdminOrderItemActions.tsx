@@ -1,7 +1,6 @@
 import React, {PropsWithChildren, useContext, useState} from 'react';
 import OrderModal from "../../Modals/OrderModal";
 import {OrderI} from "../../../store/OrderStore";
-import {Context} from "../../../index";
 import {BasketDeviceI} from "../../../store/BasketStore";
 import AddDeviceModal from "../../Modals/AddDeviceModal";
 import ConfirmRemoveOrderModal from "../../Modals/ConfirmRemoveOrderModal";
