@@ -1,14 +1,13 @@
 import axios from "axios";
 
 const SERVER_URL = `https://jewroset-server.herokuapp.com`
-const SERVER_PORT = `43556`
 
 const $host = axios.create({
-    baseURL: `${SERVER_URL}:${SERVER_PORT}`
+    baseURL: `${SERVER_URL}`
 })
 
 const $authHost = axios.create({
-    baseURL: `${SERVER_URL}:${SERVER_PORT}`
+    baseURL: `${SERVER_URL}`
 })
 
 
