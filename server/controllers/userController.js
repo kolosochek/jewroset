@@ -44,7 +44,8 @@ class UserController {
             return next(APIError.badRequestError(`Wrong password!`))
         }
         const userId = user.id
-        const basket = await Basket.findOrCreate({where: {id:userId}})
+        //const basket = await Basket.findOrCreate({where: {idd:userId}})
+        const basket = await Basket.findOrCreate({where: {userId:userId}})
         if (!basket[0]){
             return res.json({error: `Can't find or creat basket for user with id: ${userId}`})
         }
