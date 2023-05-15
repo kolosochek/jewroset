@@ -20,14 +20,10 @@ class UserController {
         const candidate = await User.findOne({where: {email}})
         if (candidate) {
             return res.json({error: `User with given email: ${email} already exist!`})
-
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
-        if (!user) {
-            return res.json({error: `Can't create an user with given email: ${email}!`})
-        }
-        //const userId = user.id
+        const userId = user.id
         //const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
@@ -47,8 +43,7 @@ class UserController {
             return next(APIError.badRequestError(`Wrong password!`))
         }
         const userId = user.id
-        //const basket = await Basket.findOrCreate({where: {idd:userId}})
-        const basket = await Basket.findOrCreate({where: {userId:userId}})
+        const basket = await Basket.findOrCreate({where: {id:userId}})
         if (!basket[0]){
             return res.json({error: `Can't find or creat basket for user with id: ${userId}`})
         }
