@@ -24,6 +24,9 @@ class UserController {
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
+        if (!user) {
+            return res.json({error: `Can't create an user with given email: ${email}!`})
+        }
         //const userId = user.id
         //const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
