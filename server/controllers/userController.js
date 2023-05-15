@@ -20,10 +20,11 @@ class UserController {
         const candidate = await User.findOne({where: {email}})
         if (candidate) {
             return res.json({error: `User with given email: ${email} already exist!`})
+
         }
         const passwordHash = await bcrypt.hash(password, 5)
         const user = await User.create({email: email, password:passwordHash, role: role})
-        const userId = user.id
+        //const userId = user.id
         //const basket = await Basket.findOrCreate({where: {id:userId}})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
