@@ -1,5 +1,5 @@
 # Jewroset
-## https://jewroset.temp/
+## http://jewroset-client.herokuapp.com/
 ### Ecommerce device store. Get your new cell phone or laptop! 
 
 [![jewroset_video](https://raw.githubusercontent.com/kolosochek/jewroset/main/github/images/jewroset_player.png)](https://youtu.be/ombSVgIhiUc)
