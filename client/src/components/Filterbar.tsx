@@ -7,11 +7,11 @@ const Filterbar = observer(() => {
     const {device} = useContext(Context)
 
     return (
-        <div className="d-flex ms-auto align-items-center">
+        <div className="d-flex col-3 ms-auto align-items-end">
             <NavDropdown
                 title={`Filter by: ${device.selectedFilter.type ? `${device.selectedFilter.type === 'id' ? 'creation' : `${device.selectedFilter.type}` } ${!device.selectedFilter.direction ? 'desc' : device.selectedFilter.direction}` : 'creation desc'}`}
                 id="basic-nav-dropdown" align="end"
-                className="">
+                className="p-2">
                 <NavDropdown.Item
                     onClick={() => device.setSelectedFilter({type: 'id', direction: 'asc'})}
                     className={device.selectedFilter.type === 'id' && device.selectedFilter.direction === "asc" ? "state__active" : ""}
