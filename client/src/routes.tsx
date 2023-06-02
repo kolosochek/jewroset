@@ -2,7 +2,7 @@ import {RouteI} from "./utils/Routes";
 import AdminDashboard from "./views/Admin/AdminDashboard";
 import Auth from "./views/Auth";
 import Basket from "./views/Basket";
-import Index from "./views/Index";
+import Index from "./views/Index/Index";
 import Catalog from "./views/Catalog";
 import Device from "./views/Device";
 import Checkout from "./views/Checkout";

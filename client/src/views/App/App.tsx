@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {BrowserRouter} from "react-router-dom"
-import AppRouter from "./components/AppRouter";
-import Navbar from "./components/Navbar";
+import AppRouter from "../../components/AppRouter";
+import Navbar from "../../components/Navbar";
 import {Container, Spinner} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
-import {Context} from "./index";
-import {findUser, setUserCookie, userCheck, userSignUp} from "./http/userAPI";
-import {UserI} from "./store/UserStore";
+import {Context} from "../../index";
+import {findUser, setUserCookie, userCheck, userSignUp} from "../../http/userAPI";
+import {UserI} from "../../store/UserStore";
 import {useCookies} from "react-cookie";
 import {v4 as uuidv4} from "uuid";
-import {findOrCreateBasket} from "./http/basketAPI";
+import {findOrCreateBasket} from "../../http/basketAPI";
+import {Loader} from "../../components/Loader/Loader";
 
 
 const findUserByEmail = async (userEmail:UserI['email']) => {
@@ -70,12 +71,12 @@ const App = observer(() => {
     }, [])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
     return (
         <BrowserRouter>
             <Navbar/>
-            <Container>
+            <Container className={`d-flex flex-grow-1`}>
                 <AppRouter/>
             </Container>
         </BrowserRouter>

@@ -3,7 +3,7 @@ import Auth from "../views/Auth";
 import Basket from "../views/Basket";
 import Catalog from "../views/Catalog";
 import Device from "../views/Device";
-import Index from "../views/Index";
+import Index from "../views/Index/Index";
 import * as React from "react";
 
 export type RoutePathT = "/"

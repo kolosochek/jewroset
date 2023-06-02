@@ -1,6 +1,6 @@
 import React, {createContext} from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './views/App/App';
 import UserStore from "./store/UserStore";
 import DeviceStore from "./store/DeviceStore";
 import BasketStore from "./store/BasketStore";

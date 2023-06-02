@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Categorybar from "../components/Categorybar";
-import DeviceList from "../components/DeviceList";
-import Brandbar from "../components/Brandbar";
-import {Context} from "../index";
+import Categorybar from "../../components/Categorybar/Categorybar";
+import DeviceList from "../../components/DeviceList/DeviceList";
+import Brandbar from "../../components/Brandbar";
+import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
-import {fetchDevices} from "../http/deviceAPI";
-import DeviceListPagination from "../components/DeviceListPagination";
+import {fetchDevices} from "../../http/deviceAPI";
+import DeviceListPagination from "../../components/DeviceListPagination";
 import {Spinner} from "react-bootstrap";
-import Filterbar from "../components/Filterbar";
-import {getAllCategories} from "../http/categoryAPI";
-import {getAllBrands} from "../http/brandAPI";
+import Filterbar from "../../components/Filterbar";
+import {getAllCategories} from "../../http/categoryAPI";
+import {getAllBrands} from "../../http/brandAPI";
+import {Loader} from "../../components/Loader/Loader";
 
 const Index = observer(() => {
     const {device} = useContext(Context)
@@ -32,14 +33,14 @@ const Index = observer(() => {
             .then((data) => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)
+            // debug
+            setIsLoading(false)
         }).catch(error => console.error(`Can't fetch all devices, reason: ${error.reason || error}`))
-        // debug
-        setIsLoading(false)
         //
     }, [categoryId, brandId, filterByType, filterByDirection, page])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (
@@ -48,7 +49,7 @@ const Index = observer(() => {
                 <Categorybar/>
             </aside>
             <section className="col-9 flex py-3">
-                <section className="b-filter-wrapper container p-0 d-flex">
+                <section className={`b-filter-wrapper container p-0 d-flex flex-wrap`}>
                     <Brandbar/>
                     <Filterbar/>
                 </section>

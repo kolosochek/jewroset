@@ -1,12 +1,13 @@
 import React, {useContext} from 'react';
 import {Image, Figure} from "react-bootstrap";
-import {DeviceI} from "../store/DeviceStore";
+import {DeviceI} from "../../store/DeviceStore";
 import {NavLink, useNavigate} from "react-router-dom";
-import starImg from "../assets/star.png"
-import starImgNobg from "../assets/star_no_bg.png"
-import AddToCart from "./AddToCart/AddToCart";
-import {Context} from "../index";
-import {BasketDeviceI} from "../store/BasketStore";
+import starImg from "../../assets/star.png"
+import starImgNobg from "../../assets/star_no_bg.png"
+import AddToCart from "../AddToCart/AddToCart";
+import {Context} from "../../index";
+import {BasketDeviceI} from "../../store/BasketStore";
+import styles from "./index.module.css"
 
 
 interface ItemProps {
@@ -26,21 +27,20 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
     }
 
     return (
-        <section className="b-device-item-wrapper col border-0">
-            <div className="b-device-item card shadow-sm">
+        <section className={`b-device-item-wrapper col border-0 ${styles["b-device-item-wrapper"]}`}>
+            <div className={`b-device-item card shadow-sm ${styles["b-device-item"]}`}>
                 <Figure
-                    className="b-device-item-figure-wrapper p-3 m-0 text-center"
+                    className={`b-device-item-figure-wrapper p-3 m-0 text-center ${styles["b-device-item-figure-wrapper"]}`}
                     onClick={() => navigate(`/device/${deviceItem.id}`)}>
                     <img
-                        src={`${process.env.REACT_APP_SERVER_URL}/${deviceItem.img}`}
+                        src={`${process.env.REACT_APP_SERVER_URL}${process.env.REACT_APP_SERVER_PORT ? ':'+process.env.REACT_APP_SERVER_PORT : ''}/${deviceItem.img}`}
                         alt={deviceItem.name}
                         height="200"
                         className="b-device-item-figure rounded"
                         role="button"
-                        style={{maxWidth: '240px'}}
                     />
                 </Figure>
-                <section className="b-device-item-info-wrapper p-3">
+                <section className={`b-device-item-info-wrapper p-3`}>
                     <p className="text-center">
                         <a
                             role="button"

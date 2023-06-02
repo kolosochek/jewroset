@@ -1,59 +1,32 @@
-import React, {useContext} from 'react';
+import React, {useContext, useRef} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
-import {NavLink} from "react-router-dom";
-import {RouteI} from "../utils/Routes";
 import {ListGroup, Card} from "react-bootstrap";
 import {BrandI} from "../store/DeviceStore";
-import Filterbar from "./Filterbar";
 
 const Brandbar = observer(() => {
     const {device} = useContext(Context)
-    let {id} = device.selectedBrand
-
+    const {id} = device.selectedBrand
+    const brands = device.selectedCategory.id ? device.brands.filter((brand) => device.selectedCategory.id === brand.categoryId) : device.brands
+    const brandList = useRef([{name: `All`, id: 0}, ...brands])
 
     return (
         <div className="col-9 d-flex">
             <ListGroup className="b-filter d-flex flex-row flex-wrap">
-                <ListGroup.Item
-                    className={`p-2 me-2 border-0 rounded`}
-                    active={!device.selectedBrand.id ?? true}
-                    role="button"
-                >
-                    <div
-                        onClick={() => device.setSelectedBrand({id: 0, name: `All`})}
-                        className={(!device.selectedBrand.id ?? true) ? "text-white text-decoration-none" : "text-decoration-none"}>All
-                    </div>
-                </ListGroup.Item>
-                {device.selectedCategory.id
-                    ? device.brands.filter((brand) => device.selectedCategory.id === brand.categoryId).map((brand: BrandI) => {
-                    return (
-                    <ListGroup.Item
-                    key={brand.id}
-                    className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
-                    active={!device.selectedBrand.id ? brand.id === 0 : brand.id === id}
-                    role="button"
-                    >
-                    <div
-                    key={brand.id}
-                    onClick={() => device.setSelectedBrand(brand!)}
-                    className={(!device.selectedBrand.id ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
-                    </div>
-                    </ListGroup.Item>
-                    )
-                    })
-                    : device.brands.map((brand: BrandI) => {
+                {brandList.current && brandList.current.map((brand: BrandI) => {
+                    const isBrandSelected = !device.selectedBrand.id ? brand.id === 0 : brand.id === id
+
                     return (
                         <ListGroup.Item
                             key={brand.id}
                             className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
-                            active={!device.selectedBrand.id ? brand.id === 0 : brand.id === id}
+                            active={isBrandSelected}
                             role="button"
                         >
                             <div
                                 key={brand.id}
-                                onClick={() => device.setSelectedBrand(brand!)}
-                                className={(!device.selectedBrand.id ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
+                                onClick={() => device.setSelectedBrand(brand)}
+                                className={(isBrandSelected ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
                             </div>
                         </ListGroup.Item>
                     )

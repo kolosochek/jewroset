@@ -12,7 +12,7 @@ import {clearBasket, findOrCreateBasket} from "../http/basketAPI";
 import {UserI} from "../store/UserStore";
 import {v4 as uuidv4} from "uuid";
 import {setUserCookie} from "../http/userAPI";
-import {createGuestUser} from "../App";
+import {createGuestUser} from "../views/App/App";
 import {useCookies} from "react-cookie";
 
 
@@ -65,7 +65,7 @@ const Navbar = observer(() => {
     }
 
     return (
-        <NavbarBootstrap bg="" variant="light">
+        <NavbarBootstrap variant="light">
             <Container>
                 <NavLink onClick={() => {
                     device.setSelectedCategory({id: 0, name: `All`})

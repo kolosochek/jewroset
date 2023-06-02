@@ -70,6 +70,7 @@ export default class DeviceStore {
     setSelectedBrand(brand: BrandI) {
         this._selectedBrand = brand
         this.setPage(1)
+        //this.brands.filter((brand) => this._selectedCategory.id === brand.categoryId)
     }
 
     setSelectedFilter(filter: FilterI) {

@@ -1,0 +1,25 @@
+
+
+.b-device-item-wrapper {
+    position: relative;
+    z-index: 100;
+    transition: 300ms ease all;
+}
+.b-device-item-wrapper:hover {
+    /* transform: rotateX(-2deg); */
+    transform: scale(105%);
+    z-index: 101;
+}
+
+.b-device-item {
+    transition: 500ms ease-in-out border;
+}
+.b-device-item:hover {
+    border-color: var(--bs-blue);
+}
+.b-device-item-figure-wrapper {
+}
+.b-device-item-figure-wrapper img {
+    max-width:100%;
+    max-height:200px;
+}

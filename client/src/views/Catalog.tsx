@@ -1,9 +1,9 @@
 import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {fetchDevices} from "../http/deviceAPI";
-import Categorybar from "../components/Categorybar";
+import Categorybar from "../components/Categorybar/Categorybar";
 import Brandbar from "../components/Brandbar";
-import DeviceList from "../components/DeviceList";
+import DeviceList from "../components/DeviceList/DeviceList";
 import {observer} from "mobx-react-lite";
 import {getAllCategories} from "../http/categoryAPI";
 import {getAllBrands} from "../http/brandAPI";

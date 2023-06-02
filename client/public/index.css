@@ -1,7 +1,15 @@
+body {
+    height: 100vh;
+}
+#root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .dropdown-item.state__active {
     background: #CCCCCC;
 }
-
 
 .bd-placeholder-img {
     font-size: 1.125rem;
