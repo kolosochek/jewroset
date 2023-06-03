@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Categorybar from "../../components/Categorybar/Categorybar";
 import DeviceList from "../../components/DeviceList/DeviceList";
-import Brandbar from "../../components/Brandbar";
+import Brandbar from "../../components/Brandbar/Brandbar";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {fetchDevices} from "../../http/deviceAPI";
 import DeviceListPagination from "../../components/DeviceListPagination";
 import {Spinner} from "react-bootstrap";
-import Filterbar from "../../components/Filterbar";
+import Filterbar from "../../components/Filterbar/Filterbar";
 import {getAllCategories} from "../../http/categoryAPI";
 import {getAllBrands} from "../../http/brandAPI";
 import {Loader} from "../../components/Loader/Loader";
@@ -49,7 +49,7 @@ const Index = observer(() => {
                 <Categorybar/>
             </aside>
             <section className="col-9 flex py-3">
-                <section className={`b-filter-wrapper container p-0 d-flex flex-wrap`}>
+                <section className={`b-filter-wrapper container mb-3 p-0 d-flex flex-wrap align-items-start justify-content-between`}>
                     <Brandbar/>
                     <Filterbar/>
                 </section>

@@ -7,13 +7,14 @@ const EmptyDeviceList = () => {
 
 
     return (
-        <Container className="d-flex my-5">
-            <p>No items.<a
-                className="container"
+        <Container className="d-flex my-3">
+            <p>No items. <a
+                className=""
                 onClick={() => {
                     device.clearSelectedCategory()
                     device.clearSelectedBrand()
                 }}
+                role="button"
             >{`Clear filters?`}</a>
             </p>
         </Container>

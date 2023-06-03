@@ -27,7 +27,7 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
     }
 
     return (
-        <section className={`b-device-item-wrapper col border-0 ${styles["b-device-item-wrapper"]}`}>
+        <section className={`b-device-item-wrapper col border-0 mb-3 ${styles["b-device-item-wrapper"]}`}>
             <div className={`b-device-item card shadow-sm ${styles["b-device-item"]}`}>
                 <Figure
                     className={`b-device-item-figure-wrapper p-3 m-0 text-center ${styles["b-device-item-figure-wrapper"]}`}
@@ -75,16 +75,18 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
                             className="text-primary text-decoration-underline cursor-pointer card-text"
                         >{deviceItem.name}</NavLink>
                     </h4>
-                    <div className="d-flex justify-content-between">
-                        <figure className="b-rating-wrapper m-0">
-                            <span className="b-rating d-flex align-items-center">{deviceItem.rating}&nbsp;<Image src={!deviceItem.rating ? starImgNobg : starImg} width={16} height={16}/></span>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <figure className="d-flex b-rating-wrapper m-0">
+                            <h5 className="b-rating d-flex align-items-center m-0 p-0">{deviceItem.rating}<Image className="ms-1" src={!deviceItem.rating ? starImgNobg : starImg} width={16} height={16}/></h5>
                         </figure>
-                        <div className="b-price-wrapper">
-                            <h5 className="b-device-item-price"><strong>${deviceItem.price}</strong></h5>
+                        <div className="d-flex b-price-wrapper">
+                            <h3 className="b-device-item-price m-0 p-0">
+                                <strong>${deviceItem.price}</strong>
+                            </h3>
                         </div>
                     </div>
                 </section>
-                <div className="ms-auto pe-2 ps-2 pb-3">
+                <div className="pe-3 ps-3 pb-3">
                     <AddToCart basketDevice={basketDevice} />
                 </div>
             </div>

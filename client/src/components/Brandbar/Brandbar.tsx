@@ -1,8 +1,9 @@
 import React, {useContext, useRef} from 'react';
 import {observer} from "mobx-react-lite";
-import {Context} from "../index";
+import {Context} from "../../index";
 import {ListGroup, Card} from "react-bootstrap";
-import {BrandI} from "../store/DeviceStore";
+import {BrandI} from "../../store/DeviceStore";
+import styles from "./index.module.css"
 
 const Brandbar = observer(() => {
     const {device} = useContext(Context)
@@ -12,22 +13,22 @@ const Brandbar = observer(() => {
 
     return (
         <div className="col-9 d-flex">
-            <ListGroup className="b-filter d-flex flex-row flex-wrap">
+            <ListGroup className={`b-filter d-flex flex-row flex-wrap`}>
                 {brandList.current && brandList.current.map((brand: BrandI) => {
-                    const isBrandSelected = !device.selectedBrand.id ? brand.id === 0 : brand.id === id
+                    const isActive = !device.selectedBrand.id ? brand.id === 0 : brand.id === id
 
                     return (
                         <ListGroup.Item
                             key={brand.id}
-                            className={`p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
-                            active={isBrandSelected}
+                            className={`b-brandbar-item-wrapper ${styles['b-brandbar-item-wrapper']} p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
+                            active={isActive}
                             role="button"
                         >
-                            <div
+                            <a
                                 key={brand.id}
                                 onClick={() => device.setSelectedBrand(brand)}
-                                className={(isBrandSelected ? brand.id === 0 : brand.id === id) ? "text-white text-decoration-none" : "text-decoration-none"}>{brand.name}
-                            </div>
+                                className={`b-brandbar-item ${styles['b-brandbar-item']} b-link text-decoration-none ${isActive ? "text-white " : ""}`}>{brand.name}
+                            </a>
                         </ListGroup.Item>
                     )
                 })}

@@ -1,5 +1,13 @@
 import {makeAutoObservable} from "mobx";
 
+export const filterType = ["id", "price", "rating", ]
+export const filterDirection = [`asc`, `desc`]
+export const filterTitle =['creation', 'price', 'rating']
+export type TFilterTitle = typeof filterTitle
+export type TFilterType = typeof filterType
+export type TFilterDirection = typeof filterDirection
+
+
 export interface BrandI {
     id: number,
     name: string,
@@ -22,9 +30,11 @@ export interface CategoryI {
 }
 
 export interface FilterI {
-    type: 'price' | `rating` | 'id'
-    direction: `asc` | `desc`
+    type: TFilterType[number]
+    direction: TFilterDirection[number]
+    title?: TFilterTitle[number]
 }
+
 
 export type DeviceInfoT = Record<string, string | number | Date>
 
@@ -52,7 +62,7 @@ export default class DeviceStore {
         private _selectedCategory: Partial<CategoryI> = {},
         private _selectedBrand: Partial<BrandI> = {},
         private _category: Partial<CategoryI> = {},
-        private _selectedFilter: Partial<FilterI> = {},
+        private _selectedFilter: FilterI = {type: filterType[0], direction: filterDirection[0], title: filterTitle[0]},
         private _selectedPage: PaginatorI['page'] = 1,
         private _page: PaginatorI['page'] = 1,
         private _limit: PaginatorI['limit'] = 9,

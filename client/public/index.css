@@ -7,9 +7,6 @@ body {
     flex-direction: column;
 }
 
-.dropdown-item.state__active {
-    background: #CCCCCC;
-}
 
 .bd-placeholder-img {
     font-size: 1.125rem;

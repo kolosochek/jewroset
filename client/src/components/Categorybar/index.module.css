@@ -1,7 +1,11 @@
 .b-categorybar-item-wrapper {
-    transition: 500ms ease all;
+    border-width: 1px;
 }
 
 .b-categorybar-item-wrapper:hover {
+    background-color: #EEE;
+}
 
+.b-categorybar-item-wrapper.state__active {
+    background: var(--bs-primary) !important;
 }

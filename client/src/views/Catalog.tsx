@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
 import {fetchDevices} from "../http/deviceAPI";
 import Categorybar from "../components/Categorybar/Categorybar";
-import Brandbar from "../components/Brandbar";
+import Brandbar from "../components/Brandbar/Brandbar";
 import DeviceList from "../components/DeviceList/DeviceList";
 import {observer} from "mobx-react-lite";
 import {getAllCategories} from "../http/categoryAPI";

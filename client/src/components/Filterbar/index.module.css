@@ -1,0 +1,11 @@
+.b-filterbar-item {
+    border-width: 1px;
+}
+
+.b-filterbar-item:hover {
+    background: #EEEEEE;
+}
+
+.b-filterbar-item.state__active {
+    background: var(--bs-primary);
+}

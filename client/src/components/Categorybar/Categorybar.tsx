@@ -15,17 +15,19 @@ const Categorybar = observer(() => {
         <div className="flex-shrink-0 py-3 pe-3 bg-white">
             <ListGroup className="list-unstyled ps-0 shadow-sm">
                 {categoryList.current && categoryList.current.map((category: CategoryI) => {
+                    const isActive = !device.selectedCategory.id ? category.id === 0 : category.id === id
+
                     return (
                         <ListGroup.Item
                             key={category.id}
-                            active={!device.selectedCategory.id ? category.id === 0 : category.id === id}
-                            className={`b-categorybar-item-wrapper ${styles["b-categorybar-item-wrapper"]}`}
+                            active={isActive}
+                            className={`b-categorybar-item-wrapper ${styles["b-categorybar-item-wrapper"]} ${isActive ? styles["state__active"] : ""}`}
                             role="button"
                         >
                             <a
                                 key={category.id}
                                 onClick={() => device.setSelectedCategory(category)}
-                                className={`b-categorybar-item-wrapper b-link text-decoration-none text-break ${(!device.selectedCategory.id ? category.id === 0 : category.id === id) ? 'text-white d-block text-decoration-none' : ''}`}>{category.name}
+                                className={`d-block b-categorybar-item b-link text-decoration-none text-break ${isActive ? 'text-white' : ''}`}>{category.name}
                             </a>
                         </ListGroup.Item>
                     )

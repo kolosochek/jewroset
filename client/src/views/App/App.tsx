@@ -76,7 +76,7 @@ const App = observer(() => {
     return (
         <BrowserRouter>
             <Navbar/>
-            <Container className={`d-flex flex-grow-1`}>
+            <Container className={`d-flex flex-grow-1`} role="main">
                 <AppRouter/>
             </Container>
         </BrowserRouter>

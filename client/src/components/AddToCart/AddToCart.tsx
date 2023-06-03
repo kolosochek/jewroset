@@ -1,56 +1,59 @@
-import React, {ClassAttributes, PropsWithChildren, useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import styles from "./AddToCart.module.css"
-import BasketStore, {BasketDeviceI, decrementBasketDevice, incrementBasketDevice} from "../../store/BasketStore";
+import {BasketDeviceI, decrementBasketDevice, incrementBasketDevice} from "../../store/BasketStore";
 import {Context} from "../../index";
 
-interface AddToCartProps extends PropsWithChildren {
+type CartFunctionT = (basketDevices:AddToCartPropsI["basketDevices"], basketDevice: AddToCartPropsI["basketDevice"], setDeviceQuantity:AddToCartPropsI['setDeviceQuantity'], setBasketDevices:AddToCartPropsI['setBasketDevices']) => void
+
+const getBasketDeviceIndex = (basketDevices:AddToCartPropsI["basketDevices"], basketDevice:AddToCartPropsI["basketDevice"]) => {
+    let index = -1
+    for (let [i, item] of basketDevices!.entries()) {
+        if (item.deviceId === basketDevice.deviceId) {
+            index = i
+        }
+    }
+    return index
+}
+
+const incrementDevice:CartFunctionT = (basketDevices, basketDevice, setDeviceQuantity, setBasketDevices) => {
+    incrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
+        basketDevice.quantity += 1
+        setDeviceQuantity!(basketDevice.quantity)
+        if (basketDevices && setBasketDevices) {
+            const index = getBasketDeviceIndex(basketDevices, basketDevice)
+            const newBasketDevicesArr = [...basketDevices]
+            newBasketDevicesArr[index] = basketDevice
+            setBasketDevices(newBasketDevicesArr)
+        }
+    })
+}
+
+const decrementDevice:CartFunctionT = (basketDevices, basketDevice, setDeviceQuantity, setBasketDevices) => {
+    decrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
+        basketDevice.quantity -= 1
+        setDeviceQuantity!(basketDevice.quantity)
+        if (basketDevices && setBasketDevices) {
+            const index = getBasketDeviceIndex(basketDevices, basketDevice)
+            const newBasketDevicesArr = [...basketDevices]
+            newBasketDevicesArr[index] = basketDevice
+            setBasketDevices(newBasketDevicesArr)
+        }
+    })
+}
+
+interface AddToCartPropsI {
     basketDevice: BasketDeviceI,
     basketDevices?: BasketDeviceI[],
     setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void,
+    setDeviceQuantity?: (value: BasketDeviceI['quantity'] | ((prevVar: BasketDeviceI['quantity']) => BasketDeviceI['quantity'])) => void,
     className?: string
 }
 
-const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevices, setBasketDevices, className}) => {
+const AddToCart = observer(({basketDevice, basketDevices, setBasketDevices, className} : AddToCartPropsI) => {
     const {basket} = useContext(Context)
     const [deviceQuantity, setDeviceQuantity] = useState<BasketDeviceI['quantity']>(setBasketDevices && basketDevices ? basketDevice.quantity : basket.getDeviceBasketQuantityById(basketDevice.device?.id!))
-
-    const getBasketDeviceIndex = () => {
-        let index = -1
-        for (let [i, item] of basketDevices!.entries()) {
-            if (item.deviceId === basketDevice.deviceId) {
-                index = i
-            }
-        }
-        return index
-    }
-
-    const incrementDevice = (basketDevice: BasketDeviceI) => {
-        incrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
-            basketDevice.quantity += 1
-            setDeviceQuantity(basketDevice.quantity)
-            if (basketDevices && setBasketDevices) {
-                const index = getBasketDeviceIndex()
-                const newBasketDevicesArr = [...basketDevices]
-                newBasketDevicesArr[index] = basketDevice
-                setBasketDevices(newBasketDevicesArr)
-            }
-        })
-    }
-
-    const decrementDevice = (basketDevice: BasketDeviceI) => {
-        decrementBasketDevice(basketDevice.basketId, basketDevice.deviceId).then(() => {
-            basketDevice.quantity -= 1
-            setDeviceQuantity(basketDevice.quantity)
-            if (basketDevices && setBasketDevices) {
-                const index = getBasketDeviceIndex()
-                const newBasketDevicesArr = [...basketDevices]
-                newBasketDevicesArr[index] = basketDevice
-                setBasketDevices(newBasketDevicesArr)
-            }
-        })
-    }
 
     return (
         <>
@@ -63,7 +66,7 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
                                 className="quantity-left-minus btn btn-danger btn-number"
                                 onClick={() => {
                                     if (setBasketDevices) {
-                                        decrementDevice(basketDevice)
+                                        decrementDevice(basketDevices, basketDevice, setDeviceQuantity, setBasketDevices)
                                     } else {
                                         setDeviceQuantity(deviceQuantity - 1)
                                         basket.decrementBasketDevice(basketDevice.deviceId).then(() => {
@@ -84,7 +87,7 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
                                 className="quantity-right-plus btn btn-success btn-number"
                                 onClick={() => {
                                     if (setBasketDevices) {
-                                        incrementDevice(basketDevice)
+                                        incrementDevice(basketDevices, basketDevice, setDeviceQuantity, setBasketDevices)
                                     } else {
                                         basket.incrementBasketDevice(basketDevice.deviceId).then(() => {
                                             setDeviceQuantity(deviceQuantity + 1)
@@ -97,9 +100,11 @@ const AddToCart: React.FC<AddToCartProps> = observer(({basketDevice, basketDevic
                         </span>
                     </div>
                 </section>)
-                : (<Button onClick={() => {
+                : (<Button
+                    className="w-100"
+                    onClick={() => {
                     if (setBasketDevices) {
-                        incrementDevice(basketDevice)
+                        incrementDevice(basketDevices, basketDevice, setDeviceQuantity, setBasketDevices)
                     } else {
                         basket.incrementBasketDevice(basketDevice.deviceId).then(() => {
                             setDeviceQuantity(deviceQuantity + 1)

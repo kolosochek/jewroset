@@ -1,0 +1,9 @@
+.b-brandbar-item-wrapper {
+    border-width: 1px;
+}
+.b-brandbar-item-wrapper:hover {
+    background-color: #EEE;
+}
+.b-brandbar-item {
+
+}
