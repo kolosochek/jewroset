@@ -1,27 +1,27 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
+import {useContext} from 'react';
 import {Col, Row} from "react-bootstrap";
 import {Link, useLocation} from "react-router-dom";
 import BasketImage from "./BasketImage/BasketImage";
 import AddToCart from "./AddToCart/AddToCart";
-import BasketStore, {BasketDeviceI, removeBasketDevice} from "../store/BasketStore";
+import {BasketDeviceI, removeBasketDevice} from "../store/BasketStore";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {RouteI} from "../utils/Routes";
 
-interface BasketDeviceItemProps extends PropsWithChildren{
+interface BasketDeviceItemPropsI {
     basketDevice: BasketDeviceI,
     index: number
     basketDevices?: BasketDeviceI[],
     setBasketDevices?: (value: BasketDeviceI[] | ((prevVar: BasketDeviceI[]) => BasketDeviceI[])) => void;
 }
-const BasketDeviceItem:React.FC<BasketDeviceItemProps> = observer(({basketDevice, index, basketDevices, setBasketDevices}) => {
+const BasketDeviceItem = observer(({basketDevice, index, basketDevices, setBasketDevices}:BasketDeviceItemPropsI) => {
     const {basket} = useContext(Context)
     const location = useLocation()
 
 
     return (
         <>
-            <Row key={basketDevice.device?.id} className={`align-items-center ${index % 2 ? 'bg-light' : ''}`}>
+            <Row key={basketDevice.device?.id} className={`mb-3 align-items-center ${index % 2 ? 'bg-light' : ''}`}>
                 <Col>{++index}</Col>
                 <Col className="col-3"><Link to={`/device/${basketDevice.device?.id}`}>{basketDevice.device?.name}</Link></Col>
                 <Col className="text-center">

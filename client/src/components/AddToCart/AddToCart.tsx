@@ -59,7 +59,7 @@ const AddToCart = observer(({basketDevice, basketDevices, setBasketDevices, clas
         <>
             {deviceQuantity > 0
                 ? (<section className="b-add-to-cart-wrapper">
-                    <div className={`b-add-to-cart ${className ? className : 'd-flex'}`}>
+                    <div className={`b-add-to-cart justify-content-center ${className ? className : 'd-flex'}`}>
                         <span className="input-group-btn d-inline-block">
                             <button
                                 type="button"

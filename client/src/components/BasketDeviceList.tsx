@@ -17,12 +17,12 @@ const BasketDeviceList: React.FC<BasketDeviceListProps> = ({basketDevices, setBa
             {setBasketDevices
                 ? (basketDevices && basketDevices.map((basketDevice: BasketDeviceI, index: number) => {
                     return (
-                        <BasketDeviceItem key={`basket-device-item-${index}`} basketDevice={basketDevice} index={index} basketDevices={basketDevices} setBasketDevices={setBasketDevices} />
+                        <BasketDeviceItem key={`basket-device-item-${basketDevice.deviceId}`} basketDevice={basketDevice} index={index} basketDevices={basketDevices} setBasketDevices={setBasketDevices} />
                     )
                 }))
                 : (basket && basket.basketDevices?.map((basketDevice: BasketDeviceI, index: number) => {
                     return (
-                        <BasketDeviceItem key={`basket-device-item-${index}`} basketDevice={basketDevice} index={index} basketDevices={basketDevices} />
+                        <BasketDeviceItem key={`basket-device-item-${basketDevice.deviceId}`} basketDevice={basketDevice} index={index} basketDevices={basketDevices} />
                     )
                 }))
             }

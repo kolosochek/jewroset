@@ -9,6 +9,7 @@ import {RouteI} from "../utils/Routes";
 import {BasketDeviceI} from "../store/BasketStore";
 import ReactMarkdown from 'react-markdown'
 import {Loader} from "../components/Loader/Loader";
+import {getStaticPath} from "../utils";
 
 const Device = ({}) => {
     const {basket} = useContext(Context)
@@ -51,7 +52,7 @@ const Device = ({}) => {
                         <div className="preview-pic tab-content">
                             <div className="text-center mb-5">
                                 <Image
-                                    src={`${process.env.REACT_APP_SERVER_URL}${process.env.REACT_APP_SERVER_PORT ? ':'+process.env.REACT_APP_SERVER_PORT : ''}/${device.img}`}
+                                    src={`${getStaticPath()}/${device.img}`}
                                     alt={device.name}
                                     width={300}
                                 />

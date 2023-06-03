@@ -1,11 +1,12 @@
 import axios from "axios";
+import {getStaticPath} from "../utils";
 
 const $host = axios.create({
-    baseURL: `${process.env.REACT_APP_SERVER_URL}${process.env.REACT_APP_SERVER_PORT ? ':'+process.env.REACT_APP_SERVER_PORT : ''}`
+    baseURL: getStaticPath()
 })
 
 const $authHost = axios.create({
-    baseURL: `${process.env.REACT_APP_SERVER_URL}${process.env.REACT_APP_SERVER_PORT ? ':'+process.env.REACT_APP_SERVER_PORT : ''}`
+    baseURL: getStaticPath()
 })
 
 

@@ -81,10 +81,6 @@ const Checkout = observer(() => {
     }
 
     useEffect(() => {
-        // debug
-        console.log(`user`);
-        console.log(user);
-        //
         findUserData(user.user.email!).then((userInfo) => {
             user.setUserInfo(userInfo)
         })
@@ -102,15 +98,15 @@ const Checkout = observer(() => {
         <section className="mt-5 mb-5">
             <div className="row g-5">
                 <div className="col-md-5 col-lg-4 order-md-last">
-                    <h4 className="d-flex justify-content-between align-items-center mb-2">
-                        <span className="text-primary">Your cart</span>
+                    <h4 className="d-flex justify-content-between align-items-center mb-3">
+                        <span className="">Your cart</span>
                         <span className="badge bg-primary rounded-pill">{basket.itemsTotal}</span>
                     </h4>
                     <ul className="list-group mb-3">
                         {basket.basketDevices?.map((item) => {
                             return (
                                 <li key={item.device?.id}
-                                    className="list-group-item d-flex justify-content-between lh-sm">
+                                    className="list-group-item d-flex justify-content-between lh-sm p-3">
                                     <div>
                                         <h6 className="my-0">{item.device.name}</h6>
                                         <small
@@ -120,14 +116,14 @@ const Checkout = observer(() => {
                                 </li>
                             )
                         })}
-                        <li className="list-group-item d-flex justify-content-between">
+                        <li className="list-group-item d-flex justify-content-between pt-3 pb-3">
                             <span>Total (USD)</span>
                             <strong>${basket.priceTotal}</strong>
                         </li>
                     </ul>
                 </div>
                 <div className="col-md-7 col-lg-8">
-                    <h4 className="mb-3">Billing address</h4>
+                    <h4 className="mb-5">Billing address</h4>
                     <Form method="POST" className="needs-validation" ref={form} noValidate={true}>
                         <div className="row g-3">
                             <div className="col-12">

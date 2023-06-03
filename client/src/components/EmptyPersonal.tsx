@@ -3,14 +3,14 @@ import {NavLink} from "react-router-dom";
 import {RouteI} from "../utils/Routes";
 import {Container} from "react-bootstrap";
 
-const EmptyPersonal = () => {
+const EmptyCart = () => {
     return (
-        <Container className="d-flex my-5 p-0">
-            <h5 className="text-center">
-                <NavLink className="link" to={`/` as RouteI['path']}>{`No items. Go back?`}</NavLink>
+        <Container className="d-flex my-3 p-0 justify-content-center">
+            <h5 className="text-center">No items.&nbsp;
+                <NavLink className="link" to={`/` as RouteI['path']}>{`Go back?`}</NavLink>
             </h5>
         </Container>
     )
 }
 
-export default EmptyPersonal;
+export default EmptyCart;

@@ -65,7 +65,10 @@ const Navbar = observer(() => {
     }
 
     return (
-        <NavbarBootstrap variant="light">
+        <NavbarBootstrap
+            className="mt-3 mb-3"
+            variant="light"
+        >
             <Container>
                 <NavLink onClick={() => {
                     device.setSelectedCategory({id: 0, name: `All`})

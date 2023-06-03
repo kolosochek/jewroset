@@ -8,6 +8,7 @@ import AddToCart from "../AddToCart/AddToCart";
 import {Context} from "../../index";
 import {BasketDeviceI} from "../../store/BasketStore";
 import styles from "./index.module.css"
+import {getStaticPath} from "../../utils";
 
 
 interface ItemProps {
@@ -33,7 +34,7 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
                     className={`b-device-item-figure-wrapper p-3 m-0 text-center ${styles["b-device-item-figure-wrapper"]}`}
                     onClick={() => navigate(`/device/${deviceItem.id}`)}>
                     <img
-                        src={`${process.env.REACT_APP_SERVER_URL}${process.env.REACT_APP_SERVER_PORT ? ':'+process.env.REACT_APP_SERVER_PORT : ''}/${deviceItem.img}`}
+                        src={`${getStaticPath()}/${deviceItem.img}`}
                         alt={deviceItem.name}
                         height="200"
                         className="b-device-item-figure rounded"
