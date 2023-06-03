@@ -7,3 +7,6 @@
 .b-brandbar-item {
 
 }
+.b-brandbar-item.state__active {
+    background: var(--bs-primary) !important;
+}

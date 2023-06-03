@@ -7,7 +7,7 @@
 }
 .b-device-item-wrapper:hover {
     /* transform: rotateX(-2deg); */
-    transform: scale(110%);
+    transform: scale(106%);
     z-index: 101;
 }
 

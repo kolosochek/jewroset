@@ -20,14 +20,14 @@ const Brandbar = observer(() => {
                     return (
                         <ListGroup.Item
                             key={brand.id}
-                            className={`b-brandbar-item-wrapper ${styles['b-brandbar-item-wrapper']} p-2 me-2 border-0 rounded ${brand.id === id ? `bg-primary` : ''}`}
+                            className={`b-brandbar-item-wrapper ${styles['b-brandbar-item-wrapper']} p-2 me-2 border-0 rounded ${isActive ? `bg-primary ${styles['state__active']}` : ''}`}
                             active={isActive}
                             role="button"
                         >
                             <a
                                 key={brand.id}
                                 onClick={() => device.setSelectedBrand(brand)}
-                                className={`b-brandbar-item ${styles['b-brandbar-item']} b-link text-decoration-none ${isActive ? "text-white " : ""}`}>{brand.name}
+                                className={`b-brandbar-item ${styles['b-brandbar-item']} b-link text-decoration-none ${isActive ? `text-white ` : ""}`}>{brand.name}
                             </a>
                         </ListGroup.Item>
                     )
