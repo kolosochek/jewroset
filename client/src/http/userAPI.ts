@@ -63,7 +63,7 @@ export const userCheck = async () => {
     }
 }
 
-export const adminGetAllUsers = async (page: PaginatorI['page'], limit: PaginatorI['limit'], orderBy:AdminClientFilterI["orderBy"], orderDirection:AdminClientFilterI["orderDirection"]) => {
+export const adminGetAllUsers = async (page: PaginatorI['page']=1, limit: PaginatorI['limit']=10, orderBy:AdminClientFilterI["orderBy"]="email", orderDirection:AdminClientFilterI["orderDirection"]="desc") => {
     const {data} = await $authHost.get('api/user/all', {
         params: {
             page, limit, orderBy, orderDirection

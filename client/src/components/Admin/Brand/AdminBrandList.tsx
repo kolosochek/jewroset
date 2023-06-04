@@ -7,6 +7,7 @@ import {BrandI} from "../../../store/DeviceStore";
 import AdminBrandListActions from "./AdminBrandListActions";
 import AdminBrandListHeader from "./AdminBrandListHeader";
 import AdminBrandItem from "./AdminBrandItem";
+import {Loader} from "../../Loader/Loader";
 
 
 const AdminBrandList: React.FC = () => {
@@ -23,7 +24,7 @@ const AdminBrandList: React.FC = () => {
     }, [isForceRender])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
 

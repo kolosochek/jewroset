@@ -8,6 +8,7 @@ import EmptyPersonal from "../components/EmptyPersonal";
 import {Link, useNavigate} from "react-router-dom";
 import {BasketDeviceI} from "../store/BasketStore";
 import BasketImage from "../components/BasketImage/BasketImage";
+import {Loader} from "../components/Loader/Loader";
 
 export const switchTitle = (element: HTMLButtonElement | HTMLAnchorElement, values = ['Collapse', 'Expand']) => {
     if (element.hasAttributes() && element.hasAttribute('aria-expanded')) {
@@ -45,7 +46,7 @@ const Orders = () => {
     }, [])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (
@@ -102,7 +103,7 @@ const Orders = () => {
                                             className={`text-center ${orderStatus.className}`}>{orderStatus.title}</Col>
                                         <Col className={order.status === "awaitingPayment" ? 'text-center' : 'text-end'}>
                                             <Button
-                                                className="btn btn-primary"
+                                                className={`btn btn-primary ${order.status === "awaitingPayment" ? "me-2" : ""}`}
                                                 type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target={`#collapse${order.id}`}
@@ -115,9 +116,9 @@ const Orders = () => {
                                             </Button>
                                             {order.status === "awaitingPayment" && (
                                                 <Button
-                                                    className="mt-1"
+                                                    className=""
                                                     onClick={() => {
-                                                        navigate(`/payment/${order.id}`)
+                                                        navigate(`${"/payment/" as RouteI['path']}${order.id}`)
                                                     }}
                                                 >Pay</Button>
                                             )}

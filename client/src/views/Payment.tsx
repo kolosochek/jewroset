@@ -7,6 +7,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {OrderI} from "../store/OrderStore";
 import {getOrder, updateOrder} from "../http/orderAPI";
 import {createBasket} from "../http/basketAPI";
+import {Loader} from "../components/Loader/Loader";
 
 export default function OrderPayment() {
     const {
@@ -76,17 +77,13 @@ export default function OrderPayment() {
         if (id) {
             getOrder(parseInt(id), user.id!).then(orderParam => {
                 setOrderById(orderParam)
-                // debug
-                console.log(`orderParam`);
-                console.log(orderParam);
-                //
             }).catch(error => console.error(`Can't set an order by id ${id}, reason: ${error.reason || error}`));
         }
         setIsLoading(false);
     }, [])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (

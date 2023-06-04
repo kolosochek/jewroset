@@ -79,7 +79,7 @@ const Navbar = observer(() => {
                         <>
                             {user.isAdmin && <Button className="btn"
                                                                    onClick={() => navigate('/admin' as RouteI['path'])}>Admin</Button>}
-                            <Button className="ms-2 btn" onClick={() => navigate('/personal' as RouteI['path'])}>Orders</Button>
+                            <Button className="ms-2 btn" onClick={() => navigate('/orders' as RouteI['path'])}>Orders</Button>
                             <Button className="ms-2 btn" onClick={() => logout()}>Logout</Button>
 
                         </>

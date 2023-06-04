@@ -8,6 +8,7 @@ import AdminOrderItem from "./AdminOrderItem";
 import {PaginatorI} from "../../../store/DeviceStore";
 import AdminOrderListHeader from "./AdminOrderListHeader";
 import AdminPagination from "../AdminPagination";
+import {Loader} from "../../Loader/Loader";
 
 
 interface AdminOrderListProps extends PropsWithChildren {
@@ -37,7 +38,7 @@ const AdminOrderList: React.FC<AdminOrderListProps> = ({}) => {
     }, [isForceRender, page, orderBy, orderDirection])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (

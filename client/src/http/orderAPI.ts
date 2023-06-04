@@ -15,8 +15,17 @@ export const getUserOrders = async (userId: UserI['id']) => {
     return data
 }
 
-export const adminGetAllOrders = async (page: PaginatorI['page'], limit: PaginatorI['limit'], orderBy:AdminOrderFilterI["orderBy"], orderDirection:AdminOrderFilterI["orderDirection"]) => {
+export const adminGetAllOrders = async (page: PaginatorI['page']=1, limit: PaginatorI['limit']=10, orderBy:AdminOrderFilterI["orderBy"]="status", orderDirection:AdminOrderFilterI["orderDirection"]="desc") => {
     const {data} = await $authHost.get('api/order/all', {
+        params: {
+            page, limit, orderBy, orderDirection
+        }
+    })
+    return data
+}
+
+export const adminGetAllUnshippedOrders = async (page: PaginatorI['page']=1, limit: PaginatorI['limit']=10, orderBy:AdminOrderFilterI["orderBy"]="status", orderDirection:AdminOrderFilterI["orderDirection"]="desc") => {
+    const {data} = await $authHost.get('api/order/all_unshipped', {
         params: {
             page, limit, orderBy, orderDirection
         }

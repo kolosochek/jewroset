@@ -7,6 +7,7 @@ import AdminProductListHeader from "./AdminProductListHeader";
 import AdminProductItem from "./AdminProductItem";
 import {AdminProductContext, AdminProductFilterI} from "../../../views/Admin/AdminProducts";
 import AdminPagination from "../AdminPagination";
+import {Loader} from "../../Loader/Loader";
 
 
 const AdminProductList = () => {
@@ -31,7 +32,7 @@ const AdminProductList = () => {
     }, [isForceRender, page, orderBy, orderDirection])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (

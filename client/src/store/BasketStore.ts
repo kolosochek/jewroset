@@ -8,7 +8,9 @@ export interface BasketDeviceI {
     basketId: BasketI['id'],
     deviceId: DeviceI['id'],
     quantity: number,
-    device: DeviceI
+    device: DeviceI,
+    createdAt?: string,
+    updatedAt?: string,
 }
 export interface BasketI {
     id: number,

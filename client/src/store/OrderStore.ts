@@ -11,9 +11,9 @@ export interface OrderI {
     addresstwo?: string,
     country: string,
     city: string,
-    zip: string
     userId: number,
     basketId: number,
+    zip: string,
     user?: UserI,
     email?: UserI["email"],
     basket?: BasketI,

@@ -6,6 +6,7 @@ import AdminCategoryListHeader from "./AdminCategoryListHeader";
 import AdminCategoryItem from "./AdminCategoryItem";
 import {getAllCategories} from "../../../http/categoryAPI";
 import {CategoryI} from "../../../store/DeviceStore";
+import {Loader} from "../../Loader/Loader";
 
 
 const AdminCategoryList: React.FC = () => {
@@ -22,7 +23,7 @@ const AdminCategoryList: React.FC = () => {
     }, [isForceRender])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
 

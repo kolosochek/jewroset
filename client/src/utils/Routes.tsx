@@ -14,7 +14,8 @@ export type RoutePathT = "/"
     | "/catalog"
     | "/device"
     | "/checkout"
-    | "payment"
+    | "/payment"
+    | "/orders"
     | string;
 export type ViewT = typeof AdminDashboard | typeof Auth | typeof Basket | typeof Device | typeof Index | typeof Catalog
 

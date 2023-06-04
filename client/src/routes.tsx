@@ -49,7 +49,7 @@ export const authorizedRoutes: RouteI[] = [
     ...commonRoutes,
     ...adminRoutes,
     {
-        path: '/personal', View: Orders,
+        path: '/orders', View: Orders,
     },
 ]
 

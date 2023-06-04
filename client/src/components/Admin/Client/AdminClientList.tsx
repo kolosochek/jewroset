@@ -8,6 +8,7 @@ import {adminGetAllUsers} from "../../../http/userAPI";
 import AdminClientListHeader from "./AdminClientListHeader";
 import AdminClientListActions from "./AdminClientListActions";
 import AdminClientItem from "./AdminClientItem";
+import {Loader} from "../../Loader/Loader";
 
 const AdminClientList = () => {
     const [users, setUsers] = useState<UserI[]>([]);
@@ -33,7 +34,7 @@ const AdminClientList = () => {
     }, [isForceRender, page, orderBy, orderDirection])
 
     if (isLoading) {
-        return <Spinner animation={"grow"}/>
+        return <Loader />
     }
 
     return (
