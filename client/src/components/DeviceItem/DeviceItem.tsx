@@ -9,6 +9,7 @@ import {Context} from "../../index";
 import {BasketDeviceI} from "../../store/BasketStore";
 import styles from "./index.module.css"
 import {getStaticPath} from "../../utils";
+import {DeviceRating} from "../DeviceRating/DeviceRating";
 
 
 interface ItemProps {
@@ -78,7 +79,9 @@ const DeviceItem = ({deviceItem}: ItemProps) => {
                     </h4>
                     <div className="d-flex justify-content-between align-items-center">
                         <figure className="d-flex b-rating-wrapper m-0">
-                            <h5 className="b-rating d-flex align-items-center m-0 p-0">{deviceItem.rating}<Image className="ms-1" src={!deviceItem.rating ? starImgNobg : starImg} width={16} height={16}/></h5>
+                            <h5 className="b-rating d-flex align-items-center m-0 p-0">
+                                <DeviceRating rating={deviceItem.rating!} />
+                            </h5>
                         </figure>
                         <div className="d-flex b-price-wrapper">
                             <h3 className="b-device-item-price m-0 p-0">

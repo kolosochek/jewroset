@@ -10,6 +10,7 @@ import {BasketDeviceI} from "../store/BasketStore";
 import ReactMarkdown from 'react-markdown'
 import {Loader} from "../components/Loader/Loader";
 import {getStaticPath} from "../utils";
+import {DeviceRating} from "../components/DeviceRating/DeviceRating";
 
 const Device = ({}) => {
     const {basket} = useContext(Context)
@@ -32,13 +33,14 @@ const Device = ({}) => {
         navigate('/basket' as RouteI['path'])
     }
 
-
     useEffect(() => {
         fetchOneDevice(+id!).then(device => {
             setDevice(device)
             setDeviceQuantity(basket.getDeviceBasketQuantityById(device?.id!))
         }).finally(() => setIsLoading(false))
     }, [])
+
+
 
     if (isLoading) {
         return <Loader />
@@ -54,24 +56,16 @@ const Device = ({}) => {
                                 <Image
                                     src={`${getStaticPath()}/${device.img}`}
                                     alt={device.name}
-                                    width={300}
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: "100%",
+                                    }}
                                 />
                             </div>
                         </div>
                     </div>
                     <div className="details col-md-6">
-                        <h2 className="product-title">{device?.name}</h2>
-                        <Row className="rating">
-                            <div className="stars">
-                                <span className="fa fa-star checked"></span>
-                                <span className="fa fa-star checked"></span>
-                                <span className="fa fa-star checked"></span>
-                                <span className="fa fa-star"></span>
-                                <span className="fa fa-star"></span>
-                            </div>
-
-                            <p className="b-rating">rating: <span>{device?.rating}</span></p>
-                        </Row>
+                        <h2 className="product-title mb-5">{device?.name}</h2>
                         <Row>
                             {device.description && <div id="description">
                                 <div className="product-description">
@@ -79,7 +73,12 @@ const Device = ({}) => {
                                 </div>
                             </div>}
                         </Row>
-                        <Row>
+                        <Row className="rating mt-3 mb-5 g-0" style={{
+                            fontSize: "1.6em",
+                        }}>
+                            <DeviceRating rating={device?.rating!} />
+                        </Row>
+                        <Row className="mb-3">
                             {device.info!.map((info: DeviceInfoT, index) => {
                                     return (
                                         <Row key={info.id as Key}
@@ -91,9 +90,9 @@ const Device = ({}) => {
                                 }
                             )}
                         </Row>
-                        <Row className="pt-3 pb-3 align-items-center">
+                        <Row className="mb-3 pt-3 pb-3 align-items-center">
                             <Col className="text-start">
-                                <p>current price: <h4 className="b-price"><span>${device?.price}</span></h4></p>
+                                <span>current price: <h4 className="b-price"><span>${device?.price}</span></h4></span>
                             </Col>
                             <Col className="text-end">
                                 {deviceQuantity > 0 && <AddToCart basketDevice={basketDevice} className="d-block"/>}

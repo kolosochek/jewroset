@@ -55,6 +55,15 @@ const AdminDashboard = () => {
 
     if (isLoading) {
         return <Loader />
+    } else {
+        // debug
+        console.log(`totalOrdersIDArr`);
+        console.log(totalOrdersIDArr);
+        //
+        // debug
+        console.log(`totalOrders`);
+        console.log(totalOrders);
+        //
     }
 
     return (

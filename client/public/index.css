@@ -1,8 +1,12 @@
 html {
-    overflow-y: scroll;
+
 }
 body {
     height: 100vh;
+    /*
+    width: 100vw;
+     */
+    padding-left: calc(100vw - 100%);
 }
 #root {
     height: 100%;
